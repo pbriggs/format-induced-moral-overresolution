@@ -219,6 +219,7 @@ def build_milestone_report(
     validity_check = _json_safe_validity_check(milestone_validity_check(validity_rows, milestone)) if validity_rows else None
     observed = _observed_alignment(connection, target_ids, milestone)
     decision = evaluate_milestone_alignment(milestone, observed) if observed else None
+    decision = _decision_with_completion_gate(decision, attempted, milestone, observed)
     decision = _decision_with_validity_gate(decision, validity_check, milestone, observed)
     return {
         "run_id": run_id,
@@ -261,6 +262,29 @@ def _decision_with_validity_gate(
     adjusted["milestone"] = milestone
     adjusted["observed"] = dict(observed)
     return adjusted
+
+
+def _decision_with_completion_gate(
+    decision: dict[str, Any] | None,
+    attempted: dict[str, Any],
+    milestone: str,
+    observed: dict[str, Any],
+) -> dict[str, Any]:
+    if attempted.get("completed_successful", 0) + attempted.get("terminal_failures", 0) >= attempted.get("planned", 0):
+        return decision or {
+            "milestone": milestone,
+            "decision": "pending_insufficient_outputs",
+            "failures": [],
+            "revision_reasons": [],
+            "observed": observed,
+        }
+    return {
+        "milestone": milestone,
+        "decision": "pending_insufficient_outputs",
+        "failures": [],
+        "revision_reasons": ["milestone execution incomplete"],
+        "observed": observed,
+    }
 
 
 def write_milestone_report(

@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS source_distributions (
   PRIMARY KEY (item_id, source_distribution_version, posterior_draw_id_or_null)
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_source_distributions_null_draw
+ON source_distributions (item_id, source_distribution_version)
+WHERE posterior_draw_id_or_null IS NULL;
+
 CREATE TABLE IF NOT EXISTS prompt_templates (
   prompt_template_id TEXT PRIMARY KEY,
   prompt_mode TEXT NOT NULL,

@@ -127,35 +127,45 @@ def insert_source_row(connection: sqlite3.Connection, row: ScruplesAnalysisRow) 
             json_dumps({"post_id": row.post_id}),
         ),
     )
-    connection.execute(
+    existing_distribution = connection.execute(
         """
-        INSERT OR IGNORE INTO source_distributions (
-          item_id, dataset_id, source_distribution_version, smoothing_method, alpha,
-          p_author, p_other, p_everybody, p_nobody, p_info, majority_label,
-          majority_support, majority_margin, entropy, entropy_normalized,
-          disagreement_bin, posterior_draw_id_or_null
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        SELECT 1 FROM source_distributions
+        WHERE item_id = ?
+          AND source_distribution_version = ?
+          AND posterior_draw_id_or_null IS NULL
         """,
-        (
-            row.item_id,
-            row.dataset_id,
-            row.source_distribution_version,
-            "dirichlet",
-            0.5,
-            row.source_p_author,
-            row.source_p_other,
-            row.source_p_everybody,
-            row.source_p_nobody,
-            row.source_p_info,
-            row.source_majority_label,
-            row.source_majority_support,
-            row.source_majority_margin,
-            row.source_entropy,
-            row.source_entropy_normalized,
-            row.disagreement_bin,
-            None,
-        ),
-    )
+        (row.item_id, row.source_distribution_version),
+    ).fetchone()
+    if existing_distribution is None:
+        connection.execute(
+            """
+            INSERT INTO source_distributions (
+              item_id, dataset_id, source_distribution_version, smoothing_method, alpha,
+              p_author, p_other, p_everybody, p_nobody, p_info, majority_label,
+              majority_support, majority_margin, entropy, entropy_normalized,
+              disagreement_bin, posterior_draw_id_or_null
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                row.item_id,
+                row.dataset_id,
+                row.source_distribution_version,
+                "dirichlet",
+                0.5,
+                row.source_p_author,
+                row.source_p_other,
+                row.source_p_everybody,
+                row.source_p_nobody,
+                row.source_p_info,
+                row.source_majority_label,
+                row.source_majority_support,
+                row.source_majority_margin,
+                row.source_entropy,
+                row.source_entropy_normalized,
+                row.disagreement_bin,
+                None,
+            ),
+        )
     # SCRUPLES stores raw label counts in the source JSON. The smoothed analysis
     # row has annotation_count but not per-label counts, so reconstruct the
     # canonical source-vote row from the local dataset when available.

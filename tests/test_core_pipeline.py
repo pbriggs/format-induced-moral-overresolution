@@ -28,7 +28,7 @@ from production.failure_policy import (
     should_retry_call,
 )
 from production.providers import InferenceRequest, google_generation_config, openai_response_payload
-from production.reporting import _decision_with_validity_gate, row_has_complete_distribution
+from production.reporting import _decision_with_completion_gate, _decision_with_validity_gate, row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
     earlier_non_target_call_count,
@@ -365,6 +365,14 @@ def test_milestone_planner_is_resume_safe():
     assert first_inserted == 2000
     assert second_inserted == 0
     assert len(pending_requests(connection, run_id, "3k")) == 2000
+    source_distribution_counts = connection.execute(
+        """
+        SELECT COUNT(*) AS n, COUNT(DISTINCT item_id) AS distinct_items
+        FROM source_distributions
+        WHERE posterior_draw_id_or_null IS NULL
+        """
+    ).fetchone()
+    assert source_distribution_counts["n"] == source_distribution_counts["distinct_items"]
 
     api_call_id = connection.execute(
         "SELECT api_call_id FROM planned_api_calls WHERE run_id = ? ORDER BY api_call_id LIMIT 1",
@@ -489,6 +497,14 @@ def test_report_decision_honors_validity_gate():
     adjusted = _decision_with_validity_gate(decision, {"proceed": False}, "50", {"overall_validity_rate": 0.98})
     assert adjusted["decision"] == "stop_or_redesign"
     assert "JSON validity gate failed" in adjusted["failures"]
+
+
+def test_report_decision_waits_for_complete_milestone():
+    premature = {"milestone": "3k", "decision": "stop_or_redesign", "failures": ["partial signal"], "revision_reasons": [], "observed": {}}
+    attempted = {"planned": 3000, "completed_successful": 125, "terminal_failures": 0}
+    adjusted = _decision_with_completion_gate(premature, attempted, "3k", {"overall_validity_rate": 1.0})
+    assert adjusted["decision"] == "pending_insufficient_outputs"
+    assert "milestone execution incomplete" in adjusted["revision_reasons"]
 
 
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():
