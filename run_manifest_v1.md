@@ -48,7 +48,7 @@ Per-call rendered prompt hashes are written to:
 
 Template-source hash to freeze before provider execution:
 
-- `src/prompts/prompt_templates.py`: `E91230C44ADDA25271391EBB7E8EE72388B2042FF4843352E6516F6A342E1290`
+- `src/prompts/prompt_templates.py`: `7F673DD3CA14D3780B53C05D16B67DF2AF98C7C750FC97256938A9976F32599B`
 - `src/prompts/schemas.py`: `58A3C91E42CB8264253F1C705A6C6D2162405FC6167E61C9EC28F5EEFEF02619`
 
 ## 4. JSON Schemas / Response Fields

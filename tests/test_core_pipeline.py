@@ -16,6 +16,7 @@ from metrics.sampling_compression import sample_label_distribution, sampling_com
 from models.baselines.predictors import majority_only_oracle, uniform_baseline
 from parsing.validate_json import parse_and_validate
 from parsing.validity_status import ValidityStatus
+from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import run as execute_milestone_run
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
@@ -100,6 +101,18 @@ def test_json_validation_accepts_one_extracted_object_with_extra_text():
     assert parsed.status == ValidityStatus.VALID_EXTRACTED_JSON
     assert parsed.extracted_json
     assert parsed.parsed_json["chosen_label"] == "author"
+
+
+def test_prompts_name_required_json_fields():
+    labels = ("author", "other", "everybody", "nobody", "info")
+    distribution = render_prompt(PromptMode.DISTRIBUTION, "Example situation.", labels)
+    assert "label_probabilities" in distribution
+    assert "most_likely_label" in distribution
+    assert '"author": 0.0' in distribution
+
+    verdict = render_prompt(PromptMode.DESCRIPTIVE_VERDICT, "Example situation.", labels)
+    assert "chosen_label" in verdict
+    assert "estimated_source_community_agreement" in verdict
 
 
 def test_primary_metrics():
