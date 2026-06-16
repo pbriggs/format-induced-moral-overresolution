@@ -1,4 +1,4 @@
-# Run Manifest v1
+# Run Manifest Pre-3k Freeze v2
 
 This file is the pre-3k freeze artifact uploaded to the editable OSF project and public/review repository before provider collection begins. It freezes the model roster, provider settings, prompt/schema hashes, and exact 3k planned-call artifacts for `production_milestones_cumulative_v1`.
 
