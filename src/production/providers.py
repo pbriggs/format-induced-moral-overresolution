@@ -192,7 +192,7 @@ class OpenAIAdapter:
         self.endpoint = f"{cfg.base_url.rstrip('/')}/responses"
 
     def run_single_turn(self, req: InferenceRequest) -> ApiResponseEnvelope:
-        payload: dict[str, Any] = {"model": req.model_id, "input": req.prompt, "max_output_tokens": req.max_tokens}
+        payload = openai_response_payload(req)
         body, status, latency, headers = post_json_with_retry(
             self.endpoint,
             {"Authorization": f"Bearer {self.cfg.api_key}"},
@@ -200,6 +200,18 @@ class OpenAIAdapter:
         )
         text = body.get("output_text") or _extract_openai_text(body)
         return ApiResponseEnvelope("openai", req.model_id, str(body.get("model", req.model_id)), self.endpoint, status, text, latency, payload, body, headers)
+
+
+def openai_response_payload(req: InferenceRequest) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "model": req.model_id,
+        "input": req.prompt,
+        "max_output_tokens": max(req.max_tokens, 1024),
+    }
+    lower = req.model_id.lower()
+    if lower.startswith(("gpt-5", "o1", "o3", "o4")):
+        payload["reasoning"] = {"effort": "minimal"}
+    return payload
 
 
 class AnthropicAdapter:

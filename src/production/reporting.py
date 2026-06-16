@@ -424,6 +424,11 @@ def _distribution_agreement_gap_by_bin_model(connection: sqlite3.Connection, tar
           JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
           WHERE p.api_call_id IN ({placeholders})
             AND p.prompt_mode = ?
+            AND po.p_author IS NOT NULL
+            AND po.p_other IS NOT NULL
+            AND po.p_everybody IS NOT NULL
+            AND po.p_nobody IS NOT NULL
+            AND po.p_info IS NOT NULL
         ) dist ON dist.item_id = vd.item_id AND dist.model_id = vd.model_id
         JOIN source_distributions sd ON sd.item_id = vd.item_id AND sd.posterior_draw_id_or_null IS NULL
         WHERE vd.chosen_label IS NOT NULL AND vd.estimated_source_community_agreement IS NOT NULL
@@ -432,11 +437,17 @@ def _distribution_agreement_gap_by_bin_model(connection: sqlite3.Connection, tar
     ).fetchall()
     grouped: dict[tuple[str, str], list[float]] = defaultdict(list)
     for row in rows:
+        if not row_has_complete_distribution(row):
+            continue
         distribution = {label: float(row[f"p_{label}"]) for label in LABELS}
         grouped[(str(row["disagreement_bin"]), str(row["model_id"]))].append(
             distribution_agreement_gap(float(row["estimated_source_community_agreement"]), distribution, str(row["chosen_label"]))
         )
     return _mean_records(grouped, "distribution_agreement_gap_mean")
+
+
+def row_has_complete_distribution(row: sqlite3.Row | dict[str, Any]) -> bool:
+    return all(row[f"p_{label}"] is not None for label in LABELS)
 
 
 def _sampling_compression_by_model(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:

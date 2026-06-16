@@ -26,7 +26,8 @@ from production.failure_policy import (
     classify_api_failure,
     should_retry_call,
 )
-from production.providers import InferenceRequest, google_generation_config
+from production.providers import InferenceRequest, google_generation_config, openai_response_payload
+from production.reporting import row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
     earlier_non_target_call_count,
@@ -428,6 +429,25 @@ def test_google_generation_config_requests_json_and_low_thinking():
     assert config["responseMimeType"] == "application/json"
     assert config["maxOutputTokens"] == 512
     assert config["thinkingConfig"] == {"thinkingLevel": "low"}
+
+
+def test_openai_response_payload_uses_larger_budget_and_minimal_reasoning():
+    req = InferenceRequest(
+        model_id="gpt-5.5",
+        prompt="Return JSON.",
+        prompt_mode=PromptMode.DISTRIBUTION.value,
+    )
+    payload = openai_response_payload(req)
+    assert payload["max_output_tokens"] == 1024
+    assert payload["reasoning"] == {"effort": "minimal"}
+
+
+def test_distribution_gap_report_skips_incomplete_distribution_rows():
+    complete = {"p_author": 0.8, "p_other": 0.1, "p_everybody": 0.05, "p_nobody": 0.03, "p_info": 0.02}
+    incomplete = dict(complete)
+    incomplete["p_author"] = None
+    assert row_has_complete_distribution(complete)
+    assert not row_has_complete_distribution(incomplete)
 
 
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():
