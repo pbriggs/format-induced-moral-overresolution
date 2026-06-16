@@ -17,6 +17,7 @@ from production.reporting import write_api_call_ledger, write_milestone_report
 from production.run_milestone import build_parser as build_plan_parser
 from production.run_milestone import run as plan_run
 from production.shards import append_jsonl, first_incomplete_shard, iter_jsonl, update_shard_state, write_shard_plan
+from protocol.exclusion_rules import primary_output_exclusion
 from protocol.prompt_modes import PromptMode
 from storage.db import connect, migrate
 from utils.hashing import stable_hash
@@ -72,6 +73,10 @@ def _load_target_call_ids(out_dir: Path, milestone: str) -> set[str] | None:
             if line.strip():
                 call_ids.add(str(json.loads(line)["api_call_id"]))
     return call_ids
+
+
+def parsed_output_is_invalid_for_primary_summary(status: ValidityStatus) -> bool:
+    return not primary_output_exclusion(status).include_primary
 
 
 def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int = 50) -> list[dict[str, Any]]:
@@ -434,7 +439,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         parsed = parse_and_validate(envelope.raw_text, PromptMode(str(request["prompt_mode"])))
         _insert_parsed_output(connection, request, parsed)
-        if parsed.status != ValidityStatus.VALID_STRICT_SCHEMA:
+        if parsed_output_is_invalid_for_primary_summary(parsed.status):
             invalid += 1
             append_jsonl(events_path, {"event": "unexpected_response_schema", "api_call_id": request["api_call_id"], "status": parsed.status.value, "at": utc_now()})
         append_jsonl(

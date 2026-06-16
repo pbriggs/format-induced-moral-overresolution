@@ -18,7 +18,7 @@ from parsing.validate_json import parse_and_validate
 from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
-from production.execute_milestone import run as execute_milestone_run
+from production.execute_milestone import parsed_output_is_invalid_for_primary_summary, run as execute_milestone_run
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
     ApiFailureKind,
@@ -172,6 +172,12 @@ def test_protocol_registries_lock_primary_contract():
     assert primary_output_exclusion("valid_after_repair").include_primary
     assert primary_output_exclusion("valid_extracted_json").include_primary
     assert not primary_output_exclusion("invalid_json").include_primary
+
+
+def test_executor_invalid_counter_uses_primary_valid_statuses():
+    assert not parsed_output_is_invalid_for_primary_summary(ValidityStatus.VALID_STRICT_SCHEMA)
+    assert not parsed_output_is_invalid_for_primary_summary(ValidityStatus.VALID_EXTRACTED_JSON)
+    assert parsed_output_is_invalid_for_primary_summary(ValidityStatus.MISSING_REQUIRED_FIELD)
 
 
 def test_call_milestones_lock_planned_call_budgets_and_core_modes():
