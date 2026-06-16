@@ -39,7 +39,7 @@ from production.run_milestone import (
     select_component_rows,
     terminal_api_call_ids,
 )
-from production.shards import iter_jsonl, shard_state_path, write_json, write_shard_plan
+from production.shards import first_incomplete_shard, iter_jsonl, shard_state_path, write_json, write_shard_plan
 from protocol.call_milestones import (
     CALL_MILESTONES,
     MilestoneComponentType,
@@ -212,6 +212,21 @@ def test_failed_shard_plan_rewrites_to_current_pending_calls():
 
         assert [row["api_call_id"] for row in iter_jsonl(rewritten_path)] == ["c"]
         assert json.loads(shard_state_path(rewritten_path).read_text(encoding="utf-8"))["status"] == "pending"
+    finally:
+        shutil.rmtree(shard_dir, ignore_errors=True)
+
+
+def test_empty_shards_are_not_incomplete():
+    shard_dir = Path("runs") / "test_shards" / uuid.uuid4().hex
+    try:
+        shard_paths = write_shard_plan(shard_dir, [{"api_call_id": "only"}], 3)
+        first_state = json.loads(shard_state_path(shard_paths[0]).read_text(encoding="utf-8"))
+        empty_states = [json.loads(shard_state_path(path).read_text(encoding="utf-8")) for path in shard_paths[1:]]
+        assert first_state["status"] == "pending"
+        assert all(state["status"] == "passed" and state["planned_calls"] == 0 for state in empty_states)
+
+        write_json(shard_state_path(shard_paths[0]), {**first_state, "status": "passed"})
+        assert first_incomplete_shard(shard_paths) is None
     finally:
         shutil.rmtree(shard_dir, ignore_errors=True)
 

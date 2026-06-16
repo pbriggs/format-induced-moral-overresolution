@@ -52,14 +52,15 @@ def write_shard_plan(shard_dir: Path, pending: list[dict[str, Any]], shard_count
                 for record in bucket:
                     handle.write(json_dumps(record) + "\n")
         if not state_path.exists() or should_write:
+            planned_calls = len(bucket)
             write_json(
                 state_path,
                 {
                     "shard": path.name,
-                    "status": "pending",
+                    "status": "pending" if planned_calls else "passed",
                     "created_at": utc_now(),
                     "updated_at": utc_now(),
-                    "planned_calls": len(bucket),
+                    "planned_calls": planned_calls,
                     "completed_calls": 0,
                     "failed_calls": 0,
                 },
@@ -84,7 +85,7 @@ def shard_state_path(shard_path: Path) -> Path:
 def first_incomplete_shard(shard_paths: Iterable[Path]) -> Path | None:
     for shard_path in sorted(shard_paths):
         state = read_json(shard_state_path(shard_path)) or {}
-        if state.get("status") != "passed":
+        if state.get("status") != "passed" and state.get("planned_calls", 1) > 0:
             return shard_path
     return None
 
