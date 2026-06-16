@@ -28,7 +28,8 @@ Environment variables used by the runner:
 - Temperature: `0.0` for deterministic core modes.
 - Top-p: provider default unless explicitly recorded in `api_calls_raw.top_p_or_null`.
 - Max tokens: provider adapter default `512` unless frozen differently before execution.
-- Structured output: prompt-level compact JSON-only instruction; `structured_output_mode` is stored per call.
+- Structured output: prompt-level compact JSON-only instruction; `structured_output_mode` is stored per call. The Google Gemini adapter additionally requests `responseMimeType=application/json`.
+- Gemini thinking control: for Gemini 3-family models, the Google adapter sets `thinkingConfig.thinkingLevel=low` to reserve the 512-token output budget for the required compact JSON answer.
 - Conversations: each prompt mode is executed as an independent stateless request.
 - Retries: HTTP retry and circuit-breaker policy in `src/production/providers.py` and `src/production/failure_policy.py`.
 - Deterministic JSON extraction: strict JSON is preferred; if a response contains extra text plus exactly one balanced JSON object, that object is extracted, validated, raw text is preserved, and status is `valid_extracted_json`.

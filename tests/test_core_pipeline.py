@@ -26,6 +26,7 @@ from production.failure_policy import (
     classify_api_failure,
     should_retry_call,
 )
+from production.providers import InferenceRequest, google_generation_config
 from production.run_milestone import (
     DEFAULT_MODELS,
     earlier_non_target_call_count,
@@ -415,6 +416,18 @@ def test_execution_config_uses_old_run_env_var_names(monkeypatch):
         "qwen-test-large": "llama",
         "qwen-test-small": "llama",
     }
+
+
+def test_google_generation_config_requests_json_and_low_thinking():
+    req = InferenceRequest(
+        model_id="gemini-3.5-flash",
+        prompt="Return JSON.",
+        prompt_mode=PromptMode.DISTRIBUTION.value,
+    )
+    config = google_generation_config(req)
+    assert config["responseMimeType"] == "application/json"
+    assert config["maxOutputTokens"] == 512
+    assert config["thinkingConfig"] == {"thinkingLevel": "low"}
 
 
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():

@@ -231,7 +231,7 @@ class GoogleAdapter:
         endpoint = f"{self.endpoint}/models/{req.model_id}:generateContent?key={self.cfg.api_key}"
         payload = {
             "contents": [{"parts": [{"text": req.prompt}]}],
-            "generationConfig": {"temperature": req.temperature, "maxOutputTokens": req.max_tokens, "responseMimeType": "text/plain"},
+            "generationConfig": google_generation_config(req),
         }
         body, status, latency, headers = post_json_with_retry(endpoint, {}, payload)
         text = ""
@@ -244,6 +244,17 @@ class GoogleAdapter:
                 text += part.get("text", "")
         clean_endpoint = endpoint.split("?key=", 1)[0]
         return ApiResponseEnvelope("google", req.model_id, str(body.get("modelVersion", req.model_id)), clean_endpoint, status, text, latency, payload, body, headers, finish_reason=";".join(finish) if finish else None)
+
+
+def google_generation_config(req: InferenceRequest) -> dict[str, Any]:
+    config: dict[str, Any] = {
+        "temperature": req.temperature,
+        "maxOutputTokens": req.max_tokens,
+        "responseMimeType": "application/json",
+    }
+    if req.model_id.lower().startswith("gemini-3"):
+        config["thinkingConfig"] = {"thinkingLevel": "low"}
+    return config
 
 
 class LlamaAdapter:
