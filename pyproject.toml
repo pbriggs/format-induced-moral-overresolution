@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "format-induced-moral-overresolution"
+version = "0.1.0"
+description = "Preregistered audit of whether LLMs preserve source-community moral disagreement across output formats."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+license = "CC0-1.0"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -p no:cacheprovider"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

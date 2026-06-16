@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this code or protocol, please cite the archived release."
+title: "Format-Induced Moral Over-Resolution"
+authors:
+  - family-names: "Briggs"
+    given-names: "Paul"
+version: 0.1.0
+date-released: 2026-06-15
+repository-code: "https://github.com/pbriggs/format-induced-moral-overresolution"
+url: "https://osf.io/rwhax/overview"
+abstract: "Protocol and code for auditing whether large language models preserve source-community moral disagreement across output formats."

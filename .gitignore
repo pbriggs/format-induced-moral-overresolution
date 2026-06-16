@@ -1,0 +1,30 @@
+# Python/runtime noise
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.tmp_pytest/
+.tmp_*/
+pytest-cache-files-*/
+
+# Generated study/run artifacts
+runs/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+
+# Historical/private working artifacts not intended for public release
+old/
+public_repo/
+
+# Raw or downloaded datasets; release only derived/public-safe tables unless rights are confirmed
+data/scruples/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
