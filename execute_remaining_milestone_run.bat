@@ -50,7 +50,7 @@ if errorlevel 20 (
 )
 if errorlevel 1 exit /b %errorlevel%
 
-python -c "import json, pathlib, sys; shard_dir=pathlib.Path(r'%OUT_DIR%') / r'%RUN_ID%' / 'execution_shards' / r'%MILESTONE%'; states=[json.loads(path.read_text(encoding='utf-8')) for path in sorted(shard_dir.glob('*.state.json'))]; active=[state for state in states if state.get('planned_calls',0)>0]; pending=[state for state in active if state.get('status')!='passed']; print(f'shard status: passed={len(active)-len(pending)} pending_or_failed={len(pending)} active={len(active)} total={len(states)}'); sys.exit(0 if pending else 30)"
+python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%"
 if errorlevel 30 (
   echo All executable shards for %MILESTONE% are passed.
   exit /b 0

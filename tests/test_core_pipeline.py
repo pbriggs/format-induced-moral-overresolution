@@ -20,6 +20,7 @@ from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
+from production.progress_status import _db_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
     ApiFailureKind,
@@ -520,6 +521,52 @@ def test_report_decision_waits_for_complete_milestone():
     adjusted = _decision_with_completion_gate(premature, attempted, "3k", {"overall_validity_rate": 1.0})
     assert adjusted["decision"] == "pending_insufficient_outputs"
     assert "milestone execution incomplete" in adjusted["revision_reasons"]
+
+
+def test_progress_status_reports_total_and_executable_left():
+    scratch_dir = Path("runs") / "test_progress_status" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        requests = [
+            ("done", {}),
+            ("open", {}),
+            ("blocked", {"prework_required": True}),
+        ]
+        for api_call_id, request in requests:
+            connection.execute(
+                """
+                INSERT INTO planned_api_calls (
+                  api_call_id, run_id, milestone, component_type, component_name,
+                  item_id, dataset_id, model_id, prompt_mode, assignment_hash,
+                  prompt_hash, request_json, status, created_at
+                ) VALUES (?, 'run', '3k', 'core_cross_format', 'core', ?, 'dataset', 'model',
+                  'distribution_mode', ?, 'hash', ?, 'planned', 'now')
+                """,
+                (api_call_id, api_call_id, api_call_id, json.dumps(request)),
+            )
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, raw_response, api_error_flag
+            ) VALUES ('done', 'run', '3k', 'done', 'dataset', 'model', 'provider',
+              'route', 'distribution_mode', 'hash', '{}', '{}', 0)
+            """
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    try:
+        progress = _db_progress(db_path, "run", "3k")
+        assert progress["completed_successful"] == 1
+        assert progress["left_total"] == 2
+        assert progress["provider_executable_left"] == 1
+        assert progress["prework_blocked_left"] == 1
+    finally:
+        shutil.rmtree(scratch_dir, ignore_errors=True)
 
 
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():
