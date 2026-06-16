@@ -210,7 +210,7 @@ def openai_response_payload(req: InferenceRequest) -> dict[str, Any]:
     }
     lower = req.model_id.lower()
     if lower.startswith(("gpt-5", "o1", "o3", "o4")):
-        payload["reasoning"] = {"effort": "minimal"}
+        payload["reasoning"] = {"effort": "none"}
     return payload
 
 

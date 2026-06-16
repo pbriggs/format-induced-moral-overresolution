@@ -431,7 +431,7 @@ def test_google_generation_config_requests_json_and_low_thinking():
     assert config["thinkingConfig"] == {"thinkingLevel": "low"}
 
 
-def test_openai_response_payload_uses_larger_budget_and_minimal_reasoning():
+def test_openai_response_payload_uses_larger_budget_and_no_reasoning():
     req = InferenceRequest(
         model_id="gpt-5.5",
         prompt="Return JSON.",
@@ -439,7 +439,7 @@ def test_openai_response_payload_uses_larger_budget_and_minimal_reasoning():
     )
     payload = openai_response_payload(req)
     assert payload["max_output_tokens"] == 1024
-    assert payload["reasoning"] == {"effort": "minimal"}
+    assert payload["reasoning"] == {"effort": "none"}
 
 
 def test_distribution_gap_report_skips_incomplete_distribution_rows():
