@@ -45,7 +45,8 @@ def write_shard_plan(shard_dir: Path, pending: list[dict[str, Any]], shard_count
         state = read_json(state_path) or {}
         existing_call_ids = [record.get("api_call_id") for record in iter_jsonl(path)] if path.exists() else None
         bucket_call_ids = [record.get("api_call_id") for record in bucket]
-        should_write = not path.exists() or (state.get("status") == "passed" and existing_call_ids != bucket_call_ids)
+        stale_plan = existing_call_ids != bucket_call_ids
+        should_write = not path.exists() or (state.get("status") in {"passed", "failed", "aborted"} and stale_plan)
         if should_write:
             with path.open("w", encoding="utf-8", newline="\n") as handle:
                 for record in bucket:

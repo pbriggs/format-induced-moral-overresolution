@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from argparse import Namespace
 from pathlib import Path
+import shutil
 import uuid
 
 import pytest
@@ -18,7 +19,7 @@ from parsing.validate_json import parse_and_validate
 from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
-from production.execute_milestone import parsed_output_is_invalid_for_primary_summary, run as execute_milestone_run
+from production.execute_milestone import parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
     ApiFailureKind,
@@ -27,7 +28,7 @@ from production.failure_policy import (
     should_retry_call,
 )
 from production.providers import InferenceRequest, google_generation_config, openai_response_payload
-from production.reporting import row_has_complete_distribution
+from production.reporting import _decision_with_validity_gate, row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
     earlier_non_target_call_count,
@@ -38,6 +39,7 @@ from production.run_milestone import (
     select_component_rows,
     terminal_api_call_ids,
 )
+from production.shards import iter_jsonl, shard_state_path, write_json, write_shard_plan
 from protocol.call_milestones import (
     CALL_MILESTONES,
     MilestoneComponentType,
@@ -180,6 +182,38 @@ def test_executor_invalid_counter_uses_primary_valid_statuses():
     assert not parsed_output_is_invalid_for_primary_summary(ValidityStatus.VALID_STRICT_SCHEMA)
     assert not parsed_output_is_invalid_for_primary_summary(ValidityStatus.VALID_EXTRACTED_JSON)
     assert parsed_output_is_invalid_for_primary_summary(ValidityStatus.MISSING_REQUIRED_FIELD)
+
+
+def test_executor_progress_message_reports_completed_and_left():
+    message = progress_message(
+        3,
+        10,
+        {
+            "run_id": "run",
+            "target_milestone": "50",
+            "model_id": "model",
+            "prompt_mode": "distribution_mode",
+        },
+        "parsed:valid_strict_schema",
+    )
+    assert "completed=3/10" in message
+    assert "left=7" in message
+    assert "model=model" in message
+
+
+def test_failed_shard_plan_rewrites_to_current_pending_calls():
+    shard_dir = Path("runs") / "test_shards" / uuid.uuid4().hex
+    try:
+        original = [{"api_call_id": "a"}, {"api_call_id": "b"}, {"api_call_id": "c"}]
+        [shard_path] = write_shard_plan(shard_dir, original, 1)
+        write_json(shard_state_path(shard_path), {"shard": shard_path.name, "status": "failed"})
+
+        [rewritten_path] = write_shard_plan(shard_dir, [{"api_call_id": "c"}], 1)
+
+        assert [row["api_call_id"] for row in iter_jsonl(rewritten_path)] == ["c"]
+        assert json.loads(shard_state_path(rewritten_path).read_text(encoding="utf-8"))["status"] == "pending"
+    finally:
+        shutil.rmtree(shard_dir, ignore_errors=True)
 
 
 def test_call_milestones_lock_planned_call_budgets_and_core_modes():
@@ -427,7 +461,7 @@ def test_google_generation_config_requests_json_and_low_thinking():
     )
     config = google_generation_config(req)
     assert config["responseMimeType"] == "application/json"
-    assert config["maxOutputTokens"] == 512
+    assert config["maxOutputTokens"] == 1024
     assert config["thinkingConfig"] == {"thinkingLevel": "low"}
 
 
@@ -448,6 +482,13 @@ def test_distribution_gap_report_skips_incomplete_distribution_rows():
     incomplete["p_author"] = None
     assert row_has_complete_distribution(complete)
     assert not row_has_complete_distribution(incomplete)
+
+
+def test_report_decision_honors_validity_gate():
+    decision = {"milestone": "50", "decision": "continue", "failures": [], "revision_reasons": [], "observed": {}}
+    adjusted = _decision_with_validity_gate(decision, {"proceed": False}, "50", {"overall_validity_rate": 0.98})
+    assert adjusted["decision"] == "stop_or_redesign"
+    assert "JSON validity gate failed" in adjusted["failures"]
 
 
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():

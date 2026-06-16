@@ -79,6 +79,15 @@ def parsed_output_is_invalid_for_primary_summary(status: ValidityStatus) -> bool
     return not primary_output_exclusion(status).include_primary
 
 
+def progress_message(done: int, total: int, request: dict[str, Any], status: str) -> str:
+    remaining = max(total - done, 0)
+    return (
+        f"[{utc_now()}] milestone={request.get('target_milestone') or request.get('introduced_milestone')} "
+        f"run_id={request.get('run_id')} completed={done}/{total} left={remaining} "
+        f"status={status} model={request.get('model_id')} mode={request.get('prompt_mode')}"
+    )
+
+
 def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int = 50) -> list[dict[str, Any]]:
     rows = connection.execute(
         """
@@ -325,6 +334,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     skipped = 0
     abort_reason = ""
     recent_failures: deque[dict[str, Any]] = deque(_recent_api_failures(connection, args.run_id), maxlen=50)
+    total_calls = sum(1 for _ in iter_jsonl(shard_path)) if shard_path is not None else 0
+    done_count = 0
 
     if shard_path is None:
         connection.close()
@@ -344,6 +355,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         ).fetchone()
         if already_done:
             skipped += 1
+            done_count += 1
+            print(progress_message(done_count, total_calls, request, "skipped_already_done"), flush=True)
             continue
 
         breaker = circuit_breaker_decision(
@@ -411,6 +424,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
             connection.commit()
             failed += 1
+            done_count += 1
+            print(progress_message(done_count, total_calls, request, f"api_error:{error_type}"), flush=True)
             recent_failures.append({"http_status_code": exc.status_code, "api_error_type": error_type})
             continue
 
@@ -455,6 +470,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         connection.commit()
         completed += 1
+        done_count += 1
+        status_label = f"parsed:{parsed.status.value}"
+        print(progress_message(done_count, total_calls, request, status_label), flush=True)
 
     status = "aborted" if abort_reason else "failed" if failed else "passed"
     update_shard_state(shard_path, status=status, completed_calls=completed, failed_calls=failed, skipped_calls=skipped, invalid_outputs=invalid, abort_reason=abort_reason)

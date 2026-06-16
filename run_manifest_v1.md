@@ -30,7 +30,7 @@ Environment variables used by the runner:
 - Max tokens: provider adapter default `512` unless frozen differently before execution. The OpenAI Responses adapter uses `max_output_tokens=1024` for GPT-5/o-series routes because OpenAI Responses output budgets include reasoning tokens as well as visible output.
 - OpenAI reasoning control: for GPT-5/o-series routes, the adapter sets `reasoning.effort=none` for these compact JSON classification calls.
 - Structured output: prompt-level compact JSON-only instruction; `structured_output_mode` is stored per call. The Google Gemini adapter additionally requests `responseMimeType=application/json`.
-- Gemini thinking control: for Gemini 3-family models, the Google adapter sets `thinkingConfig.thinkingLevel=low` to reserve the 512-token output budget for the required compact JSON answer.
+- Gemini thinking control: for Gemini 3-family models, the Google adapter sets `thinkingConfig.thinkingLevel=low` and `maxOutputTokens=1024` to reserve enough output budget for the required compact JSON answer.
 - Conversations: each prompt mode is executed as an independent stateless request.
 - Retries: HTTP retry and circuit-breaker policy in `src/production/providers.py` and `src/production/failure_policy.py`.
 - Deterministic JSON extraction: strict JSON is preferred; if a response contains extra text plus exactly one balanced JSON object, that object is extracted, validated, raw text is preserved, and status is `valid_extracted_json`.

@@ -219,6 +219,7 @@ def build_milestone_report(
     validity_check = _json_safe_validity_check(milestone_validity_check(validity_rows, milestone)) if validity_rows else None
     observed = _observed_alignment(connection, target_ids, milestone)
     decision = evaluate_milestone_alignment(milestone, observed) if observed else None
+    decision = _decision_with_validity_gate(decision, validity_check, milestone, observed)
     return {
         "run_id": run_id,
         "milestone": milestone,
@@ -241,6 +242,25 @@ def build_milestone_report(
         },
         "validity_gate": validity_check,
     }
+
+
+def _decision_with_validity_gate(
+    decision: dict[str, Any] | None,
+    validity_check: dict[str, Any] | None,
+    milestone: str,
+    observed: dict[str, Any],
+) -> dict[str, Any] | None:
+    if not decision or not validity_check or validity_check.get("proceed", True):
+        return decision
+    adjusted = dict(decision)
+    failures = list(adjusted.get("failures", []))
+    if "JSON validity gate failed" not in failures:
+        failures.append("JSON validity gate failed")
+    adjusted["failures"] = failures
+    adjusted["decision"] = "stop_or_redesign"
+    adjusted["milestone"] = milestone
+    adjusted["observed"] = dict(observed)
+    return adjusted
 
 
 def write_milestone_report(

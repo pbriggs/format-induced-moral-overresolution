@@ -261,7 +261,7 @@ class GoogleAdapter:
 def google_generation_config(req: InferenceRequest) -> dict[str, Any]:
     config: dict[str, Any] = {
         "temperature": req.temperature,
-        "maxOutputTokens": req.max_tokens,
+        "maxOutputTokens": max(req.max_tokens, 1024),
         "responseMimeType": "application/json",
     }
     if req.model_id.lower().startswith("gemini-3"):
