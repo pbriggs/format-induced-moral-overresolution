@@ -2,6 +2,12 @@
 
 This file is the pre-3k freeze artifact uploaded to the editable OSF project and public/review repository before provider collection begins. It freezes the model roster, provider settings, prompt/schema hashes, and exact 3k planned-call artifacts for `production_milestones_cumulative_v1`.
 
+## 0. Archive Identifiers
+
+- GitHub release/tag: `pre-3k-freeze-v1`
+- Zenodo DOI: `https://doi.org/10.5281/zenodo.20723920`
+- OSF project: `https://osf.io/rwhax/`
+
 ## 1. Exact Model Roster, Provider/API Route, Model IDs, Version Strings
 
 The run requires exactly five frozen model IDs in `STUDY_MODEL_IDS`, in slot order:
