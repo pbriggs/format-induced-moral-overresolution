@@ -51,10 +51,14 @@ Set-Location "<repo-root>"
 For a no-network smoke run:
 
 ```powershell
+Set-Location "<repo-root>"
 $env:STUDY_MODEL_IDS='mock-a,mock-b,mock-c,mock-d,mock-e'
 $env:MOCK_PROVIDER='1'
+$env:RUN_ID='mock_smoke_v1'
 .\execute_milestone_run.bat 3k
 ```
+
+The milestone scripts require the local SCRUPLES files described in [docs/DATA_SETUP.md](docs/DATA_SETUP.md), even for mock-provider runs, because they still plan calls against real study items.
 
 ## Public Release Notes
 

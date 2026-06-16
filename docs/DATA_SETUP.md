@@ -13,6 +13,14 @@ data/scruples/anecdotes/
 
 The public test suite skips data-dependent tests when these files are absent. Core protocol, metric, parsing, configuration, and schema tests still run without raw data.
 
+From the repository root, verify the local files with:
+
+```powershell
+Get-ChildItem data\scruples\anecdotes
+```
+
+Milestone planning and mock-provider execution require these files because both paths still select real study items before any provider call is made.
+
 Before provider execution, confirm:
 
 - the files are from the intended SCRUPLES Anecdotes version;

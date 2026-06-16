@@ -24,6 +24,14 @@ if "%OUT_DIR%"=="" set "OUT_DIR=runs"
 if "%SUBSET_SEED%"=="" set "SUBSET_SEED=20260615"
 if "%SCRUPLES_SPLITS%"=="" set "SCRUPLES_SPLITS=train,dev,test"
 
+for %%S in (%SCRUPLES_SPLITS:,= %) do (
+  if not exist "data\scruples\anecdotes\%%S.scruples-anecdotes.jsonl" (
+    echo Missing SCRUPLES split file: data\scruples\anecdotes\%%S.scruples-anecdotes.jsonl
+    echo See docs\DATA_SETUP.md. Run this script from the repository root after placing the local SCRUPLES files.
+    exit /b 3
+  )
+)
+
 set "PYTHONPATH=src"
 set "PYTHONDONTWRITEBYTECODE=1"
 

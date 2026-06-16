@@ -22,7 +22,7 @@ Use this checklist after the public staging folder is initialized as a standalon
 
 - [ ] Freeze OpenRouter model IDs and version/snapshot strings in `run_manifest_v1.md` after shakedown.
 - [x] Fill prompt template and schema SHA-256 hashes in `run_manifest_v1.md`.
-- [ ] Run a no-network mock execution smoke test.
+- [ ] Run a no-network mock execution smoke test with `RUN_ID=mock_smoke_v1`.
 - [ ] Plan the `3k` milestone and fill planned-call hashes/counts after planning.
 
 ## Engineering Shakedowns
