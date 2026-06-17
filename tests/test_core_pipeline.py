@@ -29,7 +29,7 @@ from production.failure_policy import (
     classify_api_failure,
     should_retry_call,
 )
-from production.providers import InferenceRequest, google_generation_config, openai_response_payload
+from production.providers import InferenceRequest, google_generation_config, openai_response_payload, xai_response_payload
 from production.reporting import _decision_with_completion_gate, _decision_with_validity_gate, row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
@@ -544,7 +544,7 @@ def test_recent_api_failures_age_out_old_transient_errors():
 
 
 def test_execution_config_uses_old_run_env_var_names(monkeypatch):
-    models = ("gpt-test", "claude-test", "gemini-test", "qwen-test-large", "qwen-test-small")
+    models = ("gpt-test", "claude-test", "gemini-test", "qwen-test-large", "grok-4.3")
     monkeypatch.setenv("OPENAI_API_KEY", "openai-key")
     monkeypatch.setenv("OPENAI_MODEL", "gpt-test")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "anthropic-key")
@@ -553,14 +553,35 @@ def test_execution_config_uses_old_run_env_var_names(monkeypatch):
     monkeypatch.setenv("GOOGLE_MODEL", "gemini-test")
     monkeypatch.setenv("LLAMA_API_KEY", "llama-key")
     monkeypatch.setenv("LLAMA_MODEL", "meta-llama-test")
+    monkeypatch.setenv("XAI_API_KEY", "xai-key")
+    monkeypatch.setenv("XAI_MODEL", "grok-4.3")
     config = load_execution_config(models)
     assert config.model_to_provider == {
         "gpt-test": "openai",
         "claude-test": "anthropic",
         "gemini-test": "google",
         "qwen-test-large": "llama",
-        "qwen-test-small": "llama",
+        "grok-4.3": "xai",
     }
+
+
+def test_execution_config_explicit_provider_map_handles_unknown_model_slug(monkeypatch):
+    models = ("gpt-test", "claude-test", "gemini-test", "qwen-test-large", "x-ai/grok-4.3")
+    monkeypatch.setenv("OPENAI_API_KEY", "openai-key")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-test")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "anthropic-key")
+    monkeypatch.setenv("ANTHROPIC_MODEL", "claude-test")
+    monkeypatch.setenv("GOOGLE_API_KEY", "google-key")
+    monkeypatch.setenv("GOOGLE_MODEL", "gemini-test")
+    monkeypatch.setenv("LLAMA_API_KEY", "llama-key")
+    monkeypatch.setenv("LLAMA_MODEL", "openrouter-test")
+    monkeypatch.setenv("XAI_API_KEY", "xai-key")
+    monkeypatch.setenv("XAI_MODEL", "grok-4.3")
+    monkeypatch.setenv("STUDY_MODEL_PROVIDER_MAP", "x-ai/grok-4.3=llama")
+
+    config = load_execution_config(models)
+
+    assert config.model_to_provider["x-ai/grok-4.3"] == "llama"
 
 
 def test_google_generation_config_requests_json_and_low_thinking():
@@ -584,6 +605,20 @@ def test_openai_response_payload_uses_larger_budget_and_no_reasoning():
     payload = openai_response_payload(req)
     assert payload["max_output_tokens"] == 1024
     assert payload["reasoning"] == {"effort": "none"}
+
+
+def test_xai_response_payload_uses_direct_responses_shape():
+    req = InferenceRequest(
+        model_id="grok-4.3",
+        prompt="Return JSON.",
+        prompt_mode=PromptMode.DISTRIBUTION.value,
+    )
+    payload = xai_response_payload(req)
+    assert payload == {
+        "model": "grok-4.3",
+        "input": "Return JSON.",
+        "max_output_tokens": 1024,
+    }
 
 
 def test_distribution_gap_report_skips_incomplete_distribution_rows():

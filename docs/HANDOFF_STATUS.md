@@ -22,6 +22,8 @@ Use this document as the starting point for a new conversation or a new workspac
 - Provider execution layer with old environment-variable names.
 - OpenRouter-compatible route still uses historical `LLAMA_*` env vars, but Llama-family models are not required.
 - Stronger Qwen/DeepSeek/Mistral/comparable OpenRouter models are allowed and should be selected based on shakedown results.
+- Direct xAI route uses `XAI_API_KEY`, `XAI_MODEL=grok-4.3`, and optional `XAI_BASE_URL=https://api.x.ai/v1`.
+- Gemini first-party availability failures during the 3k exploratory pilot led to a 2026-06-17 protocol amendment candidate: replace future Gemini-slot collection with direct xAI `grok-4.3`, after OSF/GitHub/Zenodo amendment release.
 - Raw API responses and failed-call details are retained.
 - Attempt logs are separate from final parsed outputs.
 - Circuit breaker stops repeated retryable/5xx/rate-limit failures.
@@ -80,4 +82,5 @@ git commit -m "Initial public study repository"
 - Before `3k`: bug fixes are normal, but update `run_manifest_v1.md` if they affect prompts, schemas, parsing, retry/circuit-breaker behavior, exclusions, model routing, seeds, model IDs, or planned calls.
 - During `1` / `10` / `50`: bug fixes are expected and outputs are engineering-only.
 - After `3k`: log every collection/parsing/exclusion/analysis-relevant fix in `docs/BUG_FIX_LOG.md`.
+- Provider substitutions after a freeze require a protocol amendment and a new archived release before further study-facing collection with the replacement model.
 - Before confirmatory `25k+`: freeze a new manifest and archive a release if scientific-facing behavior changed.

@@ -202,6 +202,24 @@ class OpenAIAdapter:
         return ApiResponseEnvelope("openai", req.model_id, str(body.get("model", req.model_id)), self.endpoint, status, text, latency, payload, body, headers)
 
 
+class XAIAdapter:
+    provider_name = "xai"
+
+    def __init__(self, cfg: ProviderConfig) -> None:
+        self.cfg = cfg
+        self.endpoint = f"{cfg.base_url.rstrip('/')}/responses"
+
+    def run_single_turn(self, req: InferenceRequest) -> ApiResponseEnvelope:
+        payload = xai_response_payload(req)
+        body, status, latency, headers = post_json_with_retry(
+            self.endpoint,
+            {"Authorization": f"Bearer {self.cfg.api_key}"},
+            payload,
+        )
+        text = body.get("output_text") or _extract_openai_text(body)
+        return ApiResponseEnvelope("xai", req.model_id, str(body.get("model", req.model_id)), self.endpoint, status, text, latency, payload, body, headers)
+
+
 def openai_response_payload(req: InferenceRequest) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "model": req.model_id,
@@ -212,6 +230,14 @@ def openai_response_payload(req: InferenceRequest) -> dict[str, Any]:
     if lower.startswith(("gpt-5", "o1", "o3", "o4")):
         payload["reasoning"] = {"effort": "none"}
     return payload
+
+
+def xai_response_payload(req: InferenceRequest) -> dict[str, Any]:
+    return {
+        "model": req.model_id,
+        "input": req.prompt,
+        "max_output_tokens": max(req.max_tokens, 1024),
+    }
 
 
 class AnthropicAdapter:
@@ -304,6 +330,8 @@ def build_adapters(configs: dict[str, ProviderConfig]) -> dict[str, ProviderAdap
             adapters[provider] = GoogleAdapter(cfg)
         elif provider == "llama":
             adapters[provider] = LlamaAdapter(cfg)
+        elif provider == "xai":
+            adapters[provider] = XAIAdapter(cfg)
     return adapters
 
 

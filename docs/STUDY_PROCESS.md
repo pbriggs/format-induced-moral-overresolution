@@ -87,6 +87,18 @@ The route is configured through the historical `LLAMA_*` environment variables f
 
 If Llama-family models behave as outliers, they should not be forced into the roster. Stronger Qwen, DeepSeek, Mistral, or comparable OpenRouter models are acceptable if frozen before study-facing collection.
 
+## Provider Availability Amendments
+
+If a provider becomes unavailable during exploratory collection, do not silently substitute a new model inside the frozen roster. Preserve the collected calls under their original model ID, document the provider failure evidence, run an isolated replacement shakedown, and freeze a protocol amendment before further study-facing collection with the replacement.
+
+The 2026-06-17 Gemini availability amendment replaces future Gemini-slot collection with direct xAI `grok-4.3` via the first-party xAI Responses API. The route uses:
+
+- `XAI_API_KEY`
+- `XAI_MODEL=grok-4.3`
+- optional `XAI_BASE_URL=https://api.x.ai/v1`
+
+The direct xAI route is separate from the OpenRouter-compatible `LLAMA_*` route.
+
 ## Milestone Outputs To Upload Or Link
 
 Each milestone writes:

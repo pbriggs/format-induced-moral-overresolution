@@ -75,6 +75,8 @@ def infer_provider_for_model(model_id: str) -> str:
         return "anthropic"
     if lower.startswith("gemini-"):
         return "google"
+    if lower.startswith("grok-"):
+        return "xai"
     if any(name in lower for name in ("llama", "meta-llama", "qwen", "mistral", "deepseek")):
         return "llama"
     if lower.startswith("mock-"):
@@ -111,36 +113,50 @@ def load_execution_config(model_ids: tuple[str, ...], mock_provider: bool = Fals
             model_ids=model_ids,
         )
 
-    providers = {
-        "openai": ProviderConfig(
+    explicit_map = parse_provider_map(getenv("STUDY_MODEL_PROVIDER_MAP"))
+    model_to_provider = {
+        model: explicit_map[model] if model in explicit_map else infer_provider_for_model(model)
+        for model in model_ids
+    }
+
+    provider_factories = {
+        "openai": lambda: ProviderConfig(
             "openai",
             require_env("OPENAI_API_KEY"),
             getenv("OPENAI_BASE_URL", "https://api.openai.com/v1") or "https://api.openai.com/v1",
             require_env("OPENAI_MODEL"),
         ),
-        "anthropic": ProviderConfig(
+        "anthropic": lambda: ProviderConfig(
             "anthropic",
             require_env("ANTHROPIC_API_KEY"),
             getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com/v1") or "https://api.anthropic.com/v1",
             require_env("ANTHROPIC_MODEL"),
         ),
-        "google": ProviderConfig(
+        "google": lambda: ProviderConfig(
             "google",
             require_env("GOOGLE_API_KEY"),
             getenv("GOOGLE_GENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta")
             or "https://generativelanguage.googleapis.com/v1beta",
             require_env("GOOGLE_MODEL"),
         ),
-        "llama": ProviderConfig(
+        "llama": lambda: ProviderConfig(
             "llama",
             require_env("LLAMA_API_KEY"),
             getenv("LLAMA_BASE_URL", "https://openrouter.ai/api/v1") or "https://openrouter.ai/api/v1",
             require_env("LLAMA_MODEL"),
         ),
+        "xai": lambda: ProviderConfig(
+            "xai",
+            require_env("XAI_API_KEY"),
+            getenv("XAI_BASE_URL", "https://api.x.ai/v1") or "https://api.x.ai/v1",
+            require_env("XAI_MODEL"),
+        ),
     }
-    explicit_map = parse_provider_map(getenv("STUDY_MODEL_PROVIDER_MAP"))
-    model_to_provider = {model: explicit_map.get(model, infer_provider_for_model(model)) for model in model_ids}
-    missing = sorted({provider for provider in model_to_provider.values() if provider not in providers})
+    missing = sorted({provider for provider in model_to_provider.values() if provider not in provider_factories})
     if missing:
         raise ConfigurationError(f"No provider config for provider(s): {', '.join(missing)}")
+    providers = {
+        provider_name: provider_factories[provider_name]()
+        for provider_name in sorted(set(model_to_provider.values()))
+    }
     return ExecutionConfig(providers=providers, model_to_provider=model_to_provider, model_ids=model_ids)
