@@ -102,11 +102,11 @@ Before running further study-facing collection with `grok-4.3`:
 
 1. Commit the amendment and routing-code changes to GitHub.
 2. Create a GitHub release for this amendment.
-3. Archive the release on Zenodo and record the DOI.
+3. Archive the release on Zenodo and record the DOI
 4. Upload this amendment file to the OSF project.
-5. Add the GitHub release URL and Zenodo DOI to the OSF project materials or wiki/description.
+5. Add the GitHub release URL and Zenodo DOI: https://github.com/pbriggs/-llm-metacognitive-efficiency/releases/tag/gemini-to-grok-amendment-v1 and https://doi.org/10.5281/zenodo.20736575
 
-Recommended release tag:
+Release tag:
 
 ```text
 gemini-to-grok-amendment-v1
