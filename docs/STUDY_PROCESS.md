@@ -99,6 +99,14 @@ The 2026-06-17 Gemini availability amendment replaces future Gemini-slot collect
 
 The direct xAI route is separate from the OpenRouter-compatible `LLAMA_*` route.
 
+## Paraphrase-Audit Prework
+
+The 3k milestone includes 500 paraphrase-audit calls. These are intentionally blocked until paraphrased item texts are materialized and stored in `paraphrase_pairs`.
+
+Use `materialize_paraphrases.bat 3k` after the immediately provider-executable 3k calls finish. The script generates one paraphrase for each selected paraphrase-audit item, rewrites the blocked paraphrased prompts to use that paraphrase, clears the prework flag, and refreshes `pending_api_calls_3k.jsonl`.
+
+The default helper model is `grok-4.3`; override with `PARAPHRASE_HELPER_MODEL_ID` if needed. After materialization, rerun `execute_remaining_milestone_run.bat 3k` to execute the final paraphrase-audit calls.
+
 ## Milestone Outputs To Upload Or Link
 
 Each milestone writes:

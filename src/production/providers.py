@@ -169,6 +169,8 @@ class MockAdapter:
             text = json.dumps({"chosen_label": "author", "moral_certainty": 0.78})
         elif "sampling" in req.prompt_mode:
             text = json.dumps({"chosen_label": "author"})
+        elif "paraphrase_generation" in req.prompt_mode:
+            text = json.dumps({"paraphrased_situation": "A rewritten version of the same ethical situation for testing."})
         else:
             text = json.dumps({"chosen_label": "author", "estimated_source_community_agreement": 0.72})
         return ApiResponseEnvelope(

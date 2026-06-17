@@ -21,6 +21,7 @@ from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import _executable_requests, _recent_api_failures, parse_skip_model_ids, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
+from production.materialize_paraphrases import _coerce_paraphrase_text
 from production.progress_status import _count_shards, _db_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
@@ -619,6 +620,12 @@ def test_xai_response_payload_uses_direct_responses_shape():
         "input": "Return JSON.",
         "max_output_tokens": 1024,
     }
+
+
+def test_paraphrase_materializer_coerces_literal_newline_json_string():
+    raw = '{"paraphrased_situation": "A rewritten situation with\\nactual line breaks\\ninside the JSON string."}'
+    raw = raw.replace("\\n", "\n")
+    assert _coerce_paraphrase_text(raw) == "A rewritten situation with actual line breaks inside the JSON string."
 
 
 def test_distribution_gap_report_skips_incomplete_distribution_rows():

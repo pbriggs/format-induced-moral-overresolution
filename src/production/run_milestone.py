@@ -271,10 +271,19 @@ def insert_planned_calls(
                     }
                     if component.component_type == MilestoneComponentType.PARAPHRASE_AUDIT:
                         request["prework_required"] = ["materialize_paraphrase_pairs_before_provider_execution"]
-                    already_exists = connection.execute(
-                        "SELECT 1 FROM planned_api_calls WHERE api_call_id = ?",
+                    existing_row = connection.execute(
+                        "SELECT request_json FROM planned_api_calls WHERE api_call_id = ?",
                         (request["api_call_id"],),
-                    ).fetchone() is not None
+                    ).fetchone()
+                    already_exists = existing_row is not None
+                    if existing_row is not None and request["prework_required"]:
+                        try:
+                            existing_request = json.loads(str(existing_row["request_json"]))
+                        except json.JSONDecodeError:
+                            existing_request = {}
+                        if existing_request and not existing_request.get("prework_required"):
+                            request = existing_request
+                            rendered_prompt_hash = str(existing_request.get("prompt_hash") or rendered_prompt_hash)
                     connection.execute(
                         """
                         INSERT OR IGNORE INTO prompt_assignments (
