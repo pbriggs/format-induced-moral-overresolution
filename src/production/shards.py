@@ -66,6 +66,27 @@ def write_shard_plan(shard_dir: Path, pending: list[dict[str, Any]], shard_count
                 },
             )
         shard_paths.append(path)
+    active_path_names = {path.name for path in shard_paths}
+    for stale_path in sorted(shard_dir.glob("shard_*.jsonl")):
+        if stale_path.name in active_path_names:
+            continue
+        state_path = shard_state_path(stale_path)
+        state = read_json(state_path) or {}
+        if state.get("status") == "running":
+            continue
+        stale_path.write_text("", encoding="utf-8")
+        write_json(
+            state_path,
+            {
+                "shard": stale_path.name,
+                "status": "passed",
+                "created_at": state.get("created_at") or utc_now(),
+                "updated_at": utc_now(),
+                "planned_calls": 0,
+                "completed_calls": 0,
+                "failed_calls": 0,
+            },
+        )
     return shard_paths
 
 

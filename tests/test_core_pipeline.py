@@ -259,6 +259,23 @@ def test_empty_shards_are_not_incomplete():
         shutil.rmtree(shard_dir, ignore_errors=True)
 
 
+def test_extra_stale_shards_are_retired_when_shard_count_shrinks():
+    shard_dir = Path("runs") / "test_shards" / uuid.uuid4().hex
+    try:
+        original_paths = write_shard_plan(shard_dir, [{"api_call_id": "a"}, {"api_call_id": "b"}], 2)
+        write_json(shard_state_path(original_paths[1]), {"shard": original_paths[1].name, "status": "pending", "planned_calls": 1})
+
+        [remaining_path] = write_shard_plan(shard_dir, [{"api_call_id": "a"}], 1)
+
+        retired_state = json.loads(shard_state_path(original_paths[1]).read_text(encoding="utf-8"))
+        assert [row["api_call_id"] for row in iter_jsonl(remaining_path)] == ["a"]
+        assert retired_state["status"] == "passed"
+        assert retired_state["planned_calls"] == 0
+        assert list(iter_jsonl(original_paths[1])) == []
+    finally:
+        shutil.rmtree(shard_dir, ignore_errors=True)
+
+
 def test_call_milestones_lock_planned_call_budgets_and_core_modes():
     expected_calls = {
         "1": 1,
