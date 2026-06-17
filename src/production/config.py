@@ -27,6 +27,7 @@ class ExecutionConfig:
     max_recent_retryable_errors: int = 20
     max_recent_server_errors: int = 10
     max_recent_rate_limits: int = 10
+    recent_failure_window_minutes: float = 10.0
 
 
 def _read_windows_user_env(name: str) -> Optional[str]:

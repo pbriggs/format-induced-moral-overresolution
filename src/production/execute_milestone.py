@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 from collections import deque
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import sqlite3
@@ -88,16 +88,19 @@ def progress_message(done: int, total: int, request: dict[str, Any], status: str
     )
 
 
-def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int = 50) -> list[dict[str, Any]]:
+def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int = 50, window_minutes: float = 10.0) -> list[dict[str, Any]]:
+    cutoff = datetime.now(timezone.utc) - timedelta(minutes=window_minutes)
     rows = connection.execute(
         """
         SELECT http_status_code, api_error_type
         FROM api_calls_raw
-        WHERE run_id = ? AND api_error_flag = 1
+        WHERE run_id = ?
+          AND api_error_flag = 1
+          AND timestamp_completed >= ?
         ORDER BY timestamp_completed DESC
         LIMIT ?
         """,
-        (run_id, limit),
+        (run_id, cutoff.isoformat(), limit),
     ).fetchall()
     return [dict(row) for row in rows]
 
@@ -333,7 +336,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     invalid = 0
     skipped = 0
     abort_reason = ""
-    recent_failures: deque[dict[str, Any]] = deque(_recent_api_failures(connection, args.run_id), maxlen=50)
+    recent_failures: deque[dict[str, Any]] = deque(
+        _recent_api_failures(
+            connection,
+            args.run_id,
+            window_minutes=execution_config.recent_failure_window_minutes,
+        ),
+        maxlen=50,
+    )
     total_calls = sum(1 for _ in iter_jsonl(shard_path)) if shard_path is not None else 0
     done_count = 0
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from argparse import Namespace
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import shutil
 import uuid
@@ -19,7 +20,7 @@ from parsing.validate_json import parse_and_validate
 from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
-from production.execute_milestone import parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
+from production.execute_milestone import _recent_api_failures, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
 from production.progress_status import _db_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
@@ -455,6 +456,31 @@ def test_api_failure_policy_stops_wasteful_retry_loops():
     breaker = circuit_breaker_decision([{"http_status_code": 503, "api_error_type": "server_error"} for _ in range(10)])
     assert breaker.abort
     assert "5xx" in breaker.reason
+
+
+def test_recent_api_failures_age_out_old_transient_errors():
+    connection = connect(":memory:")
+    migrate(connection)
+    old_completed = (datetime.now(timezone.utc) - timedelta(minutes=30)).isoformat()
+    recent_completed = datetime.now(timezone.utc).isoformat()
+    for api_call_id, completed in (("old", old_completed), ("recent", recent_completed)):
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, api_error_flag,
+              api_error_type, http_status_code, terminal_failure_flag, timestamp_completed
+            ) VALUES (?, 'run', '3k', ?, 'dataset', 'gemini-3.5-flash', 'google',
+              'route', 'distribution_mode', 'hash', '{}', 1, 'server_error', 503, 0, ?)
+            """,
+            (api_call_id, api_call_id, completed),
+        )
+    connection.commit()
+
+    failures = _recent_api_failures(connection, "run", window_minutes=10)
+    assert len(failures) == 1
+    assert failures[0]["http_status_code"] == 503
+    connection.close()
 
 
 def test_execution_config_uses_old_run_env_var_names(monkeypatch):
