@@ -46,6 +46,9 @@ set "PYTHONDONTWRITEBYTECODE=1"
 set "MOCK_FLAG="
 if "%MOCK_PROVIDER%"=="1" set "MOCK_FLAG=--mock-provider"
 
+set "SKIP_MODEL_FLAG="
+if not "%SKIP_MODEL_IDS%"=="" set "SKIP_MODEL_FLAG=--skip-model-ids %SKIP_MODEL_IDS%"
+
 python -m production.execute_milestone ^
   --milestone "%MILESTONE%" ^
   --run-id "%RUN_ID%" ^
@@ -54,6 +57,7 @@ python -m production.execute_milestone ^
   --seed "%SUBSET_SEED%" ^
   --models "%STUDY_MODEL_IDS%" ^
   --shard-count "%SHARD_COUNT%" ^
+  %SKIP_MODEL_FLAG% ^
   %MOCK_FLAG%
 
 endlocal

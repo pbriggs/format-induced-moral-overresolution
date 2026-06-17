@@ -45,10 +45,17 @@ def _plan_args(args: argparse.Namespace) -> argparse.Namespace:
     return plan_args
 
 
-def _executable_requests(pending: list[dict[str, Any]], allow_prework_blocked: bool) -> list[dict[str, Any]]:
+def parse_skip_model_ids(raw: str | None) -> set[str]:
+    if not raw:
+        return set()
+    return {part.strip() for part in raw.split(",") if part.strip()}
+
+
+def _executable_requests(pending: list[dict[str, Any]], allow_prework_blocked: bool, skip_model_ids: set[str] | None = None) -> list[dict[str, Any]]:
+    skipped = skip_model_ids or set()
     if allow_prework_blocked:
-        return pending
-    return [request for request in pending if not request.get("prework_required")]
+        return [request for request in pending if str(request.get("model_id")) not in skipped]
+    return [request for request in pending if not request.get("prework_required") and str(request.get("model_id")) not in skipped]
 
 
 def _load_milestone_pending(out_dir: Path, milestone: str) -> list[dict[str, Any]]:
@@ -92,7 +99,7 @@ def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int
     cutoff = datetime.now(timezone.utc) - timedelta(minutes=window_minutes)
     rows = connection.execute(
         """
-        SELECT http_status_code, api_error_type
+        SELECT provider, http_status_code, api_error_type
         FROM api_calls_raw
         WHERE run_id = ?
           AND api_error_flag = 1
@@ -324,7 +331,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     migrate(connection)
     pending = _load_milestone_pending(out_dir, args.milestone)
     target_api_call_ids = _load_target_call_ids(out_dir, args.milestone)
-    executable = _executable_requests(pending, args.allow_prework_blocked)
+    skip_model_ids = parse_skip_model_ids(getattr(args, "skip_model_ids", ""))
+    executable = _executable_requests(pending, args.allow_prework_blocked, skip_model_ids=skip_model_ids)
     if args.max_calls is not None:
         executable = executable[: args.max_calls]
 
@@ -369,8 +377,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             print(progress_message(done_count, total_calls, request, "skipped_already_done"), flush=True)
             continue
 
+        provider = execution_config.model_to_provider[str(request["model_id"])]
+        provider_recent_failures = [failure for failure in recent_failures if failure.get("provider") == provider]
         breaker = circuit_breaker_decision(
-            recent_failures,
+            provider_recent_failures,
             execution_config.max_recent_retryable_errors,
             execution_config.max_recent_server_errors,
             execution_config.max_recent_rate_limits,
@@ -379,8 +389,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             abort_reason = breaker.reason
             append_jsonl(events_path, {"event": "circuit_breaker_abort", "reason": abort_reason, "at": utc_now()})
             break
-
-        provider = execution_config.model_to_provider[str(request["model_id"])]
         adapter = adapters[provider]
         inference_request = InferenceRequest(
             prompt=str(request["prompt"]),
@@ -436,7 +444,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             failed += 1
             done_count += 1
             print(progress_message(done_count, total_calls, request, f"api_error:{error_type}"), flush=True)
-            recent_failures.append({"http_status_code": exc.status_code, "api_error_type": error_type})
+            recent_failures.append({"provider": provider, "http_status_code": exc.status_code, "api_error_type": error_type})
             continue
 
         completed_at = utc_now()
@@ -497,6 +505,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "skipped_completed_calls": skipped,
         "invalid_outputs": invalid,
         "abort_reason": abort_reason,
+        "skip_model_ids": sorted(skip_model_ids),
         "plan_summary": plan_summary,
     }
     ledger_export = write_api_call_ledger(connection, args.run_id, args.milestone, out_dir, target_api_call_ids=target_api_call_ids)
@@ -526,6 +535,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--alpha", type=float, default=0.5)
     parser.add_argument("--shard-count", type=int, default=20)
     parser.add_argument("--max-calls", type=int)
+    parser.add_argument("--skip-model-ids", default="")
     parser.add_argument("--mock-provider", action="store_true")
     parser.add_argument("--allow-prework-blocked", action="store_true")
     return parser

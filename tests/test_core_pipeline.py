@@ -20,7 +20,7 @@ from parsing.validate_json import parse_and_validate
 from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
-from production.execute_milestone import _recent_api_failures, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
+from production.execute_milestone import _executable_requests, _recent_api_failures, parse_skip_model_ids, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
 from production.progress_status import _db_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
@@ -201,6 +201,17 @@ def test_executor_progress_message_reports_completed_and_left():
     assert "completed=3/10" in message
     assert "left=7" in message
     assert "model=model" in message
+
+
+def test_executor_can_temporarily_skip_model_ids():
+    requests = [
+        {"api_call_id": "a", "model_id": "gemini-3.5-flash", "prework_required": []},
+        {"api_call_id": "b", "model_id": "gpt-5.5", "prework_required": []},
+        {"api_call_id": "c", "model_id": "qwen/qwen3.7-max", "prework_required": ["paraphrase"]},
+    ]
+    skip_model_ids = parse_skip_model_ids("gemini-3.5-flash")
+    executable = _executable_requests(requests, allow_prework_blocked=False, skip_model_ids=skip_model_ids)
+    assert [request["api_call_id"] for request in executable] == ["b"]
 
 
 def test_failed_shard_plan_rewrites_to_current_pending_calls():
@@ -480,6 +491,7 @@ def test_recent_api_failures_age_out_old_transient_errors():
     failures = _recent_api_failures(connection, "run", window_minutes=10)
     assert len(failures) == 1
     assert failures[0]["http_status_code"] == 503
+    assert failures[0]["provider"] == "google"
     connection.close()
 
 
