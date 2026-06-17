@@ -576,28 +576,29 @@ def test_report_decision_waits_for_complete_milestone():
     assert "milestone execution incomplete" in adjusted["revision_reasons"]
 
 
-def test_progress_status_reports_total_and_executable_left():
+def test_progress_status_reports_total_executable_and_skipped_left():
     scratch_dir = Path("runs") / "test_progress_status" / uuid.uuid4().hex
     db_path = scratch_dir / "study.sqlite"
     connection = connect(db_path)
     migrate(connection)
     try:
         requests = [
-            ("done", {}),
-            ("open", {}),
-            ("blocked", {"prework_required": True}),
+            ("done", "model", {}),
+            ("open", "model", {}),
+            ("blocked", "model", {"prework_required": True}),
+            ("skipped", "gemini-3.5-flash", {}),
         ]
-        for api_call_id, request in requests:
+        for api_call_id, model_id, request in requests:
             connection.execute(
                 """
                 INSERT INTO planned_api_calls (
                   api_call_id, run_id, milestone, component_type, component_name,
                   item_id, dataset_id, model_id, prompt_mode, assignment_hash,
                   prompt_hash, request_json, status, created_at
-                ) VALUES (?, 'run', '3k', 'core_cross_format', 'core', ?, 'dataset', 'model',
+                ) VALUES (?, 'run', '3k', 'core_cross_format', 'core', ?, 'dataset', ?,
                   'distribution_mode', ?, 'hash', ?, 'planned', 'now')
                 """,
-                (api_call_id, api_call_id, api_call_id, json.dumps(request)),
+                (api_call_id, api_call_id, model_id, api_call_id, json.dumps(request)),
             )
         connection.execute(
             """
@@ -613,11 +614,13 @@ def test_progress_status_reports_total_and_executable_left():
         connection.close()
 
     try:
-        progress = _db_progress(db_path, "run", "3k")
+        progress = _db_progress(db_path, "run", "3k", skip_model_ids={"gemini-3.5-flash"})
         assert progress["completed_successful"] == 1
-        assert progress["left_total"] == 2
-        assert progress["provider_executable_left"] == 1
+        assert progress["left_total"] == 3
+        assert progress["provider_executable_left"] == 2
+        assert progress["provider_executable_left_now"] == 1
         assert progress["prework_blocked_left"] == 1
+        assert progress["skip_model_left"] == 1
     finally:
         shutil.rmtree(scratch_dir, ignore_errors=True)
 

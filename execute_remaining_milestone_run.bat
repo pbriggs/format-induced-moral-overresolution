@@ -48,7 +48,7 @@ if errorlevel 1 exit /b %errorlevel%
 
 python -c "import json, pathlib, sys; out=pathlib.Path(r'%OUT_DIR%') / r'%RUN_ID%'; summary_path=out / 'execution_summary_%MILESTONE%.json'; summary=json.loads(summary_path.read_text(encoding='utf-8')) if summary_path.exists() else {}; status=summary.get('status'); print('last executor status:', status); sys.exit({'aborted':20,'failed':21}.get(status,0))"
 if errorlevel 21 (
-  python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%"
+  python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%" --skip-model-ids "%SKIP_MODEL_IDS%"
   python -c "import pathlib, sqlite3, sys; db=pathlib.Path(r'%OUT_DIR%') / r'%RUN_ID%' / 'study.sqlite'; con=sqlite3.connect(db); row=con.execute('select count(distinct api_call_id) from api_calls_raw where run_id=? and milestone=? and api_error_flag=1 and terminal_failure_flag=1', (r'%RUN_ID%', r'%MILESTONE%')).fetchone(); con.close(); sys.exit(31 if row[0] == 0 else 20)"
   if errorlevel 31 (
     set /a RETRYABLE_FAILURE_COUNT+=1
@@ -64,7 +64,7 @@ if errorlevel 21 (
   exit /b 20
 )
 if errorlevel 20 (
-  python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%"
+  python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%" --skip-model-ids "%SKIP_MODEL_IDS%"
   echo Stopping because the last shard aborted.
   exit /b 20
 )
@@ -72,7 +72,7 @@ if errorlevel 1 exit /b %errorlevel%
 
 set /a RETRYABLE_FAILURE_COUNT=0
 
-python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%"
+python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%" --skip-model-ids "%SKIP_MODEL_IDS%"
 if errorlevel 30 (
   echo All executable shards for %MILESTONE% are passed.
   exit /b 0
