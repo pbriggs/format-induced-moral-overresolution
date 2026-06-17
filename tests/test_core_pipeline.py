@@ -693,6 +693,68 @@ def test_progress_status_reports_total_executable_and_skipped_left():
         shutil.rmtree(scratch_dir, ignore_errors=True)
 
 
+def test_progress_status_can_scope_to_current_target_call_ids():
+    scratch_dir = Path("runs") / "test_progress_status_targets" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        requests = [
+            ("done_current", "grok-4.3", {}),
+            ("blocked_current", "grok-4.3", {"prework_required": True}),
+            ("stale_gemini", "gemini-3.5-flash", {}),
+        ]
+        for api_call_id, model_id, request in requests:
+            connection.execute(
+                """
+                INSERT INTO planned_api_calls (
+                  api_call_id, run_id, milestone, component_type, component_name,
+                  item_id, dataset_id, model_id, prompt_mode, assignment_hash,
+                  prompt_hash, request_json, status, created_at
+                ) VALUES (?, 'run', '3k', 'core_cross_format', 'core', ?, 'dataset', ?,
+                  'distribution_mode', ?, 'hash', ?, 'planned', 'now')
+                """,
+                (api_call_id, api_call_id, model_id, api_call_id, json.dumps(request)),
+            )
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, raw_response, api_error_flag
+            ) VALUES ('done_current', 'run', '3k', 'done_current', 'dataset', 'grok-4.3', 'xai',
+              'route', 'distribution_mode', 'hash', '{}', '{}', 0)
+            """
+        )
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, api_error_flag, api_error_type, http_status_code
+            ) VALUES ('stale_gemini', 'run', '3k', 'stale_gemini', 'dataset', 'gemini-3.5-flash', 'google',
+              'route', 'distribution_mode', 'hash', '{}', 1, 'server_error', 503)
+            """
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    try:
+        progress = _db_progress(
+            db_path,
+            "run",
+            "3k",
+            target_api_call_ids={"done_current", "blocked_current"},
+        )
+        assert progress["planned"] == 2
+        assert progress["completed_successful"] == 1
+        assert progress["api_errors"] == 0
+        assert progress["left_total"] == 1
+        assert progress["provider_executable_left_now"] == 0
+        assert progress["prework_blocked_left"] == 1
+    finally:
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
 def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_successes():
     _require_scruples_data("dev")
     models = "mock-a,mock-b,mock-c,mock-d,mock-e"

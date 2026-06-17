@@ -25,6 +25,24 @@ def _parse_model_ids(raw: str | None) -> set[str]:
     return {part.strip() for part in raw.split(",") if part.strip()}
 
 
+def _load_target_call_ids(run_dir: Path, milestone: str) -> set[str] | None:
+    path = run_dir / f"target_api_call_ids_{milestone}.jsonl"
+    if not path.exists():
+        return None
+    target_ids: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        api_call_id = record.get("api_call_id") if isinstance(record, dict) else None
+        if api_call_id:
+            target_ids.add(str(api_call_id))
+    return target_ids
+
+
 def _count_shards(out_dir: Path, run_id: str, milestone: str) -> dict[str, int]:
     shard_dir = out_dir / run_id / "execution_shards" / milestone
     state_pattern = re.compile(r"shard_\d{4}\.state\.json$")
@@ -43,7 +61,13 @@ def _count_shards(out_dir: Path, run_id: str, milestone: str) -> dict[str, int]:
     }
 
 
-def _db_progress(db_path: Path, run_id: str, milestone: str, skip_model_ids: set[str] | None = None) -> dict[str, int | str]:
+def _db_progress(
+    db_path: Path,
+    run_id: str,
+    milestone: str,
+    skip_model_ids: set[str] | None = None,
+    target_api_call_ids: set[str] | None = None,
+) -> dict[str, int | str]:
     skipped = skip_model_ids or set()
     if not db_path.exists():
         return {
@@ -68,6 +92,8 @@ def _db_progress(db_path: Path, run_id: str, milestone: str, skip_model_ids: set
             """,
             (run_id, milestone),
         ).fetchall()
+        if target_api_call_ids is not None:
+            raw_rows = [row for row in raw_rows if str(row["api_call_id"]) in target_api_call_ids]
         successful = {str(row["api_call_id"]) for row in raw_rows if not row["api_error_flag"]}
         terminal = {str(row["api_call_id"]) for row in raw_rows if row["terminal_failure_flag"]}
         api_errors = {str(row["api_call_id"]) for row in raw_rows if row["api_error_flag"]}
@@ -79,6 +105,8 @@ def _db_progress(db_path: Path, run_id: str, milestone: str, skip_model_ids: set
             """,
             (run_id, milestone),
         ).fetchall()
+        if target_api_call_ids is not None:
+            planned_rows = [row for row in planned_rows if str(row["api_call_id"]) in target_api_call_ids]
         pending_rows = [
             row
             for row in planned_rows
@@ -113,7 +141,8 @@ def print_progress(out_dir: Path, run_id: str, milestone: str, skip_model_ids: s
     run_dir = out_dir / run_id
     db_path = run_dir / "study.sqlite"
     skipped = skip_model_ids or set()
-    db_progress = _db_progress(db_path, run_id, milestone, skip_model_ids=skipped)
+    target_api_call_ids = _load_target_call_ids(run_dir, milestone)
+    db_progress = _db_progress(db_path, run_id, milestone, skip_model_ids=skipped, target_api_call_ids=target_api_call_ids)
     shard_progress = _count_shards(out_dir, run_id, milestone)
     print(
         "full milestone progress: "
