@@ -21,7 +21,7 @@ from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import _executable_requests, _recent_api_failures, parse_skip_model_ids, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
-from production.progress_status import _db_progress
+from production.progress_status import _count_shards, _db_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
     ApiFailureKind,
@@ -274,6 +274,22 @@ def test_extra_stale_shards_are_retired_when_shard_count_shrinks():
         assert list(iter_jsonl(original_paths[1])) == []
     finally:
         shutil.rmtree(shard_dir, ignore_errors=True)
+
+
+def test_progress_status_ignores_attempt_and_event_state_files():
+    run_root = Path("runs") / "test_progress_status" / uuid.uuid4().hex
+    shard_dir = run_root / "run" / "execution_shards" / "3k"
+    try:
+        shard_dir.mkdir(parents=True, exist_ok=True)
+        write_json(shard_dir / "shard_0000.state.json", {"status": "pending", "planned_calls": 1})
+        write_json(shard_dir / "shard_0000.attempts.state.json", {"status": "pending", "planned_calls": 99})
+        write_json(shard_dir / "shard_0000.events.state.json", {"status": "pending", "planned_calls": 99})
+
+        counts = _count_shards(run_root, "run", "3k")
+
+        assert counts == {"passed": 0, "pending_or_failed": 1, "active": 1, "total": 1}
+    finally:
+        shutil.rmtree(run_root, ignore_errors=True)
 
 
 def test_call_milestones_lock_planned_call_budgets_and_core_modes():

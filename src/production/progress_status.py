@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import sqlite3
 import sys
 from typing import Any
@@ -26,10 +27,11 @@ def _parse_model_ids(raw: str | None) -> set[str]:
 
 def _count_shards(out_dir: Path, run_id: str, milestone: str) -> dict[str, int]:
     shard_dir = out_dir / run_id / "execution_shards" / milestone
+    state_pattern = re.compile(r"shard_\d{4}\.state\.json$")
     states = [
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted(shard_dir.glob("*.state.json"))
-        if path.exists()
+        if path.exists() and state_pattern.fullmatch(path.name)
     ]
     active = [state for state in states if int(state.get("planned_calls") or 0) > 0]
     pending = [state for state in active if state.get("status") != "passed"]
