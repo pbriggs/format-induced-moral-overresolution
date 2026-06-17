@@ -356,8 +356,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     done_count = 0
 
     if shard_path is None:
+        summary = {
+            "status": "already_complete",
+            "milestone": args.milestone,
+            "run_id": args.run_id,
+            "db_path": str(db_path),
+            "skip_model_ids": sorted(skip_model_ids),
+            "plan_summary": plan_summary,
+        }
+        (out_dir / f"execution_summary_{args.milestone}.json").write_text(
+            json.dumps(summary, sort_keys=True, indent=2),
+            encoding="utf-8",
+        )
         connection.close()
-        return {"status": "already_complete", "milestone": args.milestone, "plan_summary": plan_summary}
+        return summary
 
     update_shard_state(shard_path, status="running", started_at=utc_now())
     attempts_path = shard_path.with_suffix(".attempts.jsonl")

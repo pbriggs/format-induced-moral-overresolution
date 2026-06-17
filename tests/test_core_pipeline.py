@@ -699,6 +699,27 @@ def test_mock_executor_retains_raw_attempts_and_resumes_without_recalling_succes
     finally:
         connection.close()
 
+    complete_run_id = f"mock_executor_already_complete_{uuid.uuid4().hex}"
+    complete_args = Namespace(
+        milestone="1",
+        run_id=complete_run_id,
+        out_dir=str(out_dir),
+        db=None,
+        models=models,
+        splits="dev",
+        seed=20260615,
+        alpha=0.5,
+        shard_count=1,
+        max_calls=None,
+        skip_model_ids="mock-a",
+        mock_provider=True,
+        allow_prework_blocked=False,
+    )
+    complete = execute_milestone_run(complete_args)
+    complete_summary_path = out_dir / complete_run_id / "execution_summary_1.json"
+    assert complete["status"] == "already_complete"
+    assert json.loads(complete_summary_path.read_text(encoding="utf-8"))["status"] == "already_complete"
+
 
 def test_larger_milestone_pending_includes_prior_successes_without_recalling_them():
     _require_scruples_data("train", "dev", "test")
