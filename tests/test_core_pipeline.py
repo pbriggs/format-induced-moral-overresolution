@@ -229,6 +229,21 @@ def test_failed_shard_plan_rewrites_to_current_pending_calls():
         shutil.rmtree(shard_dir, ignore_errors=True)
 
 
+def test_pending_stale_shard_plan_rewrites_to_current_pending_calls():
+    shard_dir = Path("runs") / "test_shards" / uuid.uuid4().hex
+    try:
+        original = [{"api_call_id": "a"}, {"api_call_id": "b"}, {"api_call_id": "c"}]
+        [shard_path] = write_shard_plan(shard_dir, original, 1)
+        write_json(shard_state_path(shard_path), {"shard": shard_path.name, "status": "pending"})
+
+        [rewritten_path] = write_shard_plan(shard_dir, [{"api_call_id": "c"}], 1)
+
+        assert [row["api_call_id"] for row in iter_jsonl(rewritten_path)] == ["c"]
+        assert json.loads(shard_state_path(rewritten_path).read_text(encoding="utf-8"))["status"] == "pending"
+    finally:
+        shutil.rmtree(shard_dir, ignore_errors=True)
+
+
 def test_empty_shards_are_not_incomplete():
     shard_dir = Path("runs") / "test_shards" / uuid.uuid4().hex
     try:
