@@ -139,6 +139,11 @@ def evaluate_milestone_alignment(
         if low_diffuse_gap is not None and high_gap is not None and low_diffuse_gap <= high_gap:
             failures.append("contested-item gap is not larger than the high-consensus gap")
 
+    if thresholds.require_low_diffuse_surplus_gt_high_consensus:
+        high_surplus = number("high_consensus_agreement_surplus_mean")
+        if low_diffuse_surplus is not None and high_surplus is not None and low_diffuse_surplus <= high_surplus:
+            failures.append("contested-item agreement surplus is not larger than the high-consensus surplus")
+
     positive_sampling_models = integer("positive_sampling_compression_models")
     if (
         thresholds.positive_sampling_models_min is not None

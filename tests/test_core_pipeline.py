@@ -409,6 +409,7 @@ def test_milestone_validity_and_alignment_decisions():
             "low_diffuse_distribution_agreement_gap_mean": 0.12,
             "low_diffuse_agreement_surplus_mean": 0.11,
             "high_consensus_distribution_agreement_gap_mean": 0.02,
+            "high_consensus_agreement_surplus_mean": 0.03,
             "positive_sampling_compression_models": 3,
             "paraphrase_preserves_direction": True,
             "distribution_outputs_item_sensitive": True,
@@ -416,6 +417,22 @@ def test_milestone_validity_and_alignment_decisions():
         },
     )
     assert continue_decision["decision"] == "continue"
+
+    surplus_failure = evaluate_milestone_alignment(
+        "6k",
+        {
+            "overall_validity_rate": 0.99,
+            "positive_gap_models": 5,
+            "positive_surplus_models": 5,
+            "low_diffuse_distribution_agreement_gap_mean": 0.20,
+            "high_consensus_distribution_agreement_gap_mean": 0.10,
+            "low_diffuse_agreement_surplus_mean": 0.05,
+            "high_consensus_agreement_surplus_mean": 0.06,
+            "positive_sampling_compression_models": 5,
+        },
+    )
+    assert surplus_failure["decision"] == "stop_or_redesign"
+    assert "contested-item agreement surplus" in surplus_failure["failures"][0]
 
     stop_decision = evaluate_milestone_alignment(
         "13k",
@@ -758,6 +775,53 @@ def test_progress_status_can_scope_to_current_target_call_ids():
         assert progress["left_total"] == 1
         assert progress["provider_executable_left_now"] == 0
         assert progress["prework_blocked_left"] == 1
+    finally:
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
+def test_progress_status_target_scope_counts_cumulative_milestone_rows():
+    scratch_dir = Path("runs") / "test_progress_status_cumulative_targets" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        for api_call_id, milestone in (("three_k_done", "3k"), ("six_k_done", "6k")):
+            connection.execute(
+                """
+                INSERT INTO planned_api_calls (
+                  api_call_id, run_id, milestone, component_type, component_name,
+                  item_id, dataset_id, model_id, prompt_mode, assignment_hash,
+                  prompt_hash, request_json, status, created_at
+                ) VALUES (?, 'run', ?, 'core_cross_format', 'core', ?, 'dataset', 'model',
+                  'distribution_mode', ?, 'hash', '{}', 'planned', 'now')
+                """,
+                (api_call_id, milestone, api_call_id, api_call_id),
+            )
+            connection.execute(
+                """
+                INSERT INTO api_calls_raw (
+                  api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+                  api_route, prompt_mode, prompt_hash, request_json, raw_response, api_error_flag
+                ) VALUES (?, 'run', ?, ?, 'dataset', 'model', 'provider',
+                  'route', 'distribution_mode', 'hash', '{}', '{}', 0)
+                """,
+                (api_call_id, milestone, api_call_id),
+            )
+        connection.commit()
+    finally:
+        connection.close()
+
+    try:
+        progress = _db_progress(
+            db_path,
+            "run",
+            "6k",
+            target_api_call_ids={"three_k_done", "six_k_done"},
+        )
+        assert progress["planned"] == 2
+        assert progress["completed_successful"] == 2
+        assert progress["left_total"] == 0
+        assert progress["provider_executable_left_now"] == 0
     finally:
         shutil.rmtree(scratch_dir, ignore_errors=True)
 

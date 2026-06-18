@@ -88,6 +88,7 @@ class MilestoneThresholds:
     low_diffuse_surplus_min: float | None = None
     positive_sampling_models_min: int | None = None
     require_low_diffuse_gt_high_consensus: bool = False
+    require_low_diffuse_surplus_gt_high_consensus: bool = False
     require_paraphrase_preserves_direction: bool = False
 
     def to_dict(self) -> dict[str, Any]:
@@ -246,6 +247,7 @@ CALL_MILESTONES: tuple[CallMilestone, ...] = (
             low_diffuse_gap_min=0.08,
             positive_sampling_models_min=3,
             require_low_diffuse_gt_high_consensus=True,
+            require_low_diffuse_surplus_gt_high_consensus=True,
         ),
     ),
     CallMilestone(
@@ -266,6 +268,7 @@ CALL_MILESTONES: tuple[CallMilestone, ...] = (
             low_diffuse_surplus_min=0.10,
             positive_sampling_models_min=3,
             require_low_diffuse_gt_high_consensus=True,
+            require_low_diffuse_surplus_gt_high_consensus=True,
             require_paraphrase_preserves_direction=True,
         ),
     ),
@@ -294,6 +297,7 @@ CALL_MILESTONES: tuple[CallMilestone, ...] = (
             low_diffuse_surplus_min=0.10,
             positive_sampling_models_min=3,
             require_low_diffuse_gt_high_consensus=True,
+            require_low_diffuse_surplus_gt_high_consensus=True,
             require_paraphrase_preserves_direction=True,
         ),
         use_as_confirmatory=True,
@@ -331,6 +335,7 @@ CALL_MILESTONES: tuple[CallMilestone, ...] = (
             low_diffuse_surplus_min=0.10,
             positive_sampling_models_min=3,
             require_low_diffuse_gt_high_consensus=True,
+            require_low_diffuse_surplus_gt_high_consensus=True,
             require_paraphrase_preserves_direction=True,
         ),
         normative_certainty_allowed=True,
@@ -362,6 +367,7 @@ CALL_MILESTONES: tuple[CallMilestone, ...] = (
             low_diffuse_surplus_min=0.10,
             positive_sampling_models_min=3,
             require_low_diffuse_gt_high_consensus=True,
+            require_low_diffuse_surplus_gt_high_consensus=True,
             require_paraphrase_preserves_direction=True,
         ),
         normative_certainty_allowed=True,

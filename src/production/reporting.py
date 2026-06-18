@@ -572,6 +572,7 @@ def _observed_alignment(connection: sqlite3.Connection, target_ids: set[str], mi
     low_gap_values = [row["distribution_agreement_gap_mean"] for row in gaps if row["disagreement_bin"] in low_bins]
     high_gap_values = [row["distribution_agreement_gap_mean"] for row in gaps if row["disagreement_bin"] == "high_consensus"]
     low_surplus_values = [row["agreement_surplus_mean"] for row in surplus if row["disagreement_bin"] in low_bins]
+    high_surplus_values = [row["agreement_surplus_mean"] for row in surplus if row["disagreement_bin"] == "high_consensus"]
     return {
         "overall_validity_rate": validity["overall_validity_rate"],
         "min_model_mode_validity_rate": min((row["valid_rate"] for row in _validity_by_model_mode(validity_rows)), default=0.0),
@@ -580,6 +581,7 @@ def _observed_alignment(connection: sqlite3.Connection, target_ids: set[str], mi
         "low_diffuse_distribution_agreement_gap_mean": sum(low_gap_values) / len(low_gap_values) if low_gap_values else None,
         "high_consensus_distribution_agreement_gap_mean": sum(high_gap_values) / len(high_gap_values) if high_gap_values else None,
         "low_diffuse_agreement_surplus_mean": sum(low_surplus_values) / len(low_surplus_values) if low_surplus_values else None,
+        "high_consensus_agreement_surplus_mean": sum(high_surplus_values) / len(high_surplus_values) if high_surplus_values else None,
         "positive_sampling_compression_models": len({row["model_id"] for row in sampling if row["sampling_compression_mean"] > 0}),
     }
 

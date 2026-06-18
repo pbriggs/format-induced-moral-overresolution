@@ -84,27 +84,47 @@ def _db_progress(
     connection.row_factory = sqlite3.Row
     try:
         integrity = str(connection.execute("PRAGMA integrity_check").fetchone()[0])
-        raw_rows = connection.execute(
-            """
-            SELECT api_call_id, api_error_flag, terminal_failure_flag
-            FROM api_calls_raw
-            WHERE run_id = ? AND milestone = ?
-            """,
-            (run_id, milestone),
-        ).fetchall()
+        if target_api_call_ids is None:
+            raw_rows = connection.execute(
+                """
+                SELECT api_call_id, api_error_flag, terminal_failure_flag
+                FROM api_calls_raw
+                WHERE run_id = ? AND milestone = ?
+                """,
+                (run_id, milestone),
+            ).fetchall()
+        else:
+            raw_rows = connection.execute(
+                """
+                SELECT api_call_id, api_error_flag, terminal_failure_flag
+                FROM api_calls_raw
+                WHERE run_id = ?
+                """,
+                (run_id,),
+            ).fetchall()
         if target_api_call_ids is not None:
             raw_rows = [row for row in raw_rows if str(row["api_call_id"]) in target_api_call_ids]
         successful = {str(row["api_call_id"]) for row in raw_rows if not row["api_error_flag"]}
         terminal = {str(row["api_call_id"]) for row in raw_rows if row["terminal_failure_flag"]}
         api_errors = {str(row["api_call_id"]) for row in raw_rows if row["api_error_flag"]}
-        planned_rows = connection.execute(
-            """
-            SELECT api_call_id, model_id, request_json
-            FROM planned_api_calls
-            WHERE run_id = ? AND milestone = ?
-            """,
-            (run_id, milestone),
-        ).fetchall()
+        if target_api_call_ids is None:
+            planned_rows = connection.execute(
+                """
+                SELECT api_call_id, model_id, request_json
+                FROM planned_api_calls
+                WHERE run_id = ? AND milestone = ?
+                """,
+                (run_id, milestone),
+            ).fetchall()
+        else:
+            planned_rows = connection.execute(
+                """
+                SELECT api_call_id, model_id, request_json
+                FROM planned_api_calls
+                WHERE run_id = ?
+                """,
+                (run_id,),
+            ).fetchall()
         if target_api_call_ids is not None:
             planned_rows = [row for row in planned_rows if str(row["api_call_id"]) in target_api_call_ids]
         pending_rows = [
