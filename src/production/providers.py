@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from http import client as http_client
 import json
 import random
 import time
@@ -119,7 +120,7 @@ def post_json_with_retry(
             if exc.code not in RETRY_STATUSES or attempt >= max_attempts:
                 raise last_error from exc
             time.sleep(_sleep_seconds(response_headers, attempt, base_backoff_seconds))
-        except (TimeoutError, OSError) as exc:
+        except (TimeoutError, OSError, http_client.HTTPException) as exc:
             last_error = ProviderRequestError(
                 f"Transport error: {exc}",
                 transport_error_message=str(exc),

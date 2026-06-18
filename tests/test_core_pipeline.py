@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from argparse import Namespace
 from datetime import datetime, timedelta, timezone
+from http import client as http_client
 from pathlib import Path
 import shutil
 import uuid
@@ -30,7 +31,7 @@ from production.failure_policy import (
     classify_api_failure,
     should_retry_call,
 )
-from production.providers import InferenceRequest, google_generation_config, openai_response_payload, xai_response_payload
+from production.providers import InferenceRequest, google_generation_config, openai_response_payload, post_json_with_retry, xai_response_payload
 from production.reporting import _decision_with_completion_gate, _decision_with_validity_gate, row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
@@ -202,6 +203,49 @@ def test_executor_progress_message_reports_completed_and_left():
     assert "completed=3/10" in message
     assert "left=7" in message
     assert "model=model" in message
+
+
+def test_provider_retries_incomplete_chunked_read(monkeypatch):
+    calls = {"n": 0}
+
+    class FakeHeaders:
+        def items(self):
+            return []
+
+    class FakeResponse:
+        status = 200
+        headers = FakeHeaders()
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+        def read(self):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise http_client.IncompleteRead(b"partial")
+            return b'{"ok": true}'
+
+    def fake_urlopen(req, timeout):
+        return FakeResponse()
+
+    monkeypatch.setattr("production.providers.request.urlopen", fake_urlopen)
+
+    body, status, latency_ms, headers = post_json_with_retry(
+        "https://example.test",
+        {},
+        {"prompt": "hello"},
+        max_attempts=2,
+        base_backoff_seconds=0.0,
+    )
+
+    assert body == {"ok": True}
+    assert status == 200
+    assert latency_ms >= 0
+    assert headers == {}
+    assert calls["n"] == 2
 
 
 def test_executor_can_temporarily_skip_model_ids():
