@@ -12,8 +12,8 @@ This file freezes the post-6k / pre-13k study state for `format-induced-moral-ov
 - Prior Zenodo DOI: `https://doi.org/10.5281/zenodo.20738342`
 - New GitHub release/tag to create: `post-6k-pre13k-freeze-v1`
 - New GitHub release URL to create: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-6k-pre13k-freeze-v1`
-- New Zenodo DOI: `[fill after Zenodo archives the GitHub release]`
-- Git commit at freeze: `[fill after committing this manifest and 6k milestone code updates]`
+- New Zenodo DOI: `https://doi.org/10.5281/zenodo.20740440`
+- Git commit at freeze: `SHA 4ea1d0f17e34d438bb860b0d5ec8f6c7e8ff04b7`
 - Author: Paul Briggs
 - License: CC0 1.0 Universal, unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
 
