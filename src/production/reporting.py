@@ -43,6 +43,15 @@ def _target_call_ids(
     return {str(row["api_call_id"]) for row in rows}
 
 
+def _prepare_target_id_table(connection: sqlite3.Connection, target_ids: set[str]) -> None:
+    connection.execute("DROP TABLE IF EXISTS temp_report_target_ids")
+    connection.execute("CREATE TEMP TABLE temp_report_target_ids (api_call_id TEXT PRIMARY KEY)")
+    connection.executemany(
+        "INSERT INTO temp_report_target_ids (api_call_id) VALUES (?)",
+        ((api_call_id,) for api_call_id in target_ids),
+    )
+
+
 def api_call_ledger_rows(
     connection: sqlite3.Connection,
     run_id: str,
@@ -52,12 +61,12 @@ def api_call_ledger_rows(
     target_ids = _target_call_ids(connection, run_id, milestone, target_api_call_ids)
     if target_api_call_ids is not None and not target_ids:
         return []
+    _prepare_target_id_table(connection, target_ids)
     target_filter = "p.run_id = ? AND p.milestone = ?"
     params: tuple[Any, ...] = (run_id, milestone)
     if target_api_call_ids is not None:
-        placeholders = ",".join("?" for _ in target_ids)
-        target_filter = f"p.run_id = ? AND p.api_call_id IN ({placeholders})"
-        params = (run_id, *tuple(target_ids))
+        target_filter = "p.run_id = ? AND p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)"
+        params = (run_id,)
     rows = connection.execute(
         f"""
         SELECT
@@ -306,19 +315,18 @@ def write_milestone_report(
 def _attempted_counts(connection: sqlite3.Connection, target_ids: set[str]) -> dict[str, int]:
     if not target_ids:
         return {"planned": 0, "attempted": 0, "completed_successful": 0, "api_errors": 0, "terminal_failures": 0}
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT api_error_flag, terminal_failure_flag, raw_response
         FROM api_calls_raw
-        WHERE api_call_id IN ({placeholders})
+        WHERE api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
         """,
-        tuple(target_ids),
     ).fetchall()
     return {
         "planned": len(target_ids),
         "attempted": len(rows),
-        "completed_successful": sum(1 for row in rows if not row["api_error_flag"] and row["raw_response"]),
+        "completed_successful": sum(1 for row in rows if not row["api_error_flag"]),
         "api_errors": sum(1 for row in rows if row["api_error_flag"]),
         "terminal_failures": sum(1 for row in rows if row["terminal_failure_flag"]),
     }
@@ -327,10 +335,9 @@ def _attempted_counts(connection: sqlite3.Connection, target_ids: set[str]) -> d
 def _retry_rate(connection: sqlite3.Connection, target_ids: set[str]) -> dict[str, float | int]:
     if not target_ids:
         return {"attempted_calls": 0, "calls_with_retry": 0, "retry_rate": 0.0}
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"SELECT retry_count FROM api_calls_raw WHERE api_call_id IN ({placeholders})",
-        tuple(target_ids),
+        "SELECT retry_count FROM api_calls_raw WHERE api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)",
     ).fetchall()
     with_retry = sum(1 for row in rows if int(row["retry_count"] or 0) > 0)
     return {"attempted_calls": len(rows), "calls_with_retry": with_retry, "retry_rate": with_retry / len(rows) if rows else 0.0}
@@ -339,14 +346,13 @@ def _retry_rate(connection: sqlite3.Connection, target_ids: set[str]) -> dict[st
 def _validity_rows(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:
     if not target_ids:
         return []
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT model_id, prompt_mode, validity_status, refusal_flag, malformed_flag, off_schema_label_flag
         FROM parsed_outputs
-        WHERE api_call_id IN ({placeholders})
+        WHERE api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
         """,
-        tuple(target_ids),
     ).fetchall()
     return [dict(row) for row in rows]
 
@@ -389,15 +395,14 @@ def _malformed_refusal_off_schema_rate(rows: list[dict[str, Any]]) -> dict[str, 
 def _distribution_entropy_by_bin(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:
     if not target_ids:
         return []
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT DISTINCT sd.disagreement_bin, p.item_id, sd.entropy, sd.entropy_normalized
         FROM planned_api_calls p
         JOIN source_distributions sd ON sd.item_id = p.item_id AND sd.posterior_draw_id_or_null IS NULL
-        WHERE p.api_call_id IN ({placeholders})
+        WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
         """,
-        tuple(target_ids),
     ).fetchall()
     by_bin: dict[str, list[sqlite3.Row]] = defaultdict(list)
     for row in rows:
@@ -421,9 +426,9 @@ def _source_distribution(row: sqlite3.Row) -> dict[str, float]:
 def _agreement_surplus_by_bin_model(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:
     if not target_ids:
         return []
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT p.model_id, sd.disagreement_bin, sd.p_author AS source_p_author,
                sd.p_other AS source_p_other, sd.p_everybody AS source_p_everybody,
                sd.p_nobody AS source_p_nobody, sd.p_info AS source_p_info,
@@ -431,12 +436,12 @@ def _agreement_surplus_by_bin_model(connection: sqlite3.Connection, target_ids: 
         FROM planned_api_calls p
         JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
         JOIN source_distributions sd ON sd.item_id = p.item_id AND sd.posterior_draw_id_or_null IS NULL
-        WHERE p.api_call_id IN ({placeholders})
+        WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
           AND p.prompt_mode IN (?, ?)
           AND po.chosen_label IS NOT NULL
           AND po.estimated_source_community_agreement IS NOT NULL
         """,
-        (*tuple(target_ids), PromptMode.DESCRIPTIVE_VERDICT.value, PromptMode.PARAPHRASED_DESCRIPTIVE_VERDICT.value),
+        (PromptMode.DESCRIPTIVE_VERDICT.value, PromptMode.PARAPHRASED_DESCRIPTIVE_VERDICT.value),
     ).fetchall()
     grouped: dict[tuple[str, str], list[float]] = defaultdict(list)
     for row in rows:
@@ -449,9 +454,9 @@ def _agreement_surplus_by_bin_model(connection: sqlite3.Connection, target_ids: 
 def _distribution_agreement_gap_by_bin_model(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:
     if not target_ids:
         return []
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT vd.model_id, sd.disagreement_bin, vd.item_id, vd.chosen_label,
                vd.estimated_source_community_agreement,
                dist.p_author, dist.p_other, dist.p_everybody, dist.p_nobody, dist.p_info
@@ -459,14 +464,14 @@ def _distribution_agreement_gap_by_bin_model(connection: sqlite3.Connection, tar
           SELECT p.item_id, p.model_id, po.chosen_label, po.estimated_source_community_agreement
           FROM planned_api_calls p
           JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
-          WHERE p.api_call_id IN ({placeholders})
+          WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
             AND p.prompt_mode = ?
         ) vd
         JOIN (
           SELECT p.item_id, p.model_id, po.p_author, po.p_other, po.p_everybody, po.p_nobody, po.p_info
           FROM planned_api_calls p
           JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
-          WHERE p.api_call_id IN ({placeholders})
+          WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
             AND p.prompt_mode = ?
             AND po.p_author IS NOT NULL
             AND po.p_other IS NOT NULL
@@ -477,7 +482,7 @@ def _distribution_agreement_gap_by_bin_model(connection: sqlite3.Connection, tar
         JOIN source_distributions sd ON sd.item_id = vd.item_id AND sd.posterior_draw_id_or_null IS NULL
         WHERE vd.chosen_label IS NOT NULL AND vd.estimated_source_community_agreement IS NOT NULL
         """,
-        (*tuple(target_ids), PromptMode.DESCRIPTIVE_VERDICT.value, *tuple(target_ids), PromptMode.DISTRIBUTION.value),
+        (PromptMode.DESCRIPTIVE_VERDICT.value, PromptMode.DISTRIBUTION.value),
     ).fetchall()
     grouped: dict[tuple[str, str], list[float]] = defaultdict(list)
     for row in rows:
@@ -497,9 +502,9 @@ def row_has_complete_distribution(row: sqlite3.Row | dict[str, Any]) -> bool:
 def _sampling_compression_by_model(connection: sqlite3.Connection, target_ids: set[str]) -> list[dict[str, Any]]:
     if not target_ids:
         return []
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT p.item_id, p.model_id, sd.disagreement_bin,
                sd.p_author AS source_p_author, sd.p_other AS source_p_other,
                sd.p_everybody AS source_p_everybody, sd.p_nobody AS source_p_nobody,
@@ -507,11 +512,11 @@ def _sampling_compression_by_model(connection: sqlite3.Connection, target_ids: s
         FROM planned_api_calls p
         JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
         JOIN source_distributions sd ON sd.item_id = p.item_id AND sd.posterior_draw_id_or_null IS NULL
-        WHERE p.api_call_id IN ({placeholders})
+        WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
           AND p.prompt_mode = ?
           AND po.chosen_label IS NOT NULL
         """,
-        (*tuple(target_ids), PromptMode.SAMPLING.value),
+        (PromptMode.SAMPLING.value,),
     ).fetchall()
     by_pair: dict[tuple[str, str, str], dict[str, Any]] = {}
     for row in rows:
@@ -536,16 +541,15 @@ def _mean_records(grouped: dict[tuple[str, str], list[float]], field: str) -> li
 def _paraphrase_label_order_check(connection: sqlite3.Connection, target_ids: set[str]) -> dict[str, Any]:
     if not target_ids:
         return {"status": "not_available", "paraphrase_outputs": 0, "unique_label_orders": 0}
-    placeholders = ",".join("?" for _ in target_ids)
+    _prepare_target_id_table(connection, target_ids)
     rows = connection.execute(
-        f"""
+        """
         SELECT p.prompt_mode, pa.label_order, po.validity_status
         FROM planned_api_calls p
         LEFT JOIN prompt_assignments pa ON pa.assignment_hash = p.assignment_hash
         LEFT JOIN parsed_outputs po ON po.api_call_id = p.api_call_id
-        WHERE p.api_call_id IN ({placeholders})
+        WHERE p.api_call_id IN (SELECT api_call_id FROM temp_report_target_ids)
         """,
-        tuple(target_ids),
     ).fetchall()
     paraphrase = [
         row for row in rows if str(row["prompt_mode"]) in {PromptMode.PARAPHRASED_DISTRIBUTION.value, PromptMode.PARAPHRASED_DESCRIPTIVE_VERDICT.value}

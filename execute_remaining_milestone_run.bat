@@ -73,6 +73,11 @@ if errorlevel 1 exit /b %errorlevel%
 set /a RETRYABLE_FAILURE_COUNT=0
 
 python -m production.progress_status --out-dir "%OUT_DIR%" --run-id "%RUN_ID%" --milestone "%MILESTONE%" --skip-model-ids "%SKIP_MODEL_IDS%"
+if errorlevel 31 (
+  echo Provider-executable calls are done, but prework-blocked calls remain for %MILESTONE%.
+  echo Run the required materialization/prework command, then rerun this executor.
+  exit /b 31
+)
 if errorlevel 30 (
   echo All executable shards for %MILESTONE% are passed.
   exit /b 0

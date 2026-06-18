@@ -23,7 +23,7 @@ from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import _executable_requests, _recent_api_failures, parse_skip_model_ids, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
 from production.materialize_paraphrases import _coerce_paraphrase_text
-from production.progress_status import _count_shards, _db_progress
+from production.progress_status import _count_shards, _db_progress, print_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
 from production.failure_policy import (
     ApiFailureKind,
@@ -32,7 +32,7 @@ from production.failure_policy import (
     should_retry_call,
 )
 from production.providers import InferenceRequest, google_generation_config, openai_response_payload, post_json_with_retry, xai_response_payload
-from production.reporting import _decision_with_completion_gate, _decision_with_validity_gate, row_has_complete_distribution
+from production.reporting import _attempted_counts, _decision_with_completion_gate, _decision_with_validity_gate, row_has_complete_distribution
 from production.run_milestone import (
     DEFAULT_MODELS,
     earlier_non_target_call_count,
@@ -41,6 +41,7 @@ from production.run_milestone import (
     pending_requests,
     planned_call_id,
     select_component_rows,
+    successful_api_call_ids,
     terminal_api_call_ids,
 )
 from production.shards import first_incomplete_shard, iter_jsonl, shard_state_path, write_json, write_shard_plan
@@ -712,6 +713,90 @@ def test_report_decision_waits_for_complete_milestone():
     assert "milestone execution incomplete" in adjusted["revision_reasons"]
 
 
+def test_report_completion_counts_empty_non_error_response_as_attempted_output():
+    scratch_dir = Path("runs") / "test_report_completion" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, raw_response,
+              api_error_flag, http_status_code
+            ) VALUES ('empty', 'run', '13k', 'item', 'dataset', 'grok-4.3', 'xai',
+              'route', 'distribution_mode', 'hash', '{}', '', 0, 200)
+            """
+        )
+        connection.commit()
+
+        attempted = _attempted_counts(connection, {"empty"})
+
+        assert attempted["planned"] == 1
+        assert attempted["attempted"] == 1
+        assert attempted["completed_successful"] == 1
+        assert attempted["api_errors"] == 0
+    finally:
+        connection.close()
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
+def test_planner_treats_empty_non_error_response_as_completed_for_replanning():
+    scratch_dir = Path("runs") / "test_planner_successes" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        connection.execute(
+            """
+            INSERT INTO api_calls_raw (
+              api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+              api_route, prompt_mode, prompt_hash, request_json, raw_response,
+              api_error_flag, http_status_code
+            ) VALUES ('empty', 'run', '13k', 'item', 'dataset', 'grok-4.3', 'xai',
+              'route', 'distribution_mode', 'hash', '{}', '', 0, 200)
+            """
+        )
+        connection.commit()
+
+        assert "empty" in successful_api_call_ids(connection, "run")
+    finally:
+        connection.close()
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
+def test_report_counts_large_target_id_sets_without_sqlite_variable_limit():
+    scratch_dir = Path("runs") / "test_report_large_targets" / uuid.uuid4().hex
+    db_path = scratch_dir / "study.sqlite"
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        target_ids = {f"call_{index:04d}" for index in range(1200)}
+        for api_call_id in target_ids:
+            connection.execute(
+                """
+                INSERT INTO api_calls_raw (
+                  api_call_id, run_id, milestone, item_id, dataset_id, model_id, provider,
+                  api_route, prompt_mode, prompt_hash, request_json, raw_response,
+                  api_error_flag, http_status_code
+                ) VALUES (?, 'run', '25k', ?, 'dataset', 'grok-4.3', 'xai',
+                  'route', 'distribution_mode', 'hash', '{}', '{}', 0, 200)
+                """,
+                (api_call_id, api_call_id),
+            )
+        connection.commit()
+
+        attempted = _attempted_counts(connection, target_ids)
+
+        assert attempted["planned"] == 1200
+        assert attempted["attempted"] == 1200
+        assert attempted["completed_successful"] == 1200
+    finally:
+        connection.close()
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
 def test_progress_status_reports_total_executable_and_skipped_left():
     scratch_dir = Path("runs") / "test_progress_status" / uuid.uuid4().hex
     db_path = scratch_dir / "study.sqlite"
@@ -819,6 +904,36 @@ def test_progress_status_can_scope_to_current_target_call_ids():
         assert progress["left_total"] == 1
         assert progress["provider_executable_left_now"] == 0
         assert progress["prework_blocked_left"] == 1
+    finally:
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
+def test_progress_status_returns_prework_blocked_code_when_no_executable_left():
+    scratch_dir = Path("runs") / "test_progress_status_prework" / uuid.uuid4().hex
+    run_dir = scratch_dir / "run"
+    db_path = run_dir / "study.sqlite"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    connection = connect(db_path)
+    migrate(connection)
+    try:
+        connection.execute(
+            """
+            INSERT INTO planned_api_calls (
+              api_call_id, run_id, milestone, component_type, component_name,
+              item_id, dataset_id, model_id, prompt_mode, assignment_hash,
+              prompt_hash, request_json, status, created_at
+            ) VALUES ('blocked', 'run', '13k', 'paraphrase_audit', 'paraphrase',
+              'blocked', 'dataset', 'grok-4.3', 'paraphrased_distribution_mode',
+              'blocked', 'hash', ?, 'planned', 'now')
+            """,
+            (json.dumps({"prework_required": ["paraphrase"]}),),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    try:
+        assert print_progress(scratch_dir, "run", "13k") == 31
     finally:
         shutil.rmtree(scratch_dir, ignore_errors=True)
 

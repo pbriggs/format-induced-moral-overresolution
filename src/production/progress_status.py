@@ -185,6 +185,13 @@ def print_progress(out_dir: Path, run_id: str, milestone: str, skip_model_ids: s
         f"total={shard_progress['total']}",
         flush=True,
     )
+    if db_progress["provider_executable_left_now"] == 0 and db_progress["prework_blocked_left"] > 0:
+        print(
+            "milestone has no provider-executable calls left, but prework-blocked calls remain. "
+            "Run the required prework/materialization step, then rerun the milestone executor.",
+            flush=True,
+        )
+        return 31
     return 30 if db_progress["provider_executable_left_now"] == 0 else 0
 
 

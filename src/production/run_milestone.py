@@ -344,8 +344,6 @@ def successful_api_call_ids(connection: sqlite3.Connection, run_id: str) -> set[
         FROM api_calls_raw
         WHERE run_id = ?
           AND api_error_flag = 0
-          AND raw_response IS NOT NULL
-          AND TRIM(raw_response) != ''
         """,
         (run_id,),
     ).fetchall()
