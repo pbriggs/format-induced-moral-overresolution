@@ -9,11 +9,10 @@ This file freezes the post-13k / pre-25k study state for `format-induced-moral-o
 - OSF project: `https://osf.io/rwhax/`
 - Prior GitHub release/tag: `post-6k-pre13k-freeze-v1`
 - Prior GitHub release URL: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-6k-pre13k-freeze-v1`
-- Prior Zenodo DOI: `[fill if minted for post-6k/pre-13k release]`
 - New GitHub release/tag to create: `post-13k-pre25k-freeze-v1`
 - New GitHub release URL to create: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-13k-pre25k-freeze-v1`
-- New Zenodo DOI: `[fill after Zenodo archives the GitHub release]`
-- Git commit at freeze: `[fill after committing this manifest and 13k/25k code updates]`
+- New Zenodo DOI: `https://doi.org/10.5281/zenodo.20753877`
+- Git commit at freeze: `SHA 6ce0a365fdb4fcd839433e340bf914b2fa50e995`
 - Author: Paul Briggs
 - License: CC0 1.0 Universal, unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
 
