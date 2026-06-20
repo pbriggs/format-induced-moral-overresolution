@@ -13,7 +13,7 @@ This file freezes the post-25k / pre-35k study state for `format-induced-moral-o
 - New GitHub release/tag to create: `post-25k-pre35k-freeze-v1`
 - New GitHub release URL to create: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-25k-pre35k-freeze-v1`
 - New Zenodo DOI: `https://doi.org/10.5281/zenodo.20768498`
-- Git commit at freeze: `[fill after committing this manifest and 25k/35k code updates]`
+- Git commit at freeze: `Record 25k milestone review and pre-35k freeze`
 - Author: Paul Briggs
 - License: CC0 1.0 Universal, unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
 
