@@ -541,13 +541,14 @@ def run(args: argparse.Namespace) -> dict[str, object]:
         "provider_execution_note": "Use production.execute_milestone or execute_milestone_run.bat with exactly five frozen model IDs. Paraphrase-audit calls require materialized paraphrase_pairs before execution.",
     }
     write_outputs(out_dir, milestone, component_rows, pending, summary, target_api_call_ids)
-    ledger_export = write_api_call_ledger(connection, args.run_id, milestone.name, out_dir, target_api_call_ids=target_api_call_ids)
-    report_export = write_milestone_report(connection, args.run_id, milestone.name, out_dir, target_api_call_ids=target_api_call_ids)
-    summary["call_ledger_export"] = ledger_export
-    summary["milestone_report_export"] = {
-        "json_path": report_export["json_path"],
-        "md_path": report_export["md_path"],
-    }
+    if not getattr(args, "skip_report_exports", False):
+        ledger_export = write_api_call_ledger(connection, args.run_id, milestone.name, out_dir, target_api_call_ids=target_api_call_ids)
+        report_export = write_milestone_report(connection, args.run_id, milestone.name, out_dir, target_api_call_ids=target_api_call_ids)
+        summary["call_ledger_export"] = ledger_export
+        summary["milestone_report_export"] = {
+            "json_path": report_export["json_path"],
+            "md_path": report_export["md_path"],
+        }
     (out_dir / f"run_summary_{milestone.name}.json").write_text(json.dumps(summary, sort_keys=True, indent=2), encoding="utf-8")
     connection.close()
     return summary
@@ -563,6 +564,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--splits", default="train,dev,test")
     parser.add_argument("--seed", type=int, default=20260615)
     parser.add_argument("--alpha", type=float, default=0.5)
+    parser.add_argument("--skip-report-exports", action="store_true", help="Skip expensive ledger/report exports during execution resume planning.")
     return parser
 
 

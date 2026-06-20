@@ -56,11 +56,21 @@ class CircuitBreakerDecision:
 def classify_api_failure(
     http_status_code: int | None = None,
     error_type: str | None = None,
+    error_response_body: str | None = None,
     retry_after_seconds: float | None = None,
 ) -> FailureDecision:
     normalized_error = (error_type or "").strip().lower()
+    normalized_body = (error_response_body or "").strip().lower()
     if http_status_code is None and not normalized_error:
         return FailureDecision(ApiFailureKind.NONE, retryable=False, terminal=False)
+    if http_status_code == 403 and any(token in normalized_body for token in ("key limit exceeded", "resource-exhausted", "rate limit")):
+        return FailureDecision(
+            ApiFailureKind.RATE_LIMIT,
+            retryable=True,
+            terminal=False,
+            retry_after_seconds=retry_after_seconds,
+            reason="provider key or account limit exceeded",
+        )
     if http_status_code in {401, 403} or normalized_error in {"auth", "authentication", "authorization"}:
         return FailureDecision(ApiFailureKind.AUTHORIZATION, retryable=False, terminal=True, reason="authorization failure")
     if http_status_code == 400 or normalized_error in {"bad_request", "invalid_request"}:

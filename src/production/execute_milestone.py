@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import sqlite3
+import sys
 from typing import Any
 
 from parsing.validate_json import ParsedOutput, parse_and_validate
@@ -42,6 +43,7 @@ def _plan_args(args: argparse.Namespace) -> argparse.Namespace:
     plan_args.splits = args.splits
     plan_args.seed = args.seed
     plan_args.alpha = args.alpha
+    plan_args.skip_report_exports = True
     return plan_args
 
 
@@ -93,6 +95,11 @@ def progress_message(done: int, total: int, request: dict[str, Any], status: str
         f"run_id={request.get('run_id')} completed={done}/{total} left={remaining} "
         f"status={status} model={request.get('model_id')} mode={request.get('prompt_mode')}"
     )
+
+
+def emit_status(message: str) -> None:
+    print(f"[{utc_now()}] {message}", flush=True)
+    sys.stdout.flush()
 
 
 def _recent_api_failures(connection: sqlite3.Connection, run_id: str, limit: int = 50, window_minutes: float = 10.0) -> list[dict[str, Any]]:
@@ -231,6 +238,7 @@ def _insert_error(
     failure = classify_api_failure(
         http_status_code=error.status_code,
         error_type="transport_error" if error.transport_error_message else None,
+        error_response_body=error.error_response_body,
         retry_after_seconds=error.retry_after_seconds,
     )
     connection.execute(
@@ -320,7 +328,12 @@ def _insert_parsed_output(connection: sqlite3.Connection, request: dict[str, Any
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    emit_status(f"milestone={args.milestone} run_id={args.run_id} phase=planning_start")
     plan_summary = plan_run(_plan_args(args))
+    emit_status(
+        f"milestone={args.milestone} run_id={args.run_id} phase=planning_done "
+        f"pending={plan_summary.get('pending_calls')} provider_executable={plan_summary.get('provider_executable_pending_calls')}"
+    )
     model_ids = parse_model_ids(args.models)
     execution_config = load_execution_config(model_ids, mock_provider=args.mock_provider)
     adapters = build_adapters(execution_config.providers)
@@ -374,12 +387,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     update_shard_state(shard_path, status="running", started_at=utc_now())
     attempts_path = shard_path.with_suffix(".attempts.jsonl")
     events_path = shard_path.with_suffix(".events.jsonl")
+    emit_status(f"milestone={args.milestone} run_id={args.run_id} shard={shard_path.name} phase=execution_start planned_calls={total_calls}")
     for request_record in iter_jsonl(shard_path):
         request = dict(request_record)
         already_done = connection.execute(
             """
             SELECT 1 FROM api_calls_raw
-            WHERE api_call_id = ? AND ((api_error_flag = 0 AND raw_response IS NOT NULL) OR terminal_failure_flag = 1)
+            WHERE api_call_id = ? AND (api_error_flag = 0 OR terminal_failure_flag = 1)
             """,
             (request["api_call_id"],),
         ).fetchone()
@@ -402,6 +416,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             append_jsonl(events_path, {"event": "circuit_breaker_abort", "reason": abort_reason, "at": utc_now()})
             break
         adapter = adapters[provider]
+        emit_status(
+            f"milestone={args.milestone} run_id={args.run_id} starting_call={done_count + 1}/{total_calls} "
+            f"left={max(total_calls - done_count, 0)} model={request.get('model_id')} mode={request.get('prompt_mode')}"
+        )
         inference_request = InferenceRequest(
             prompt=str(request["prompt"]),
             model_id=str(request["model_id"]),
@@ -520,8 +538,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "skip_model_ids": sorted(skip_model_ids),
         "plan_summary": plan_summary,
     }
+    emit_status(f"milestone={args.milestone} run_id={args.run_id} phase=ledger_export_start")
     ledger_export = write_api_call_ledger(connection, args.run_id, args.milestone, out_dir, target_api_call_ids=target_api_call_ids)
+    emit_status(f"milestone={args.milestone} run_id={args.run_id} phase=report_export_start")
     report_export = write_milestone_report(connection, args.run_id, args.milestone, out_dir, target_api_call_ids=target_api_call_ids)
+    emit_status(f"milestone={args.milestone} run_id={args.run_id} phase=exports_done status={status}")
     summary["call_ledger_export"] = ledger_export
     summary["milestone_report_export"] = {
         "json_path": report_export["json_path"],

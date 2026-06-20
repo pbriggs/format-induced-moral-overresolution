@@ -22,6 +22,7 @@ from parsing.validity_status import ValidityStatus
 from prompts.prompt_templates import render_prompt
 from production.config import load_execution_config
 from production.execute_milestone import _executable_requests, _recent_api_failures, parse_skip_model_ids, parsed_output_is_invalid_for_primary_summary, progress_message, run as execute_milestone_run
+from production.execute_milestone import _plan_args as execute_plan_args
 from production.materialize_paraphrases import _coerce_paraphrase_text
 from production.progress_status import _count_shards, _db_progress, print_progress
 from pilot.pilot_diagnostics import evaluate_milestone_alignment, milestone_validity_check
@@ -204,6 +205,23 @@ def test_executor_progress_message_reports_completed_and_left():
     assert "completed=3/10" in message
     assert "left=7" in message
     assert "model=model" in message
+
+
+def test_executor_internal_planning_skips_expensive_report_exports():
+    args = Namespace(
+        milestone="25k",
+        run_id="run",
+        out_dir="runs",
+        db=None,
+        models="a,b,c,d,e",
+        splits="train,dev,test",
+        seed=1,
+        alpha=0.5,
+    )
+
+    plan_args = execute_plan_args(args)
+
+    assert plan_args.skip_report_exports is True
 
 
 def test_provider_retries_incomplete_chunked_read(monkeypatch):
@@ -574,6 +592,14 @@ def test_api_failure_policy_stops_wasteful_retry_loops():
     bad_request = classify_api_failure(http_status_code=400)
     assert bad_request.terminal
     assert not should_retry_call(0, bad_request)
+
+    openrouter_key_limit = classify_api_failure(
+        http_status_code=403,
+        error_response_body='{"error":{"message":"Key limit exceeded (total limit)","code":403}}',
+    )
+    assert openrouter_key_limit.kind == ApiFailureKind.RATE_LIMIT
+    assert openrouter_key_limit.retryable
+    assert not openrouter_key_limit.terminal
 
     breaker = circuit_breaker_decision([{"http_status_code": 503, "api_error_type": "server_error"} for _ in range(10)])
     assert breaker.abort
