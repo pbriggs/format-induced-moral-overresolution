@@ -28,3 +28,8 @@ data/scruples/
 # OS/editor noise
 .DS_Store
 Thumbs.db
+
+# Drafts and notes
+drafts/
+notes/
+paper/
