@@ -11,7 +11,7 @@ This file records completion of the full reduced 50k milestone for `format-induc
 - Prior GitHub release/tag: `post-35k-pre50k-freeze-v1`
 - New GitHub release/tag to create: `post-50k-completion-v1`
 - New GitHub release URL to create: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-50k-completion-v1`
-- New Zenodo DOI: `[fill after Zenodo mints DOI for post-50k completion release]`
+- New Zenodo DOI: `https://doi.org/10.5281/zenodo.20786461`
 - Git commit at completion review: `d40e7ab Update .gitignore`
 - Author: Paul Briggs
 - License: CC0 1.0 Universal, unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
