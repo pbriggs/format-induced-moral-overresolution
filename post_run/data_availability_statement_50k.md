@@ -5,7 +5,7 @@ Code, run manifests, and derived analysis artifacts for this study are available
 - OSF: `https://osf.io/rwhax/`
 - GitHub: `https://github.com/pbriggs/format-induced-moral-overresolution`
 - Zenodo, 50k execution/completion archive: `https://doi.org/10.5281/zenodo.20786461`
-- Zenodo, paper-analysis archive: `[fill after paper-analysis-50k-v1 release archival, if created]`
+- Zenodo, paper-analysis archive: `https://doi.org/10.5281/zenodo.20789625`
 
 The repository license is CC0 1.0 Universal unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
 
@@ -30,4 +30,4 @@ The main export manifest is:
 
 - `post_run/analysis_exports/50k/analysis_export_manifest_50k.json`
 
-The post-50k completion archive records the completed 50k execution state. Because additional paper-analysis scripts, tables, figures, and planning documents were generated after that release point, a separate paper-analysis release/DOI is recommended for final manuscript submission.
+The post-50k completion archive records the completed 50k execution state. The paper-analysis archive records the final offline analysis/export/figure package created after that release point.

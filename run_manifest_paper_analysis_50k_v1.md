@@ -14,9 +14,9 @@ It supplements, but does not replace, `run_manifest_post50k_completion_v1.md`.
 - 50k execution/completion release tag: `post-50k-completion-v1`
 - 50k execution/completion release URL: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/post-50k-completion-v1`
 - 50k execution/completion Zenodo DOI: `https://doi.org/10.5281/zenodo.20786461`
-- Recommended paper-analysis release tag to create after committing these analysis scripts/docs: `paper-analysis-50k-v1`
-- Recommended paper-analysis release URL to create: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/paper-analysis-50k-v1`
-- Paper-analysis Zenodo DOI: `[fill after Zenodo archives paper-analysis-50k-v1]`
+- Paper-analysis release tag: `paper-analysis-50k-v1`
+- Paper-analysis release URL: `https://github.com/pbriggs/format-induced-moral-overresolution/releases/tag/paper-analysis-50k-v1`
+- Paper-analysis Zenodo DOI: `https://doi.org/10.5281/zenodo.20789625`
 - Author: Paul Briggs
 - License: CC0 1.0 Universal, unless superseded by OSF project settings. Dataset and model-output redistribution remain subject to SCRUPLES/AllenAI terms, model-provider terms, privacy considerations, and institutional review requirements.
 
@@ -112,7 +112,7 @@ Primary contested-minus-high contrast estimates:
 
 These estimates are derived from the frozen 50k target IDs and do not require additional provider execution.
 
-## 6. Recommended GitHub Release
+## 6. GitHub Release
 
 Tag:
 
@@ -156,4 +156,4 @@ Upload or add the paper-analysis artifacts to the existing OSF project storage:
 
 - `https://osf.io/rwhax/files/osfstorage`
 
-The earlier milestone uploads remain valid. For the paper-analysis release, upload the generated `post_run/` analysis/export/figure folders and public post-run documents after creating the GitHub release and Zenodo DOI.
+The earlier milestone uploads remain valid. For the paper-analysis release, upload the generated `post_run/` analysis/export/figure folders, public post-run documents, and this manifest.
