@@ -1,0 +1,16 @@
+disagreement_bin,endpoint,mean,model_id,n
+diffuse,agreement_surplus,0.4356185586450608,all_models,2500
+high_consensus,agreement_surplus,0.16940876806182525,all_models,1750
+low_consensus,agreement_surplus,0.37093131989024575,all_models,3749
+low_diffuse,agreement_surplus,0.3968103560379554,all_models,6249
+moderate_consensus,agreement_surplus,0.2946303508144813,all_models,2000
+diffuse,distribution_agreement_gap,0.22655573376102645,all_models,2494
+high_consensus,distribution_agreement_gap,0.18284240687679082,all_models,1745
+low_consensus,distribution_agreement_gap,0.23268736616702354,all_models,3736
+low_diffuse,distribution_agreement_gap,0.23023274478330658,all_models,6230
+moderate_consensus,distribution_agreement_gap,0.22150952858575726,all_models,1994
+diffuse,sampling_compression,1.5073793114633163,all_models,500
+high_consensus,sampling_compression,0.5637081252817788,all_models,350
+low_consensus,sampling_compression,1.2646376937804604,all_models,750
+low_diffuse,sampling_compression,1.3617343408536027,all_models,1250
+moderate_consensus,sampling_compression,0.997935615478948,all_models,400

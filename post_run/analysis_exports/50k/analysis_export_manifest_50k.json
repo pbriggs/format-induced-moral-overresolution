@@ -1,0 +1,63 @@
+{
+  "analysis_rows": 47500,
+  "artifacts": [
+    "adjusted_tests_50k.csv",
+    "analysis_rows_50k.csv",
+    "annotation_info_sensitivity_50k.csv",
+    "baseline_distribution_quality_50k.csv",
+    "bootstrap_contrast_ci_50k.csv",
+    "bootstrap_endpoint_ci_50k.csv",
+    "distribution_diagnostics_50k.csv",
+    "distribution_diagnostics_summary_50k.csv",
+    "distribution_entropy_correlations_50k.csv",
+    "invalid_output_summary_50k.csv",
+    "leave_one_model_out_50k.csv",
+    "model_level_endpoint_table_50k.csv",
+    "normative_certainty_by_bin_model_50k.csv",
+    "paraphrase_bootstrap_ci_50k.csv",
+    "paraphrase_effects_50k.csv",
+    "paraphrase_original_vs_rewrite_50k.csv",
+    "primary_endpoint_table_50k.csv",
+    "smoothing_sensitivity_50k.csv",
+    "validity_by_model_mode_50k.csv",
+    "validity_flags_50k.csv",
+    "validity_sensitivity_50k.csv"
+  ],
+  "bootstrap_iterations": 2000,
+  "bootstrap_seed": 20260621,
+  "figure_ready": [
+    "figure_agreement_surplus_by_bin_model_50k.csv",
+    "figure_distribution_gap_by_bin_model_50k.csv",
+    "figure_distribution_quality_by_bin_model_50k.csv",
+    "figure_paraphrase_effects_by_bin_model_50k.csv",
+    "figure_sampling_compression_by_bin_model_50k.csv",
+    "figure_validity_by_model_mode_50k.csv"
+  ],
+  "manuscript_tables": [
+    "table_adjusted_tests_50k.csv",
+    "table_baseline_distribution_quality_50k.csv",
+    "table_component_allocation_50k.csv",
+    "table_distribution_quality_50k.csv",
+    "table_invalid_output_summary_50k.csv",
+    "table_model_roster_50k.csv",
+    "table_normative_certainty_50k.csv",
+    "table_paraphrase_ci_50k.csv",
+    "table_paraphrase_effects_50k.csv",
+    "table_primary_contrasts_with_ci_50k.csv",
+    "table_primary_results_with_ci_50k.csv",
+    "table_robustness_annotation_info_50k.csv",
+    "table_robustness_smoothing_50k.csv",
+    "table_validity_by_model_mode_50k.csv"
+  ],
+  "milestone": "50k",
+  "model_ready": [
+    "mixed_effects_endpoint_rows_50k.csv",
+    "mixed_effects_endpoint_rows_strict_valid_50k.csv"
+  ],
+  "out_dir": "post_run\\analysis_exports\\50k",
+  "run_id": "production_milestones_cumulative_v1",
+  "summaries": [
+    "manuscript_results_summary_50k.md"
+  ],
+  "target_api_call_ids": 47500
+}
