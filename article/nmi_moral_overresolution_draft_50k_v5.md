@@ -282,7 +282,7 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 5. Abdulhai, M., Serapio-Garcia, G., Crepy, C., Valter, D., Canny, J. & Jaques, N. Moral foundations of large language models. arXiv:2310.15337 (2023). https://arxiv.org/abs/2310.15337
 6. Takemoto, K. The moral machine experiment on large language models. *Royal Society Open Science* **11**, 231393 (2024). https://doi.org/10.1098/rsos.231393
 7. Zaim bin Ahmad, M. S. & Takemoto, K. Large-scale moral machine experiment on large language models. *PLoS One* **20**, e0322776 (2025). https://doi.org/10.1371/journal.pone.0322776
-8. Sclar, M., Choi, Y., Tsvetkov, Y. & Suhr, A. Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. *International Conference on Learning Representations, ICLR 2024* (2024).
+8. Sclar, M., Choi, Y., Tsvetkov, Y. & Suhr, A. Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. *International Conference on Learning Representations* (2024). https://openreview.net/forum?id=RIu5lyNXjT
 
 ## Main display items
 
@@ -294,9 +294,9 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 
 **Fig. 4 | Repeated forced-choice outputs compress source-community disagreement.** Sampling compression by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means for source-community entropy minus entropy of repeated forced-choice outputs on the five-label scale in bits. Positive values mean that repeated forced-choice outputs are more concentrated than source-community judgments under the study protocol. In the low-consensus primary subset, mean sampling compression was 1.264638 bits (95% item-cluster bootstrap CI, 1.218425-1.309054; n = 750 item-model summaries; Holm-adjusted P = 0.0015).
 
-**Table 1 | Frozen model roster and target allocation.** The roster reports the evaluated model IDs, access routes, collection windows and target calls. Provider/route fields record provenance only; provider-family, route and model-family comparisons are outside the analysis. The allocation table reports the frozen study components used for the target-scoped audit.
+**Table 1 | Model roster and target allocation.** The roster reports the evaluated model IDs, access routes, collection windows and target calls. Provider/route fields record provenance only; provider-family, route and model-family comparisons are outside the analysis. The allocation table reports the frozen study components used for the 50k analysis.
 
-**Table 1a | Frozen model roster.**
+**Table 1a | Model roster and collection windows.**
 
 | Model ID | Provider/route | API route | First call UTC | Last call UTC | Target calls |
 |---|---|---|---|---|---:|
