@@ -12,7 +12,7 @@ Large language models (LLMs) are increasingly asked to make ethical judgments ab
 
 LLM users often ask for single judgments when reference judgments are divided. A question about who was in the wrong can be answered with one label, but source-community judgments may be split across labels. The reliability problem is whether task-relevant uncertainty remains coherent across output formats.
 
-Moral judgment is a useful stress test because source-community disagreement is common, measurable and consequential. Some everyday cases draw a clear majority in the source community; others divide judgments across several answers.
+Moral judgment is a useful stress test because source-community disagreement is common, measurable and consequential. In some everyday cases, source-community judgments converge on a clear majority label; in others, they divide across several answers.
 
 Consider a routine interpersonal dispute in which source-community judgments could divide among the narrator, the other party and both parties. A distributional answer may assign probability mass across those labels. Asked for a verdict and agreement estimate, the same model may choose one label and estimate high source-community agreement. The failure is the cross-format shift: one format communicates division, whereas another makes the selected label sound more agreed upon.
 
@@ -161,7 +161,7 @@ Full API-parameter fields, structured-output settings where applicable, maximum-
 
 ### Prompt modes and request construction
 
-Distribution mode asked each model to estimate the source-community probability distribution over the five labels. Descriptive verdict/agreement mode asked the model to choose one label and estimate the proportion of source-community judges who would agree with that choice. Repeated-sampling mode elicited ten single-label forced-choice outputs for each repeated-sampling item-model pair. Normative-certainty prompts elicited a separate moral-certainty construct for secondary descriptive analysis.
+Distribution mode asked each model to estimate the source-community probability distribution over the five labels. Descriptive verdict/agreement mode asked the model to choose one label and estimate source-community agreement for that choice. Repeated-sampling mode elicited ten single-label forced-choice outputs for each repeated-sampling item-model pair. Normative-certainty prompts elicited a separate moral-certainty construct for secondary descriptive analysis.
 
 Requests were fresh and stateless across prompt modes. The verdict/agreement prompt did not include the model's own distribution-mode answer. Prompt templates, schemas, label order, rendered prompt hashes, model IDs, API route, timestamps and decoding parameters were recorded in run records. Prompts requested structured final outputs and did not request chain-of-thought.
 
