@@ -145,7 +145,7 @@ low consensus:              top-label support >= 0.50 and < 0.65
 diffuse/no-clear-consensus: top-label support < 0.50
 ```
 
-Item selection and label-order assignment used the milestone seed `20260615`. Eligible items were selected within disagreement bins to satisfy the frozen component allocations, and the released target manifests record the resulting item IDs. Beyond the eligibility rules above, target-list membership was governed by the frozen allocation plan rather than by inspection of model outputs.
+Item selection and label-order assignment used the recorded milestone seed `20260615`. Within each disagreement bin, eligible items were selected according to the frozen allocation plan and component-specific target counts; the released target manifests record the resulting item IDs. Beyond the eligibility rules above, target-list membership was determined by the frozen allocation plan and recorded seed rather than by inspection of model outputs.
 
 Low-consensus items were the primary confirmatory subset, diffuse/no-clear-consensus items remained secondary, and high-consensus items served as the reference condition.
 
@@ -165,11 +165,11 @@ Distribution mode asked each model to estimate the source-community probability 
 
 Requests were fresh and stateless across prompt modes. The verdict/agreement prompt did not include the model's own distribution-mode answer. Prompt templates, schemas, label order, rendered prompt hashes, model IDs, API route, timestamps and decoding parameters were recorded in run records. Prompts requested structured final outputs and did not request chain-of-thought.
 
-For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt. Label order was assigned separately for each prompt assignment using the recorded seed procedure, and the local label-order seed included `sample_id`. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed.
+For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt at temperature 0.0. Label order was assigned separately for each prompt assignment using the recorded seed procedure; `sample_id` was part of the local label-order seed. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed.
 
 The sampling-compression endpoint measures diversity across repeated forced-choice outputs under the recorded prompt and label-order randomization protocol, not stochastic sampling from an internal model distribution.
 
-For paraphrase analyses, paraphrased versions of a stratified item subset were generated with the study's paraphrase-generation prompt mode. They were then evaluated with the paraphrased distribution and paraphrased descriptive verdict/agreement modes, which reused the same response schemas and validity rules as the corresponding original-item prompts. Because matched original-vs-paraphrase overlap was limited, the paraphrase component was treated as aggregate surface-form evidence rather than as a definitive paired original-vs-paraphrase test. This component did not test training-set membership; contamination was not directly measured.
+For paraphrase analyses, paraphrased versions of a stratified item subset were generated with the study's paraphrase-generation prompt mode. The paraphrased items were then evaluated with the paraphrased distribution and paraphrased descriptive verdict/agreement modes, using the same response schemas and parsing/validity rules as corresponding original-item prompts. Because matched original-vs-paraphrase coverage was limited, the paraphrase component provides aggregate surface-form evidence rather than a definitive paired original-vs-paraphrase test. This component did not test training-set membership, and contamination was not directly measured.
 
 Rendered prompt hashes were computed after inserting item text and randomized label order. Public materials describe prompt structure and release-safe templates while excluding rendered prompts containing source anecdotes.
 
@@ -179,9 +179,9 @@ Strict JSON schema enforcement was used where supported. Otherwise, JSON was ext
 
 For distribution-mode outputs, all five label probabilities had to be castable to floats and within the closed interval [0, 1]. Values outside that interval were marked as `probability_out_of_bounds`.
 
-Probability vectors were accepted when their total fell within the inclusive interval [0.99, 1.01]. Accepted vectors whose totals differed from 1.0 by more than 1e-12 were renormalized to sum to one before downstream use. The 1e-12 threshold was only the renormalization threshold, not the exclusion tolerance. Vectors with totals below 0.99 or above 1.01 were marked as `probability_sum_error` and excluded from primary analyses. This tolerance was the hard-coded default in the collection-time parser; the final 50k exporter inherited stored parser validity statuses rather than revalidating probability sums with a second tolerance.
+Probability vectors were accepted when their total fell within the inclusive interval [0.99, 1.01]. Accepted vectors whose totals differed from 1.0 by more than 1e-12 were renormalized to sum to one before downstream use. The 1e-12 threshold was only the renormalization threshold, not the exclusion tolerance. Vectors with totals below 0.99 or above 1.01 were marked as `probability_sum_error` and excluded from primary analyses. These statuses were assigned by the collection-time parser; the final 50k exporter inherited stored parser validity statuses rather than revalidating probability sums or applying a second tolerance.
 
-The final 50k run planned, attempted and completed 47,500 target calls. Run provenance recorded 0 API errors, 0 terminal failures, retry rate 0.0, executor status passed and database integrity ok.
+The frozen analysis included 47,500 planned, attempted and completed target calls. Run provenance recorded 0 API errors, 0 terminal failures, retry rate 0.0, executor status passed and database integrity ok.
 
 Primary-valid outputs were 47,432 of 47,500: 38,790 strict-schema outputs and 8,642 extracted-JSON outputs. Invalid status counts were 52 `probability_out_of_bounds` outputs, 10 `probability_sum_error` outputs, 4 invalid-JSON outputs and 2 empty responses. Refusals and off-schema labels were zero. Repair fields were tracked, but `repair_attempted=0` and `repair_successful=0`; the final 50k analysis contained no repaired outputs. Validity by model and prompt mode is reported in Extended Data Table 1.
 
@@ -219,9 +219,9 @@ Entropy values are reported on the five-label scale in bits. Positive values ind
 
 ### Statistical inference
 
-Primary inference used item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed `20260621`. For bin-specific estimates, item IDs were resampled with replacement within the bin and all relevant model/prompt rows for resampled items were retained.
+Primary inference used item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed `20260621`. For bin-specific estimates, each bootstrap replicate resampled item IDs with replacement within the bin and retained all relevant model/prompt rows associated with the resampled items.
 
-For contrasts, each bootstrap replicate recomputed the relevant bin means and subtracted the high-consensus reference estimate. This procedure avoids treating item-model rows as fully independent observations.
+For contrasts, each bootstrap replicate recomputed the relevant bin means and subtracted the high-consensus reference estimate. This item-level clustering avoids treating item-model rows as fully independent observations.
 
 The three low-consensus primary endpoints were tested using one-sided positive-effect bootstrap P values, Holm-adjusted across the three endpoints. Because 2,000 bootstrap iterations impose a finite floor, adjusted P values are reported as Holm-adjusted P = 0.0015.
 
