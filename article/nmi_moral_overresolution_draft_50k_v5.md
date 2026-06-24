@@ -29,11 +29,11 @@ The contribution is threefold. First, the study operationalizes cross-format unc
 
 ### Endpoint logic and target set
 
-We tested three ways a verdict-style output can over-resolve a source-community judgment distribution. Agreement surplus asks whether the verdict/agreement format reports more source-community agreement than source-community support for the selected label. The distribution-agreement gap asks whether that reported agreement also exceeds the same model's distribution-mode probability for the same item and verdict-selected label. Sampling compression asks whether repeated forced-choice outputs occupy a narrower effective label range than source-community votes for the same items.
+We tested three ways verdict-style outputs can over-resolve source-community disagreement. First, a selected label can be accompanied by an estimate of source-community agreement that exceeds its source-community support. Second, the same model can report higher estimated source-community agreement in verdict/agreement mode than the probability it assigns to the same item and verdict-selected label in distribution mode. Third, repeated forced-choice outputs under the study protocol can be more concentrated on the five-label scale than the source-community judgment distribution.
 
-Low-consensus items were the confirmatory subset: cases with a majority label but substantial remaining source-community disagreement. Diffuse/no-clear-consensus items were analysed separately as secondary evidence, and high-consensus items served as a reference condition. This hierarchy keeps the primary test distinct while each endpoint compares matched item-model outputs rather than unrelated prompts.
+These endpoints were evaluated with matched item-model comparisons. Low-consensus items were the confirmatory subset: cases with a majority label but substantial remaining source-community disagreement. Diffuse/no-clear-consensus items were analysed separately as secondary evidence, and high-consensus items served as a reference condition. This hierarchy keeps the primary test distinct while each endpoint compares matched item-model outputs rather than unrelated prompts.
 
-The frozen target-scoped audit contained 47,500 target calls and 47,432 primary-valid outputs. Table 1 and Methods report the allocation, model roster and component details.
+Table 1 and Methods report the model roster, component allocation and study scale, including 47,500 target calls and 47,432 primary-valid outputs.
 
 
 ### Verdict prompts inflate apparent agreement
