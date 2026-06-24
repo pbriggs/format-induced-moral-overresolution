@@ -239,26 +239,15 @@ Normative certainty was analysed as a secondary descriptive construct distinct f
 
 Derived analysis files and reproducibility records are available through the OSF project (`https://osf.io/rwhax/overview`), OSF registration home (`https://osf.io/rwhax/registrations`), GitHub repository (`https://github.com/pbriggs/format-induced-moral-overresolution`), the post-50k execution/completion archive (`https://doi.org/10.5281/zenodo.20786461`) and the paper-analysis archive (`https://doi.org/10.5281/zenodo.20789625`). The corresponding release tags are `post-50k-completion-v1` and `paper-analysis-50k-v1`.
 
-Public derived/reviewable materials include frozen target lists and run manifests with sensitive details removed where needed, release-safe prompt templates and schema files, endpoint tables, bootstrap confidence intervals, adjusted tests, parsed-output/validity-status and exclusion summaries, robustness summaries, paraphrase-audit summaries, distribution-quality diagnostics, baseline diagnostics, normative-certainty summaries, manuscript-table CSVs, figure-ready CSVs and rendered figures. The Supplementary Information lists the main source-data and analysis files for Supplementary Tables and Extended Data. Analysis code is described in the Code Availability statement. The repository license is CC0 1.0 Universal unless superseded by OSF project settings. Redistribution of dataset and model-output material remains subject to third-party terms, privacy considerations and institutional review requirements.
+Release-safe materials include frozen target lists and run manifests with sensitive details removed where needed; prompt templates and schemas; derived endpoint, robustness, paraphrase, baseline, secondary normative-certainty and distribution-quality summaries; bootstrap intervals, adjusted tests and validity/exclusion summaries; manuscript-table CSVs, figure-ready CSVs and rendered figures. The Supplementary Information and repository documentation list the main source-data and analysis files, and analysis code is described below. The repository license is CC0 1.0 Universal unless superseded by OSF project settings.
 
-The source SCRUPLES data should be accessed through the original dataset source subject to its terms [4]. Raw SCRUPLES anecdotes, rendered prompts containing anecdote text, newly collected raw model/provider responses, full call ledgers and full SQLite run stores are not redistributed in unrestricted form where doing so could conflict with SCRUPLES/AllenAI terms, model-provider terms, privacy/sensitivity considerations or institutional review requirements. Restricted verification materials can be provided to editors or reviewers upon reasonable request under appropriate non-redistribution conditions and subject to applicable third-party terms.
+Raw SCRUPLES anecdotes, rendered prompts containing anecdote text, newly collected raw model/provider responses, full call ledgers and full run stores containing restricted or mixed material are not redistributed in unrestricted form where doing so could conflict with SCRUPLES/AllenAI terms, model-provider terms, privacy/sensitivity considerations or institutional review requirements. The source SCRUPLES data should be accessed through the original dataset source subject to its terms [4]. Restricted verification materials can be provided to editors or reviewers upon reasonable request under appropriate non-redistribution conditions and applicable third-party terms.
 
 ## Code availability
 
-Analysis code and figure-generation scripts are available at `https://github.com/pbriggs/format-induced-moral-overresolution` and archived under release tag `paper-analysis-50k-v1` with DOI `https://doi.org/10.5281/zenodo.20789625`. The repository includes preprocessing code, prompt templates, schema files, target-scoped export scripts, parsing and validation code, bootstrap procedures, manuscript tables and figure-rendering scripts. API credentials and provider-specific secrets are not included.
+Analysis and figure-generation code are available at `https://github.com/pbriggs/format-induced-moral-overresolution` and archived under release tag `paper-analysis-50k-v1` with DOI `https://doi.org/10.5281/zenodo.20789625`. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap-analysis, manuscript-table and figure-rendering code. API credentials and provider-specific secrets are not included.
 
-The final 50k analysis can be regenerated locally from the completed run database, when available in an authorized local or reviewer environment, with the offline analysis commands:
-
-```powershell
-$env:PYTHONPATH='src'
-$env:PYTHONDONTWRITEBYTECODE='1'
-python -m analysis.final_50k_exports --bootstrap-iterations 2000
-python -m analysis.render_final_figures
-```
-
-These commands regenerate analysis tables and figures from completed-run data without making new provider calls.
-
-Full local setup instructions are provided in `README.md`, `.env.example` and `docs/DATA_SETUP.md`. They cover dependency installation, SCRUPLES data placement and environment variables for optional provider-call reproduction. Optional provider-call reruns require the user's own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
+Local setup and regeneration instructions are provided in `README.md`, `.env.example` and `docs/DATA_SETUP.md`. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the user's own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
 
 ## AI assistance disclosure
 
