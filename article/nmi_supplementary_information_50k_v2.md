@@ -188,7 +188,7 @@ The inferential source for the Article is the frozen 50k analysis. Earlier cumul
 
 ## Supplementary Tables and source-data files
 
-Supplementary Tables 1-8 are provided as accompanying source-data files; this section identifies each file and its role in supporting the Article. File paths are relative to the released repository/archive root. The listed files are derived analysis/source-data files and do not indicate unrestricted redistribution of raw SCRUPLES anecdotes, rendered prompts, raw provider responses or full run stores.
+Supplementary Tables 1–8 are provided as accompanying source-data files; this section identifies each file and its role in supporting the Article. File paths are relative to the released repository/archive root. The listed files are derived analysis/source-data files and do not indicate unrestricted redistribution of raw SCRUPLES anecdotes, rendered prompts, raw provider responses or full run stores.
 
 | Supplementary Table | What it supports | Source data |
 |---|---|---|
