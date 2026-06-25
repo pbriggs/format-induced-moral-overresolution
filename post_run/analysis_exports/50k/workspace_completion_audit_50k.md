@@ -1,62 +1,77 @@
-# Workspace Completion Audit: 50k NMI Manuscript
+# Workspace Completion Audit: 50k NMI Manuscript — gap-fixed review
 
-Date: 2026-06-25
+Date: 2026-06-25  
+Revision: v2 gap-fixed review based on `workspace_completion_audit_50k.md`
 
-Scope: audit-only pass for the `format-induced-moral-overresolution` workspace. This memo inspects manuscript, Supplementary Information, figure assets, source data, references, LaTeX readiness and packaging readiness. No files were moved, renamed, deleted or regenerated during this audit; the only file changed is this memo.
+Scope: audit-only review of the `format-induced-moral-overresolution` manuscript workspace and the next packaging path. This revision does not move, rename, delete, regenerate or validate repository assets. It closes planning gaps in the original audit by separating scientific readiness from LaTeX/package readiness, adding LaTeX QA gates, adding Windows/VSCode tooling recommendations, tightening bibliography/package risks and clarifying what still requires manual inspection.
 
 ## 1. Concise verdict
 
-**Nearly ready for LaTeX.**
+**Ready to begin LaTeX packaging; not yet ready as a final LaTeX submission package.**
 
-The scientific manuscript package is largely complete enough to begin LaTeX conversion planning: the current main manuscript and SI are present, the final rendered figure package contains all expected main and Extended Data figures in SVG, PNG and PDF formats, source-data mappings are documented, and the tracked tree is clean.
+The manuscript package is scientifically and structurally far enough along to start a clean LaTeX conversion. The current main manuscript and Supplementary Information are present, the figure package is rendered in SVG/PNG/PDF, source-data mappings are documented, and the reported numerical results are traceable to the frozen 50k exports.
 
-The package is not yet fully submission-packaged because:
+The remaining blockers are packaging and verification blockers rather than analysis blockers:
 
-- no BibTeX file exists;
-- no LaTeX workspace, template class, `main.tex`, `.bbl` or build script exists;
-- the current manuscript references are embedded as numbered Markdown references;
-- the proposed `paper/` directory is currently ignored by `.gitignore`, so `submission/` is cleaner unless the ignore rule is intentionally changed.
+- no `references.bib` exists;
+- no LaTeX workspace, template/class file, `main.tex`, `.bbl`, `latexmkrc` or build script exists;
+- no compiled PDF has been built and visually inspected;
+- the current manuscript references are embedded as numbered Markdown references rather than citation keys or a controlled LaTeX bibliography;
+- the proposed `paper/` directory is currently ignored by `.gitignore`, so `submission/` is the safer package root unless the ignore rule is intentionally changed;
+- Fig. 1 still needs manual visual review despite automated layout QA;
+- no LaTeX log, reference/citation, overfull-box, font-embedding or hyperlink QA has been performed because no LaTeX build exists yet.
 
-Live NMI pages checked during this audit:
+Live NMI pages checked in the original audit:
 
 - `https://www.nature.com/natmachintell/content`
 - `https://www.nature.com/natmachintell/submission-guidelines/initial-formatting`
+
+Current NMI interpretation for this package:
+
+- Initial submission can be PDF, Word or TeX/LaTeX, and TeX/LaTeX should include compiled PDFs.
+- Article format is consistent with the current main display count and abstract length target, but final submission quality still requires a compiled PDF and manual inspection.
 
 ## 2. Current canonical manuscript and SI files
 
 Current main manuscript:
 
 - `article/nmi_moral_overresolution_draft_50k_v5.md`
-- Size: 48,191 bytes
-- Modified: 2026-06-25 11:57:10
-- Abstract word count: 149 words
+- Size reported in original audit: 48,191 bytes
+- Modified reported in original audit: 2026-06-25 11:57:10
+- Abstract word count reported in original audit: 149 words
 
 Current Supplementary Information:
 
 - `article/nmi_supplementary_information_50k_v2.md`
-- Size: 22,880 bytes
-- Modified: 2026-06-24 17:43:47
+- Size reported in original audit: 22,880 bytes
+- Modified reported in original audit: 2026-06-24 17:43:47
 
-Expected duplicate/candidate checks:
+Recommended canonical package filenames:
 
-- `nmi_moral_overresolution_draft_50k_latest.md`: not found.
-- root-level `nmi_supplementary_information_50k_v2.md`: not found.
-- `drafts/nmi_moral_overresolution_draft_50k_4.md`: exists, older draft/local-only.
-- `drafts/nmi_supplementary_information_50k.md`: exists, older draft/local-only.
+- `submission/manuscript.md`
+- `submission/supplementary_information.md`
+- `submission/references.bib`
+- `submission/latex/main.tex`
 
-Recommendation:
+Gap fixed:
 
-- Treat the two files in `article/` as current canonical source text for conversion.
-- Later, create clearer canonical filenames in a clean package area, for example `submission/manuscript.md` and `submission/supplementary_information.md`, without changing the current article files until explicitly requested.
+- The original audit correctly identified the `article/` files as canonical, but the next task should copy them into a clean package root rather than editing them in place.
+- Before creating `submission/`, check whether it is ignored:
+
+```bash
+git check-ignore -v submission/ || true
+```
+
+If `submission/` is not ignored, use it. If it is ignored in a local/global ignore, either change the ignore rule intentionally or use a different package root and document the choice.
 
 ## 3. Current repo and workspace state
 
-Git status:
+Original audit findings:
 
 - Branch: `main...origin/main`
-- Before this memo update, the tracked tree was clean.
-- After this memo update, the only tracked modification is `post_run/analysis_exports/50k/workspace_completion_audit_50k.md`.
-- `git status --short --branch --ignored` also reports ignored/local-only directories.
+- Before the audit memo update, the tracked tree was clean.
+- After the memo update, the only tracked modification was `post_run/analysis_exports/50k/workspace_completion_audit_50k.md`.
+- `git status --short --branch --ignored` also reported ignored/local-only directories.
 - Warning observed: `could not open directory '.tmp_pytest/': Permission denied`.
 
 Ignored/local-only material:
@@ -67,14 +82,19 @@ Ignored/local-only material:
 - `__pycache__/` and `.tmp_pytest/`: runtime/cache only.
 - `paper/`: ignored by `.gitignore`.
 
-Local style-reference images:
+Gap fixed:
 
-- `drafts/style_reference/nmi_figures/42256_2022_536_Fig2_HTML.webp`
-- `drafts/style_reference/nmi_figures/42256_2024_963_Fig3_HTML.webp`
-- `drafts/style_reference/nmi_figures/42256_2024_976_Fig1_HTML.webp`
-- `drafts/style_reference/nmi_figures/README.md`
+- The next packaging task should not rely only on `git status`; it should explicitly check ignore behavior for the new package root and for copied figures/source data.
+- Add a small package manifest under `submission/package_manifest.md` so the curated package can be audited without re-reading the whole repository.
+- Do not copy `runs/`, `data/scruples/`, raw provider responses, rendered prompts containing anecdote text, local style-reference images or full run stores into `submission/`.
 
-These should remain local-only and should not be committed unless the author explicitly changes the policy.
+Recommended package-status commands after the package root exists:
+
+```bash
+git status --short --branch --ignored
+git check-ignore -v submission/ || true
+find submission -maxdepth 3 -type f | sort > submission/package_file_list.txt
+```
 
 ## 4. Current figure package status
 
@@ -106,30 +126,34 @@ All expected rendered figures exist in SVG, PNG and PDF:
 | Extended Data Fig. 2 paraphrase audit | `figure_paraphrase_audit_effects_50k.{svg,png,pdf}` | `figure_ready/figure_paraphrase_effects_by_bin_model_50k.csv` | `src/analysis/render_final_figures.py` |
 | Extended Data Fig. 3 validity | `figure_validity_rate_by_model_50k.{svg,png,pdf}` | `figure_ready/figure_validity_by_model_mode_50k.csv` | `src/analysis/render_final_figures.py` |
 
-Asset checks:
+Original audit checks that remain valid:
 
 - All SVG, PNG and PDF files are non-empty.
 - All PDFs have `%PDF-` headers.
-- Search found no `<image>`, `base64` or `data:image` references in the rendered SVGs, so the SVGs appear vector/editable rather than raster-embedded.
+- Search found no `<image>`, `base64` or `data:image` references in rendered SVGs, so the SVGs appear vector/editable rather than raster-embedded.
 - `quantitative_figure_numerical_validation_50k.txt` records PNG dimensions/DPI, SVG raster checks and PDF header checks.
-- `figure_study_design_50k_layout_qa.txt` reports 0 text overlaps, 0 text-box border collisions and 0 sampled arrow-text collisions; it still notes that a manual visual check is required after render.
+- `figure_study_design_50k_layout_qa.txt` reports 0 text overlaps, 0 text-box border collisions and 0 sampled arrow-text collisions; it still requires manual visual review.
 
-Polished endpoint-figure checks:
+Gap fixed:
 
-- Aggregate all-model bars are retained in Figs. 2-4.
-- Aggregate CI/error bars are retained where available in Figs. 2-4.
-- Model-level points are retained.
-- Model colors and markers are centrally defined in `src/analysis/render_final_figures.py`.
-- Fig. 4 uses `Sampling compression (bits)`.
-- Fig. 3 and Extended Data Fig. 2 use `Distribution-agreement gap`, not `Distribution gap`.
+- Automated layout QA is not enough. A manual figure pass should be explicit before submission.
+- The LaTeX build should include final PDFs for figures by default. Keep SVGs as editable/source-adjacent assets and PNGs as preview/fallback assets.
+- After LaTeX conversion, inspect whether figure scaling changes text size, line weights, label readability, panel alignment or caption/callout accuracy.
+- If final journal upload later requires separate artwork formats, re-check the journal’s current artwork instructions at that time. For now, the package should preserve PDF, SVG and PNG so format conversion remains possible.
 
-One nuance:
+Manual figure QA checklist:
 
-- Older audit and production-decision notes, especially `figure_asset_audit_50k.md` and `figure_production_decision_lock_50k.md`, contain pre-polish statements that PDFs, Fig. 4 unit wording or the Extended Data Fig. 2 label still needed work. These appear superseded by the current rendered files, `final_figure_export_checklist_50k.md` and `quantitative_figure_numerical_validation_50k.txt`.
+- Open each main and Extended Data PDF at 100%, page width and print-like size.
+- Confirm all labels are readable after LaTeX scaling.
+- Confirm Fig. 3 says `Distribution-agreement gap`, not the shorter older label.
+- Confirm Fig. 4 unit is `bits`.
+- Confirm no cropped text, clipped markers, low-contrast points or overlapping labels.
+- Confirm Fig. 1 arrows, boxes and labels are legible and visually balanced.
+- Confirm captions in LaTeX match the final figure files and do not cite older pre-polish notes.
 
 ## 5. Source-data and numerical traceability status
 
-Main Figs. 2-4:
+Main Figs. 2–4:
 
 - Fig. 2 source CSV: `post_run/analysis_exports/50k/figure_ready/figure_agreement_surplus_by_bin_model_50k.csv`
 - Fig. 3 source CSV: `post_run/analysis_exports/50k/figure_ready/figure_distribution_gap_by_bin_model_50k.csv`
@@ -137,24 +161,35 @@ Main Figs. 2-4:
 - CI table: `post_run/analysis_exports/50k/manuscript_tables/table_primary_results_with_ci_50k.csv`
 - Contrast table: `post_run/analysis_exports/50k/manuscript_tables/table_primary_contrasts_with_ci_50k.csv`
 
-Traceability findings:
+Traceability findings from original audit:
 
-- All all-model means in Figs. 2-4 match the corresponding figure-ready CSV rows.
+- All all-model means in Figs. 2–4 match the corresponding figure-ready CSV rows.
 - All all-model means also match `table_primary_results_with_ci_50k.csv`.
 - CIs are read from `table_primary_results_with_ci_50k.csv`; no new CIs were computed for figure polish.
 - Moderate-consensus rows have means but no CI bounds in the table, and the figure/checklist correctly state that no invented CIs were added.
 - Figure-ready CSVs and manuscript tables have 2026-06-21 timestamps, while polished rendered figures and validation notes have 2026-06-24 timestamps, consistent with figure polish not changing source CSVs or manuscript tables.
 
-Extended Data traceability:
+Gap fixed:
 
-- Extended Data Fig. 1 maps to `figure_distribution_quality_by_bin_model_50k.csv`, `table_distribution_quality_50k.csv` and `table_baseline_distribution_quality_50k.csv`.
-- Extended Data Fig. 2 maps to `figure_paraphrase_effects_by_bin_model_50k.csv`, `table_paraphrase_effects_50k.csv` and `table_paraphrase_ci_50k.csv`.
-- Extended Data Fig. 3 maps to `figure_validity_by_model_mode_50k.csv`, `table_validity_by_model_mode_50k.csv` and `table_invalid_output_summary_50k.csv`.
+- The submission package should copy only the source-data files actually needed to support the manuscript figures/tables, plus an inventory explaining why each file is included.
+- Do not copy raw SCRUPLES anecdotes or raw provider responses into source data.
+- Add checksums for copied package artifacts so the curated package can be compared with the repo source.
 
-Status:
+Recommended checksum command after copying:
 
-- Source-data and numerical traceability are strong enough for LaTeX conversion.
-- Keep `figure_source_inventory_50k.md`, `final_figure_export_checklist_50k.md` and `quantitative_figure_numerical_validation_50k.txt` as the controlling audit records.
+```bash
+python - <<'PY'
+from pathlib import Path
+import hashlib
+root = Path("submission")
+for p in sorted(root.rglob("*")):
+    if p.is_file():
+        h = hashlib.sha256(p.read_bytes()).hexdigest()
+        print(f"{h}  {p.as_posix()}")
+PY
+```
+
+Save the output as `submission/package_checksums_sha256.txt`.
 
 ## 6. Caption and cross-reference status
 
@@ -171,7 +206,7 @@ Main manuscript captions/callouts are present for:
 - Extended Data Fig. 3
 - Extended Data Table 1
 
-Alignment checks:
+Alignment checks from original audit:
 
 - Fig. 3 is described as the same model, same item and same selected/verdict label.
 - Fig. 4 is described in bits.
@@ -182,38 +217,48 @@ Alignment checks:
 - Paraphrase is described as aggregate surface-form evidence with limited matched coverage, not as contamination exclusion or strong paired robustness.
 - Validity is described as supporting transparency/exclusions, not a primary endpoint.
 
-Current NMI fit note:
+Gap fixed:
 
-- The abstract is 149 words, within the live NMI Article limit of up to 150 words.
+- Markdown callouts still need conversion into LaTeX labels and references. During conversion, each callout should become a stable `\label{}`/`\ref{}` or controlled textual citation.
+- Table 1 has subparts (`Table 1a`, `Table 1b`) that may need careful LaTeX handling so the rendered PDF does not confuse them with separate main display items.
+- Extended Data references should remain Extended Data references and should not be counted as main display items.
+- The LaTeX PDF should be searched for unresolved references and citations.
+
+Suggested label scheme:
+
+```text
+fig:study-design
+fig:agreement-surplus
+fig:distribution-agreement-gap
+fig:sampling-compression
+tab:model-roster-allocation
+tab:primary-endpoints
+edfig:distribution-quality
+edfig:paraphrase-audit
+edfig:validity
+edtab:validity-exclusions
+```
 
 ## 7. Claim-discipline guardrails
 
-Searches covered the manuscript, SI, captions, figure inventory and 50k notes for wording that could imply overclaims. Most hits are explicit caveats rather than problems.
+Original audit conclusion remains sound: current manuscript/SI wording does not appear to claim moral truth, universal representativeness, contamination exclusion, strong paired paraphrase robustness, provider-family effects, model-family effects, normative certainty as a primary endpoint, high-consensus as null/unaffected, distribution-mode perfect recovery or repeated temperature-0 calls as latent model-distribution sampling.
 
-Controlled/correct caveat examples:
+Gap fixed:
 
-- `article/nmi_moral_overresolution_draft_50k_v5.md`: SCRUPLES distributions are framed as source-community reference distributions, not moral truth, universal norms, representative population estimates or deployment-ready standards.
-- `article/nmi_moral_overresolution_draft_50k_v5.md`: high-consensus items are described as a positive reference condition.
-- `article/nmi_moral_overresolution_draft_50k_v5.md`: repeated forced-choice outputs are described as protocol outputs, not stochastic samples from an internal model distribution.
-- `article/nmi_moral_overresolution_draft_50k_v5.md`: contamination was not directly measured.
-- `article/nmi_supplementary_information_50k_v2.md`: paraphrase audit is aggregate surface-form evidence, not definitive paired paraphrase testing.
-- `post_run/analysis_exports/50k/figure_source_inventory_50k.md`: guardrails for all seven figures are explicit.
+- Add one more conversion-specific guardrail: LaTeX conversion must be treated as format conversion, not prose revision. The converter should not “improve” scientific claims, rewrite captions, shorten limitations, change endpoint definitions or rephrase caveats unless a separate manuscript revision task explicitly asks for it.
+- After conversion, run a text diff between `submission/manuscript.md` and the extracted/converted `main.tex` prose where feasible, focusing on numbers, endpoint definitions and caveats.
 
-No current manuscript/SI wording was found that appears to claim:
+Numbers that should not change:
 
-- SCRUPLES labels are moral truth;
-- the source community is universal or representative;
-- contamination was ruled out;
-- paraphrase is strong paired robustness;
-- provider-family, route-family or model-family effects;
-- normative certainty is a primary endpoint;
-- high-consensus is a null/unaffected condition;
-- distribution mode perfectly recovered the source-community distribution;
-- repeated temperature-0 calls estimate a latent model distribution.
-
-Audit-note nuance:
-
-- `post_run/analysis_exports/50k/figure_production_decision_lock_50k.md` and older draft/review files contain guardrail phrasing and "do not" lists. They are useful audit history, not submission prose.
+- target calls: 47,500;
+- primary-valid outputs: 47,432;
+- agreement surplus low-consensus mean: 0.370931;
+- distribution-agreement gap low-consensus mean: 0.232687;
+- sampling compression low-consensus mean: 1.264638 bits;
+- adjusted primary P values: 0.0015;
+- paraphrase valid outputs: 2,495 of 2,500;
+- no repaired outputs entered the final analysis;
+- contamination was not directly measured.
 
 ## 8. Bibliography and references readiness
 
@@ -226,12 +271,29 @@ Findings:
 - No Pandoc citation keys such as `[@key]` were found in the current manuscript or SI.
 - No obvious `TODO`, `TBD`, `PLACEHOLDER`, `CITE` or `citation needed` markers were found in the current manuscript or SI.
 
-Needed before LaTeX conversion:
+Gap fixed:
 
-- Create `references.bib`.
-- Convert the eight numbered Markdown references to BibTeX entries.
-- Choose stable citation keys and replace numbered bracket citations with LaTeX/BibTeX-compatible citations, or preserve current numbering carefully during conversion if using manual `thebibliography`.
-- Verify reference metadata during the bibliography pass.
+- Creating `references.bib` is the first required packaging task, not a cosmetic task.
+- Decide before conversion whether to use BibTeX/BibLaTeX citation keys or a controlled manual `thebibliography`. BibTeX is preferable for maintainability; manual bibliography is simpler but more fragile if references are reordered.
+- Verify all eight references against DOI/publisher pages before freezing BibTeX. Do not invent missing metadata, provider/model citations or model snapshot citations.
+- Create a citation mapping table before touching the manuscript:
+
+| Current number | Proposed key | Reference |
+|---:|---|---|
+| 1 | `jiang2025delphi` | Jiang et al., Delphi experiment |
+| 2 | `steyvers2025whatllmsknow` | Steyvers et al., what LLMs know |
+| 3 | `kumaran2026competingbiases` | Kumaran et al., overconfidence/underconfidence |
+| 4 | `lourie2021scruples` | SCRUPLES |
+| 5 | `abdulhai2023moralfoundations` | Moral foundations of LLMs |
+| 6 | `takemoto2024moralmachine` | Moral machine experiment on LLMs |
+| 7 | `zaimtakemoto2025largescale` | Large-scale moral machine experiment |
+| 8 | `sclar2024promptformatting` | Prompt formatting sensitivity |
+
+Potential citation conversion approaches:
+
+1. Convert inline citations such as `[1-7]` to `\citep{jiang2025delphi,steyvers2025whatllmsknow,kumaran2026competingbiases,lourie2021scruples,abdulhai2023moralfoundations,takemoto2024moralmachine,zaimtakemoto2025largescale}`.
+2. Convert to journal-template-native citation macros after the selected template is installed.
+3. Use a manual numbered bibliography only if the template or submission route makes BibTeX unnecessary.
 
 ## 9. LaTeX readiness status
 
@@ -244,39 +306,143 @@ Findings:
 - No Pandoc conversion script exists.
 - No bibliography build outputs exist.
 
-Live NMI initial-formatting page says initial submission does not need special formatting if suitable for editorial assessment and peer review, and accepts PDF, Word or TeX/LaTeX formats; TeX/LaTeX submissions should include compiled PDFs.
+Gap fixed:
 
-Recommendation:
+- The next step should build a minimal reproducible LaTeX workspace before extensive manual polishing.
+- Add a build script and build log capture so LaTeX issues are repeatable.
 
-- Begin LaTeX setup after creating the clean package root and bibliography file.
-- Create a clean package workspace with manuscript, SI, figures, source data and bibliography rather than converting in place.
-- Word and PDF candidates may be useful for initial submission, but a LaTeX candidate is reasonable now because the figure and source-data package is stable.
-
-## 10. Recommended folder/package structure
-
-The proposed structure is conceptually sound, but the root name should be adjusted.
-
-Recommendation: use `submission/`, not `paper/`, for the next clean package.
-
-Reasons:
-
-- `.gitignore` currently ignores `paper/`.
-- `article/` already holds the current canonical Markdown drafts and should remain a source-text area.
-- `submission/` clearly separates a curated journal package from historical drafts, raw data, large runs and audit notes.
-
-Recommended next structure:
+Recommended LaTeX workspace:
 
 ```text
 submission/
   manuscript.md
   supplementary_information.md
   references.bib
+  package_manifest.md
+  package_file_list.txt
+  package_checksums_sha256.txt
+  figures/
+    editable/
+    final/
+    preview/
+  source_data/
+  latex/
+    main.tex
+    supplementary_information.tex
+    references.bib
+    latexmkrc
+    Makefile or build.ps1
+    build_logs/
+```
+
+Recommended initial build command:
+
+```bash
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+```
+
+Recommended Windows PowerShell wrapper:
+
+```powershell
+$ErrorActionPreference = "Stop"
+Set-Location submission/latex
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex 2>&1 | Tee-Object -FilePath build_logs/build_latest.log
+```
+
+Recommended cleanup command:
+
+```bash
+latexmk -c
+```
+
+If using MiKTeX on Windows, install/update packages through MiKTeX Console or allow missing packages to install automatically. If using TeX Live, install a full distribution or document any packages needed by the Springer/Nature template.
+
+## 10. Recommended Windows/VSCode LaTeX review setup
+
+Best default setup:
+
+- **TeX distribution:** MiKTeX or TeX Live. On Windows, MiKTeX is convenient because it can install missing packages automatically.
+- **VSCode extension:** LaTeX Workshop for editing, building and PDF preview.
+- **LaTeX linter:** ChkTeX for common LaTeX/typographic issues that a normal compile may not catch.
+- **Language/style checker:** LTeX+ or another LanguageTool-based extension for prose issues, with scientific terms added to the dictionary to avoid noise.
+- **Formatter:** `latexindent` for controlled indentation of `.tex` files, but do not run it blindly on tables until the build is stable.
+- **Desktop app fallback:** TeXstudio. It is useful for side-by-side source/PDF inspection, syntax highlighting, live reference/citation checking and an integrated PDF viewer.
+
+Recommendation:
+
+- Use VSCode + LaTeX Workshop as the primary workflow because the repo already uses code and generated assets.
+- Install TeXstudio as a secondary reviewer because it catches some reference/citation/navigation issues visually and is often easier for manual PDF-source inspection.
+- Do not rely on any single tool. The minimum reliable QA loop is compile + log review + ChkTeX + manual PDF inspection.
+
+## 11. LaTeX QA gates before calling the package “ready”
+
+A compiled PDF is necessary but not sufficient. The package should pass these gates.
+
+Compile gate:
+
+- `latexmk` completes without fatal errors.
+- No unresolved references.
+- No unresolved citations.
+- No “rerun to get cross-references right” warnings remain after `latexmk`.
+- Bibliography is generated correctly and appears in the intended style.
+
+Log gate:
+
+Search the `.log` and captured build output for:
+
+```text
+Undefined control sequence
+LaTeX Error
+Package Error
+Citation
+Reference
+undefined
+multiply defined
+Overfull \hbox
+Underfull \hbox
+Float too large
+Rerun
+Missing character
+Font shape
+```
+
+Manual PDF gate:
+
+- Page order is correct.
+- Title/author/affiliation/ORCID/corresponding author fields render correctly.
+- Abstract remains within NMI’s 150-word limit by the chosen counting method.
+- Introduction appears without a visible “Introduction” heading if following NMI Article style.
+- Results and Methods have subheadings; Discussion has no subheadings.
+- Main display count remains six: Figs. 1–4 and Tables 1–2.
+- Tables are readable and not overflowing.
+- Figure captions are paired with the correct figures.
+- Extended Data and Supplementary Information are clearly separated from the main article.
+- Hyperlinks, DOIs and cross-references work.
+- No restricted raw anecdote text or raw provider responses appear in public package files.
+
+Optional automated QA:
+
+```bash
+chktex -q main.tex
+```
+
+Use ChkTeX warnings as prompts for review, not as mandatory edits. Some warnings will be false positives for scientific notation, URLs, tables or template macros.
+
+## 12. Recommended folder/package structure
+
+Use `submission/`, not `paper/`, for the clean package unless `.gitignore` is intentionally changed.
+
+Recommended structure:
+
+```text
+submission/
+  manuscript.md
+  supplementary_information.md
+  references.bib
+  package_manifest.md
   figures/
     src/
-      fig1_study_design.py
-      fig2_agreement_surplus.py
-      fig3_distribution_agreement_gap.py
-      fig4_sampling_compression.py
+      render_final_figures.py
     editable/
       fig1_study_design.svg
       fig2_agreement_surplus.svg
@@ -300,26 +466,40 @@ submission/
       edfig2_paraphrase_audit.svg
       edfig3_validity.pdf
       edfig3_validity.svg
+    preview/
+      fig1_study_design.png
+      fig2_agreement_surplus.png
+      fig3_distribution_agreement_gap.png
+      fig4_sampling_compression.png
+      edfig1_distribution_quality.png
+      edfig2_paraphrase_audit.png
+      edfig3_validity.png
   latex/
     main.tex
+    supplementary_information.tex
     references.bib
-    bibliography.bbl
+    latexmkrc
+    build.ps1
+    build_logs/
   source_data/
     figure_source_inventory_50k.md
-    relevant_figure_ready_csvs/
-    relevant_manuscript_tables/
+    final_figure_export_checklist_50k.md
+    quantitative_figure_numerical_validation_50k.txt
+    figure_ready/
+    manuscript_tables/
 ```
 
 Notes:
 
-- Include both SVG and PDF for Extended Data final figures, not only PDF.
-- Keep PNGs available for previews, but PDFs/SVGs should be the editable/final submission assets.
+- Include both SVG and PDF for main and Extended Data final figures.
+- Keep PNGs available for preview only.
 - Do not copy local style-reference images into `submission/`.
-- If the author strongly prefers `paper/`, first change `.gitignore` intentionally or use a force-add policy and document it.
+- Do not copy restricted materials into `submission/`.
+- Include source-data CSVs only if they are release-safe derived files.
 
-## 11. Done
+## 13. Done
 
-Items that appear complete and should be frozen:
+Items that appear complete and should be frozen unless explicitly reopened:
 
 - Current main manuscript in `article/nmi_moral_overresolution_draft_50k_v5.md`.
 - Current SI in `article/nmi_supplementary_information_50k_v2.md`.
@@ -332,34 +512,42 @@ Items that appear complete and should be frozen:
 - 50k analysis manifest and derived analysis exports.
 - Figure rendering source in `src/analysis/render_final_figures.py`.
 
-## 12. Needs small fix before LaTeX
+## 14. Needs small fix before LaTeX
 
-- Decide whether to create canonical package filenames under `submission/`.
-- Create `references.bib`; this is the main missing pre-conversion artifact.
-- Confirm that older pre-polish audit notes will not be treated as controlling over the final checklist.
-- Optionally do one final manual visual review of all rendered PDFs/SVGs, especially Fig. 1, because the QA file still says manual visual check is required.
-
-## 13. Needs LaTeX setup
-
-- Create `submission/latex/` or another clean LaTeX workspace.
-- Create `main.tex`.
-- Add the selected Nature/Springer template/class files if needed.
 - Create `references.bib`.
-- Convert numbered Markdown references to citation keys or a controlled manual bibliography.
-- Add figure inclusion paths for the final PDFs/SVGs.
-- Build and inspect a compiled PDF.
+- Choose stable citation keys and convert numbered Markdown citations safely.
+- Create `submission/` as the clean package root and verify it is not ignored.
+- Copy canonical manuscript/SI into `submission/` under stable filenames.
+- Copy final figure assets and release-safe source-data assets into `submission/`.
+- Create a package manifest and checksums.
+- Confirm older pre-polish audit notes will not be treated as controlling over the final figure checklist.
+- Do one final manual visual review of all rendered PDFs/SVGs, especially Fig. 1.
 
-## 14. Needs submission package later
+## 15. Needs LaTeX setup
+
+- Create `submission/latex/`.
+- Add `main.tex`.
+- Add `supplementary_information.tex` or a separate SI PDF workflow.
+- Add selected Springer Nature/NMI-compatible template/class files if needed and if redistribution is permitted.
+- Add `references.bib`.
+- Add `latexmkrc`.
+- Add `build.ps1` or `Makefile`.
+- Convert numbered Markdown references to citation keys or a controlled manual bibliography.
+- Add figure inclusion paths for final PDFs.
+- Build and inspect compiled PDF.
+- Save build logs.
+
+## 16. Needs submission package later
 
 - Cover letter, currently only as ignored/local draft: `drafts/nmi_cover_letter_50k.md`.
 - Submission checklist, currently ignored/local: `drafts/nmi_submission_checklist_custom.md`.
 - Journal upload manifest.
 - Final source-data package mapping.
-- Final data/code availability text matched to the uploaded archive/release.
+- Final data/code availability text matched to uploaded archive/release.
 - Any required author forms, reporting summaries or editorial declarations.
 - Word/PDF version if the author chooses an initial-submission format outside LaTeX.
 
-## 15. Do not touch
+## 17. Do not touch
 
 Unless explicitly instructed later, do not modify:
 
@@ -374,7 +562,7 @@ Unless explicitly instructed later, do not modify:
 - current canonical manuscript/SI text
 - source analysis code
 
-## 16. Files that should be committed
+## 18. Files that should be committed
 
 Tracked package files that should remain committed:
 
@@ -396,12 +584,18 @@ Future files to commit after explicit creation:
 
 - `submission/manuscript.md`
 - `submission/supplementary_information.md`
+- `submission/package_manifest.md`
+- `submission/package_file_list.txt`
+- `submission/package_checksums_sha256.txt`
 - `submission/references.bib`
 - `submission/latex/main.tex`
+- `submission/latex/supplementary_information.tex`
+- `submission/latex/latexmkrc`
+- `submission/latex/build.ps1` or `submission/latex/Makefile`
 - selected LaTeX template/class files if redistribution is permitted
 - curated submission figures and source-data copies
 
-## 17. Files that should stay untracked/ignored
+## 19. Files that should stay untracked/ignored
 
 - `drafts/style_reference/nmi_figures/*.webp`
 - other files under `drafts/` unless explicitly promoted
@@ -411,8 +605,9 @@ Future files to commit after explicit creation:
 - `__pycache__/`
 - `.env` and `.env.*` except `.env.example`
 - raw provider responses, full call ledgers, full run stores and restricted/mixed materials
+- LaTeX auxiliary files such as `.aux`, `.log`, `.out`, `.toc`, `.lof`, `.lot`, `.fls`, `.fdb_latexmk`, `.synctex.gz`, `.blg` and temporary build artifacts, except saved audit logs intentionally placed in `build_logs/`
 
-## 18. Files not to modify
+## 20. Files not to modify
 
 Do not modify these in the next packaging step unless the task explicitly asks for it:
 
@@ -427,23 +622,27 @@ Do not modify these in the next packaging step unless the task explicitly asks f
 - `runs/*`
 - `drafts/style_reference/*`
 
-## 19. Prioritized next steps
+## 21. Prioritized next steps
 
 1. Create `references.bib` from the eight embedded Markdown references and choose stable citation keys.
 2. Create `submission/` as the clean package root, not `paper/`, unless `.gitignore` is intentionally changed.
 3. Copy current canonical manuscript/SI, final figures, figure inventory and relevant source-data tables into `submission/`.
-4. Convert the manuscript and SI to LaTeX in `submission/latex/`.
-5. Build and inspect a compiled PDF.
-6. Prepare cover letter and final submission checklist after the LaTeX/PDF build works.
+4. Add `submission/package_manifest.md`, `submission/package_file_list.txt` and `submission/package_checksums_sha256.txt`.
+5. Convert the manuscript and SI to LaTeX in `submission/latex/`.
+6. Add `latexmkrc` and a Windows-friendly build script.
+7. Build and inspect a compiled PDF.
+8. Run LaTeX log/reference/citation/overfull-box QA.
+9. Run ChkTeX as advisory linting.
+10. Prepare cover letter and final submission checklist after the LaTeX/PDF build works.
 
-## 20. Clear recommendation for the next Codex task
+## 22. Clear recommendation for the next Codex task
 
 Next Codex task:
 
-> Create `submission/` as a clean package root, copy the canonical manuscript/SI and final figure/source-data assets into it, and create an initial `references.bib` from the eight numbered references. Then start LaTeX conversion in `submission/latex/`.
+> Create `submission/` as a clean package root, verify it is not ignored, copy the canonical manuscript/SI and final release-safe figure/source-data assets into it, create `references.bib` from the eight numbered references, and add a package manifest plus checksums. Then start LaTeX conversion in `submission/latex/` with `main.tex`, `supplementary_information.tex`, `latexmkrc` and a Windows-friendly build script. Build the PDF, save the build log, and report unresolved references, unresolved citations, overfull boxes and any visual issues.
 
 Rationale:
 
-- The figure package is ready enough to freeze.
-- The source-data mapping is ready enough to copy.
-- The biggest blockers to LaTeX conversion are bibliographic structure and clean package layout, not analysis, figure regeneration or abstract length.
+- The science, figures and source-data mappings are ready enough to freeze.
+- The biggest blockers are bibliography structure, clean package layout, LaTeX build infrastructure and manual visual/log QA.
+- This should be treated as package construction, not scientific manuscript revision.
