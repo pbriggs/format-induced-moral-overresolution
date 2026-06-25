@@ -1,0 +1,5 @@
+figure_study_design_50k layout QA
+text_text_overlaps: 0
+text_box_border_collisions: 0
+arrow_text_collisions_sampled: 0
+manual_visual_check: required after render
