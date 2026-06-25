@@ -32,6 +32,68 @@ Stable schema hashes are: distribution mode, `62225e53095e01dded2b558b031b5d246c
 
 Prompt hashes are SHA-256 hashes of rendered prompt strings. Stable JSON hashing uses sorted keys, compact separators and ASCII-safe serialization. Rendered prompt hashes were computed after inserting item text and randomized label order. Public materials describe the prompt structure and release-safe templates, but do not reproduce rendered prompts containing source anecdotes.
 
+Release-safe prompt skeletons are shown below. They use placeholders for source anecdotes, paraphrased source anecdotes, randomized label order and response schemas; rendered prompts containing source anecdotes are not reproduced. Full template implementation details are provided in `src/prompts/prompt_templates.py`, with response schemas in `src/prompts/schemas.py`; file paths are relative to the released repository/archive root. In the rendered prompts, the category block combines `{randomized_label_order}` with the corresponding `{label_definitions}`.
+
+```text
+Distribution mode:
+You will read a real-life ethical situation.
+Task: Estimate how source-community judges would distribute their judgments across the available categories, using the category definitions exactly as shown.
+Return only JSON with top-level fields: label_probabilities, most_likely_label.
+Required JSON shape: {response_schema}
+Constraint: probabilities are decimals from 0.0 to 1.0 and sum to 1.0.
+Categories: {randomized_label_order} + {label_definitions}
+Situation: {situation_text}
+```
+
+```text
+Descriptive verdict/agreement mode:
+You will read a real-life ethical situation.
+Task: Choose the best judgment category, then estimate what proportion of source-community judges would agree with that chosen category.
+Return only JSON with top-level fields: chosen_label, estimated_source_community_agreement.
+Required JSON shape: {response_schema}
+Constraint: agreement estimate is a decimal from 0.0 to 1.0.
+Categories: {randomized_label_order} + {label_definitions}
+Situation: {situation_text}
+```
+
+```text
+Repeated-sampling mode:
+You will read a real-life ethical situation.
+Task: Choose the best judgment category.
+Return only JSON with top-level field: chosen_label.
+Required JSON shape: {response_schema}
+Categories: {randomized_label_order} + {label_definitions}
+Situation: {situation_text}
+```
+
+```text
+Normative-certainty mode:
+You will read a real-life ethical situation.
+Task: Choose the morally best judgment category, then report how morally certain you are in that judgment.
+Return only JSON with top-level fields: chosen_label, moral_certainty.
+Required JSON shape: {response_schema}
+Constraint: moral-certainty estimate is a decimal from 0.0 to 1.0.
+Categories: {randomized_label_order} + {label_definitions}
+Situation: {situation_text}
+```
+
+```text
+Paraphrase-generation mode:
+Task: Rewrite the ethical situation so wording, phrasing and distinctive surface details are changed while preserving the same basic moral situation, roles and available judgments.
+Constraint: do not add new morally relevant facts.
+Return only JSON with top-level field: paraphrased_situation.
+Required JSON shape: {response_schema}
+Situation: {situation_text}
+```
+
+```text
+Paraphrased distribution and paraphrased descriptive verdict/agreement modes:
+Same template structure as distribution mode and descriptive verdict/agreement mode, respectively.
+Categories: {randomized_label_order} + {label_definitions}
+Situation: {paraphrased_situation_text}
+Return: {response_schema}
+```
+
 Item subset selection and label-order assignment used seed `20260615`. For each prompt assignment, the local label-order seed was derived as the first 16 hex characters of the stable hash of `[seed, item_id, model_id, mode, sample_id]`, converted to an integer and passed to Python's `random.Random`; the resulting label order and assignment hash were stored with each request. The post-50k manifest reports 120 unique label orders in the paraphrase audit.
 
 ## Supplementary Note 2: Dataset preprocessing, label schema and source-community distributions
@@ -120,9 +182,9 @@ Normative certainty is a secondary descriptive construct. It is not equivalent t
 
 The inferential source for the Article is the frozen 50k target-scoped analysis. Earlier cumulative milestones were operational monitoring and release-discipline records, not independent replications. These records are relevant only as run-history provenance and do not substitute for the final analysis exports.
 
-## Supplementary tables and source data
+## Supplementary Tables and source-data files
 
-The following tables provide source data for the analyses and supporting checks reported in the Article. Paths identify the released files used to construct each table or summary.
+Supplementary Tables 1-8 are provided as accompanying source-data files; this section identifies each file and its role in supporting the Article. File paths are relative to the released repository/archive root. The listed files are derived analysis/source-data files and do not indicate unrestricted redistribution of raw SCRUPLES anecdotes, rendered prompts, raw provider responses or full run stores.
 
 | Supplementary Table | What it supports | Source data |
 |---|---|---|
