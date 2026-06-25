@@ -20,6 +20,19 @@ BIN_LABELS = {
     "low_diffuse": "Low + diffuse",
 }
 MODEL_MARKERS = ["o", "s", "^", "D", "P", "X"]
+MODEL_COLORS = ["#4F7895", "#B07C64", "#6F956B", "#9A7893", "#7C8494", "#8C765B"]
+QUANT_STYLE = {
+    "background": "#FFFFFF",
+    "bar": "#5F7D80",
+    "bar_light": "#DCE6E5",
+    "ci": "#2F383A",
+    "grid": "#E6E8E8",
+    "spine": "#8A9395",
+    "ink": "#172124",
+    "muted": "#596466",
+    "support_blue": "#5A86A9",
+    "support_orange": "#C58A66",
+}
 PALETTE = {
     "source": "#DCEDEA",
     "mode": "#F3EBD8",
@@ -55,11 +68,34 @@ def ordered_bins(rows: list[dict[str, Any]]) -> list[str]:
 
 def save(fig: plt.Figure, out_dir: Path, stem: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    fig.tight_layout()
+    if not fig.get_constrained_layout():
+        fig.tight_layout()
     fig.savefig(out_dir / f"{stem}.png", dpi=300)
     fig.savefig(out_dir / f"{stem}.svg")
     fig.savefig(out_dir / f"{stem}.pdf")
     plt.close(fig)
+
+
+def format_bin_label(bin_name: str) -> str:
+    label = BIN_LABELS.get(bin_name, bin_name)
+    return "Low +\ndiffuse" if label == "Low + diffuse" else label
+
+
+def style_quant_ax(ax: Axes, *, title: str, ylabel: str, title_size: float = 9.3) -> None:
+    ax.set_title(title, fontsize=title_size, fontweight="regular", color=QUANT_STYLE["ink"], pad=10)
+    ax.set_ylabel(ylabel, fontsize=8.2, color=QUANT_STYLE["ink"])
+    ax.tick_params(axis="both", labelsize=7.3, colors=QUANT_STYLE["ink"], length=3, width=0.6)
+    ax.grid(axis="y", color=QUANT_STYLE["grid"], linewidth=0.55)
+    ax.grid(axis="x", visible=False)
+    ax.spines[["top", "right"]].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(QUANT_STYLE["spine"])
+        ax.spines[side].set_linewidth(0.6)
+    ax.set_facecolor(QUANT_STYLE["background"])
+
+
+def model_color(model_index: int) -> str:
+    return MODEL_COLORS[model_index % len(MODEL_COLORS)]
 
 
 def ci_lookup(path: Path) -> dict[tuple[str, str], dict[str, float]]:
@@ -538,8 +574,9 @@ def plot_endpoint(path: Path, ci_path: Path, out_dir: Path, stem: str, title: st
     endpoint = str(rows[0]["endpoint"]) if rows else ""
     ci_by_key = ci_lookup(ci_path)
 
-    fig, ax = plt.subplots(figsize=(8.2, 4.8))
-    ax.bar(xs, means, color=PALETTE["bar"], width=0.62, label="All models")
+    fig, ax = plt.subplots(figsize=(7.09, 4.55), layout="constrained")
+    fig.patch.set_facecolor(QUANT_STYLE["background"])
+    ax.bar(xs, means, color=QUANT_STYLE["bar"], width=0.58, label="All models", alpha=0.95, zorder=2)
     for index, bin_name in enumerate(bins):
         ci = ci_by_key.get((endpoint, bin_name))
         if ci is None:
@@ -550,10 +587,10 @@ def plot_endpoint(path: Path, ci_path: Path, out_dir: Path, stem: str, title: st
             mean_value,
             yerr=[[mean_value - ci["lo"]], [ci["hi"] - mean_value]],
             fmt="none",
-            ecolor="#151515",
-            elinewidth=1.2,
-            capsize=4,
-            capthick=1.2,
+            ecolor=QUANT_STYLE["ci"],
+            elinewidth=0.9,
+            capsize=3,
+            capthick=0.9,
             zorder=4,
         )
     for model_index, model_id in enumerate(models):
@@ -570,16 +607,28 @@ def plot_endpoint(path: Path, ci_path: Path, out_dir: Path, stem: str, title: st
             values,
             s=34,
             marker=MODEL_MARKERS[model_index % len(MODEL_MARKERS)],
+            color=model_color(model_index),
             label=model_id,
-            alpha=0.82,
+            alpha=0.88,
+            linewidths=0.55,
+            edgecolors="#FFFFFF",
+            zorder=5,
         )
-    ax.axhline(0, color="#222222", linewidth=0.8)
-    ax.set_title(title)
-    ax.set_ylabel(ylabel)
-    ax.set_xticks(xs, [BIN_LABELS.get(bin_name, bin_name) for bin_name in bins], rotation=18, ha="right")
-    ax.grid(axis="y", color="#DDDDDD", linewidth=0.8)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(fontsize=7, ncols=2, frameon=False, loc="upper left")
+    ax.axhline(0, color=QUANT_STYLE["spine"], linewidth=0.55)
+    ax.set_xticks(xs, [format_bin_label(bin_name) for bin_name in bins])
+    style_quant_ax(ax, title=title, ylabel=ylabel)
+    ax.legend(
+        fontsize=6.8,
+        ncols=3,
+        frameon=False,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.16),
+        borderaxespad=0,
+        handletextpad=0.55,
+        columnspacing=1.35,
+        labelspacing=0.45,
+        markerscale=1.15,
+    )
     save(fig, out_dir, stem)
 
 
@@ -589,20 +638,29 @@ def plot_distribution_quality(path: Path, out_dir: Path) -> None:
     by_bin = {row["disagreement_bin"]: row for row in rows}
     xs = list(range(len(bins)))
 
-    fig, ax = plt.subplots(figsize=(7.4, 4.6))
-    ax.plot(xs, [as_float(by_bin[bin_name], "mean_jsd") for bin_name in bins], marker="o", label="JSD")
+    fig, ax = plt.subplots(figsize=(6.7, 3.9))
+    fig.patch.set_facecolor(QUANT_STYLE["background"])
+    ax.plot(
+        xs,
+        [as_float(by_bin[bin_name], "mean_jsd") for bin_name in bins],
+        marker="o",
+        markersize=4,
+        linewidth=1.25,
+        color=QUANT_STYLE["support_blue"],
+        label="JSD",
+    )
     ax.plot(
         xs,
         [as_float(by_bin[bin_name], "mean_total_variation_distance") for bin_name in bins],
         marker="s",
+        markersize=4,
+        linewidth=1.25,
+        color=QUANT_STYLE["support_orange"],
         label="Total variation",
     )
-    ax.set_title("Distribution-Mode Alignment Diagnostics")
-    ax.set_ylabel("Distance from source distribution")
-    ax.set_xticks(xs, [BIN_LABELS.get(bin_name, bin_name) for bin_name in bins], rotation=18, ha="right")
-    ax.grid(axis="y", color="#DDDDDD", linewidth=0.8)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(frameon=False)
+    ax.set_xticks(xs, [format_bin_label(bin_name) for bin_name in bins])
+    style_quant_ax(ax, title="Distribution-mode alignment diagnostics", ylabel="Distance from source distribution", title_size=8.9)
+    ax.legend(frameon=False, fontsize=6.8, loc="upper left", handlelength=1.8)
     save(fig, out_dir, "figure_distribution_quality_distances_50k")
 
 
@@ -613,28 +671,28 @@ def plot_paraphrase(path: Path, out_dir: Path) -> None:
     xs = list(range(len(bins)))
     width = 0.34
 
-    fig, ax = plt.subplots(figsize=(7.8, 4.6))
+    fig, ax = plt.subplots(figsize=(6.9, 3.9))
+    fig.patch.set_facecolor(QUANT_STYLE["background"])
     ax.bar(
         [x - width / 2 for x in xs],
         [as_float(by_bin[bin_name], "mean_paraphrase_agreement_surplus") or 0.0 for bin_name in bins],
         width=width,
         label="Agreement surplus",
-        color="#476A6F",
+        color=QUANT_STYLE["bar"],
+        alpha=0.88,
     )
     ax.bar(
         [x + width / 2 for x in xs],
         [as_float(by_bin[bin_name], "mean_paraphrase_distribution_agreement_gap") or 0.0 for bin_name in bins],
         width=width,
         label="Distribution-agreement gap",
-        color=PALETTE["orange"],
+        color=QUANT_STYLE["support_orange"],
+        alpha=0.82,
     )
-    ax.axhline(0, color="#222222", linewidth=0.8)
-    ax.set_title("Paraphrase Audit Effects")
-    ax.set_ylabel("Mean effect")
-    ax.set_xticks(xs, [BIN_LABELS.get(bin_name, bin_name) for bin_name in bins], rotation=18, ha="right")
-    ax.grid(axis="y", color="#DDDDDD", linewidth=0.8)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(frameon=False)
+    ax.axhline(0, color=QUANT_STYLE["spine"], linewidth=0.55)
+    ax.set_xticks(xs, [format_bin_label(bin_name) for bin_name in bins])
+    style_quant_ax(ax, title="Paraphrase audit effects", ylabel="Mean effect", title_size=8.9)
+    ax.legend(frameon=False, fontsize=6.8, loc="upper left", ncols=2, handlelength=1.6, columnspacing=1.1)
     save(fig, out_dir, "figure_paraphrase_audit_effects_50k")
 
 
@@ -646,14 +704,18 @@ def plot_validity(path: Path, out_dir: Path) -> None:
     models = sorted(grouped)
     rates = [sum(grouped[model]) / len(grouped[model]) for model in models]
 
-    fig, ax = plt.subplots(figsize=(8.4, 4.4))
-    ax.bar(range(len(models)), rates, color="#476A6F", width=0.62)
-    ax.set_ylim(0.94, 1.002)
-    ax.set_title("Primary-Validity Rate by Model")
-    ax.set_ylabel("Mean valid rate across prompt modes")
-    ax.set_xticks(range(len(models)), models, rotation=20, ha="right")
-    ax.grid(axis="y", color="#DDDDDD", linewidth=0.8)
-    ax.spines[["top", "right"]].set_visible(False)
+    fig, ax = plt.subplots(figsize=(7.09, 3.8))
+    fig.patch.set_facecolor(QUANT_STYLE["background"])
+    xs = list(range(len(models)))
+    baseline = 0.94
+    for x, rate in zip(xs, rates):
+        ax.vlines(x, baseline, rate, color=QUANT_STYLE["bar_light"], linewidth=3.2, zorder=1)
+    ax.scatter(xs, rates, s=36, color=QUANT_STYLE["bar"], edgecolors="#FFFFFF", linewidths=0.6, zorder=3)
+    for x, rate in zip(xs, rates):
+        ax.text(x, rate + 0.0014, f"{rate:.1%}", ha="center", va="bottom", fontsize=6.6, color=QUANT_STYLE["muted"])
+    ax.set_ylim(0.94, 1.006)
+    ax.set_xticks(xs, models, rotation=15, ha="right")
+    style_quant_ax(ax, title="Primary-validity rate by model", ylabel="Mean valid rate across prompt modes", title_size=8.9)
     save(fig, out_dir, "figure_validity_rate_by_model_50k")
 
 

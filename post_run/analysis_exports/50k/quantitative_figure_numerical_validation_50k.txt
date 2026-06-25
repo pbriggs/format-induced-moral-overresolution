@@ -1,0 +1,30 @@
+quantitative figure numerical validation
+
+figure_agreement_surplus_by_bin_model_50k.csv:
+  endpoint_key=agreement_surplus
+  bins=5 all_model_means=5 model_points=25 models=5
+  aggregate_ci_rows_from_table=5 ci_rows_with_bounds=4
+  aggregate_means_match_ci_table=True
+  renderer_source=figure_ready CSV means plus manuscript_tables CI rows; no new CI computation
+figure_distribution_gap_by_bin_model_50k.csv:
+  endpoint_key=distribution_agreement_gap
+  bins=5 all_model_means=5 model_points=25 models=5
+  aggregate_ci_rows_from_table=5 ci_rows_with_bounds=4
+  aggregate_means_match_ci_table=True
+  renderer_source=figure_ready CSV means plus manuscript_tables CI rows; no new CI computation
+figure_sampling_compression_by_bin_model_50k.csv:
+  endpoint_key=sampling_compression
+  bins=5 all_model_means=5 model_points=25 models=5
+  aggregate_ci_rows_from_table=5 ci_rows_with_bounds=4
+  aggregate_means_match_ci_table=True
+  renderer_source=figure_ready CSV means plus manuscript_tables CI rows; no new CI computation
+figure_distribution_quality_by_bin_model_50k.csv: rows=24 renderer_source=figure_ready CSV
+figure_paraphrase_effects_by_bin_model_50k.csv: rows=24 renderer_source=figure_ready CSV
+figure_validity_by_model_mode_50k.csv: rows=30 renderer_source=figure_ready CSV
+
+figure_agreement_surplus_by_bin_model_50k: png=2127x1365 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
+figure_distribution_gap_by_bin_model_50k: png=2127x1365 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
+figure_sampling_compression_by_bin_model_50k: png=2127x1365 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
+figure_distribution_quality_distances_50k: png=2010x1170 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
+figure_paraphrase_audit_effects_50k: png=2070x1170 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
+figure_validity_rate_by_model_50k: png=2127x1140 dpi=(299.9994, 299.9994) svg_has_image=False pdf_header=%PDF-
