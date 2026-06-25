@@ -117,6 +117,8 @@ Disagreement bins are based on top-label source-community support:
 
 Low-consensus items are the primary confirmatory subset. Diffuse/no-clear-consensus items are secondary and remain separate from the primary endpoint definition. Low-consensus plus diffuse/no-clear-consensus aggregates, when reported, are descriptive divided-item summaries rather than primary endpoints.
 
+For the repeated-sampling component, each item-model pair received ten separate fresh forced-choice calls at temperature 0.0. Sampling compression summarizes diversity across these repeated calls under the recorded prompt and label-order randomization protocol, not stochastic sampling from an internal model distribution.
+
 ## Supplementary Note 4: Model roster, API parameters and collection windows
 
 This note provides provenance for the evaluated model roster and request settings. The amended frozen roster contains five models: `claude-sonnet-4-6`, `deepseek/deepseek-v3.2`, `gpt-5.5`, `grok-4.3` and `qwen/qwen3.7-max`. Each model has 9,500 target calls. API routes, first and last call timestamps, temperature and top-p fields are reported in `post_run/analysis_exports/50k/manuscript_tables/table_model_roster_50k.csv`.
