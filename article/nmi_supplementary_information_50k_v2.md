@@ -168,6 +168,8 @@ Model-ready secondary rows are provided for transparency. They do not constitute
 
 This note describes the role and limits of the paraphrase component. The paraphrase audit uses paraphrased versions of a stratified item subset and is reported as aggregate surface-form evidence. Because original-vs-paraphrase matched coverage is limited, paraphrase results should not be framed as a definitive paired paraphrase test.
 
+The paraphrase audit contained 2,500 target calls and 2,495 valid outputs. Within the limited matched original-vs-paraphrase overlap, coverage was 29 low-consensus rows and 15 diffuse rows; chosen-label stability was 0.655 in low-consensus rows and 0.467 in diffuse rows.
+
 Contamination was not directly measured. The paraphrase audit addresses surface-form sensitivity rather than training-set membership.
 
 ## Supplementary Note 9: Distribution-quality diagnostics and baselines
