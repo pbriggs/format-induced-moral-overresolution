@@ -2,7 +2,7 @@
 
 Date: 2026-06-25
 
-Scope: audit-only pass for the `format-induced-moral-overresolution` workspace. This memo inspects manuscript, Supplementary Information, figure assets, source data, references, LaTeX readiness and packaging readiness. No files were edited, moved, renamed, deleted or regenerated during this audit except creation of this memo.
+Scope: audit-only pass for the `format-induced-moral-overresolution` workspace. This memo inspects manuscript, Supplementary Information, figure assets, source data, references, LaTeX readiness and packaging readiness. No files were moved, renamed, deleted or regenerated during this audit; the only file changed is this memo.
 
 ## 1. Concise verdict
 
@@ -15,7 +15,6 @@ The package is not yet fully submission-packaged because:
 - no BibTeX file exists;
 - no LaTeX workspace, template class, `main.tex`, `.bbl` or build script exists;
 - the current manuscript references are embedded as numbered Markdown references;
-- the current abstract is 185 words, while the live Nature Machine Intelligence Article format page lists an abstract limit of up to 150 words;
 - the proposed `paper/` directory is currently ignored by `.gitignore`, so `submission/` is cleaner unless the ignore rule is intentionally changed.
 
 Live NMI pages checked during this audit:
@@ -28,8 +27,9 @@ Live NMI pages checked during this audit:
 Current main manuscript:
 
 - `article/nmi_moral_overresolution_draft_50k_v5.md`
-- Size: 48,419 bytes
-- Modified: 2026-06-24 16:55:01
+- Size: 48,191 bytes
+- Modified: 2026-06-25 11:57:10
+- Abstract word count: 149 words
 
 Current Supplementary Information:
 
@@ -54,8 +54,9 @@ Recommendation:
 Git status:
 
 - Branch: `main...origin/main`
-- `git status --porcelain=v1 -uall`: clean.
-- `git status --short --branch --ignored`: clean tracked tree, with ignored/local-only directories.
+- Before this memo update, the tracked tree was clean.
+- After this memo update, the only tracked modification is `post_run/analysis_exports/50k/workspace_completion_audit_50k.md`.
+- `git status --short --branch --ignored` also reports ignored/local-only directories.
 - Warning observed: `could not open directory '.tmp_pytest/': Permission denied`.
 
 Ignored/local-only material:
@@ -181,9 +182,9 @@ Alignment checks:
 - Paraphrase is described as aggregate surface-form evidence with limited matched coverage, not as contamination exclusion or strong paired robustness.
 - Validity is described as supporting transparency/exclusions, not a primary endpoint.
 
-Small issue before LaTeX:
+Current NMI fit note:
 
-- The abstract is 185 words. The live NMI Article format page lists an abstract limit of up to 150 words. This should be fixed before final journal formatting or submission PDF generation.
+- The abstract is 149 words, within the live NMI Article limit of up to 150 words.
 
 ## 7. Claim-discipline guardrails
 
@@ -247,7 +248,7 @@ Live NMI initial-formatting page says initial submission does not need special f
 
 Recommendation:
 
-- Begin LaTeX setup after one small Markdown cleanup pass, especially abstract length.
+- Begin LaTeX setup after creating the clean package root and bibliography file.
 - Create a clean package workspace with manuscript, SI, figures, source data and bibliography rather than converting in place.
 - Word and PDF candidates may be useful for initial submission, but a LaTeX candidate is reasonable now because the figure and source-data package is stable.
 
@@ -333,8 +334,8 @@ Items that appear complete and should be frozen:
 
 ## 12. Needs small fix before LaTeX
 
-- Shorten the abstract from 185 words to the NMI Article limit of up to 150 words.
 - Decide whether to create canonical package filenames under `submission/`.
+- Create `references.bib`; this is the main missing pre-conversion artifact.
 - Confirm that older pre-polish audit notes will not be treated as controlling over the final checklist.
 - Optionally do one final manual visual review of all rendered PDFs/SVGs, especially Fig. 1, because the QA file still says manual visual check is required.
 
@@ -428,22 +429,21 @@ Do not modify these in the next packaging step unless the task explicitly asks f
 
 ## 19. Prioritized next steps
 
-1. Run a narrow pre-LaTeX manuscript cleanup pass: shorten the abstract to <=150 words and leave numerical claims untouched.
-2. Create `references.bib` from the eight embedded Markdown references and choose stable citation keys.
-3. Create `submission/` as the clean package root, not `paper/`, unless `.gitignore` is intentionally changed.
-4. Copy current canonical manuscript/SI, final figures, figure inventory and relevant source-data tables into `submission/`.
-5. Convert the manuscript and SI to LaTeX in `submission/latex/`.
-6. Build and inspect a compiled PDF.
-7. Prepare cover letter and final submission checklist after the LaTeX/PDF build works.
+1. Create `references.bib` from the eight embedded Markdown references and choose stable citation keys.
+2. Create `submission/` as the clean package root, not `paper/`, unless `.gitignore` is intentionally changed.
+3. Copy current canonical manuscript/SI, final figures, figure inventory and relevant source-data tables into `submission/`.
+4. Convert the manuscript and SI to LaTeX in `submission/latex/`.
+5. Build and inspect a compiled PDF.
+6. Prepare cover letter and final submission checklist after the LaTeX/PDF build works.
 
 ## 20. Clear recommendation for the next Codex task
 
 Next Codex task:
 
-> Perform a narrow pre-LaTeX cleanup and setup pass: shorten the abstract in `article/nmi_moral_overresolution_draft_50k_v5.md` to <=150 words without changing numerical claims, create `submission/` as a clean package root, copy the canonical manuscript/SI and final figure/source-data assets into it, and create an initial `references.bib` from the eight numbered references. Do not convert to LaTeX until the package root and bibliography are in place.
+> Create `submission/` as a clean package root, copy the canonical manuscript/SI and final figure/source-data assets into it, and create an initial `references.bib` from the eight numbered references. Then start LaTeX conversion in `submission/latex/`.
 
 Rationale:
 
 - The figure package is ready enough to freeze.
 - The source-data mapping is ready enough to copy.
-- The biggest blockers to LaTeX conversion are bibliographic structure, abstract length and clean package layout, not analysis or figure regeneration.
+- The biggest blockers to LaTeX conversion are bibliographic structure and clean package layout, not analysis, figure regeneration or abstract length.
