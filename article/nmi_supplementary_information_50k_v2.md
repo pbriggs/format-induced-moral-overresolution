@@ -106,7 +106,7 @@ SCRUPLES judgments are treated as source-community reference distributions. They
 
 ## Supplementary Note 3: Sampling, disagreement bins and target allocation
 
-This note supports interpretation of the primary and secondary endpoint subsets. The final analysis uses the frozen 50k target-scoped run with 47,500 target calls and 47,432 primary-valid outputs. The core cross-format item allocation is 350 high-consensus items, 400 moderate-consensus items, 750 low-consensus items and 500 diffuse/no-clear-consensus items.
+This note supports interpretation of the primary and secondary endpoint subsets. The final analysis uses the frozen 50k analysis with 47,500 target calls and 47,432 primary-valid outputs. The core cross-format item allocation is 350 high-consensus items, 400 moderate-consensus items, 750 low-consensus items and 500 diffuse/no-clear-consensus items.
 
 Disagreement bins are based on top-label source-community support:
 
@@ -162,7 +162,7 @@ Primary inference uses item-cluster bootstrap confidence intervals with 2,000 bo
 
 This note lists robustness checks that address likely reviewer concerns about parsing, source-community distribution construction, annotation density, `info` responses and model-level dependence. Robustness outputs include strict-valid-only analyses, raw/Jeffreys/Laplace source-community distribution checks, high-annotation-only checks, `info`-majority exclusion, high-`info` exclusion, leave-one-model-out summaries and model-level endpoint summaries. These checks support the direction of the main findings while preserving the primary status of the low-consensus endpoint definitions.
 
-Model-ready secondary rows are provided for transparency. They do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported.
+Mixed-effects input rows are provided for transparency. They do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported.
 
 ## Supplementary Note 8: Paraphrase audit and contamination limitation
 
@@ -182,9 +182,9 @@ These diagnostics assess whether distribution-mode outputs were non-degenerate a
 
 Normative certainty is a secondary descriptive construct. It is not equivalent to estimated source-community agreement and is not a fourth primary endpoint. The corresponding source data are provided in `post_run/analysis_exports/50k/manuscript_tables/table_normative_certainty_50k.csv`.
 
-## Supplementary Note 11: Run-history provenance
+## Supplementary Note 11: Analysis provenance
 
-The inferential source for the Article is the frozen 50k target-scoped analysis. Earlier cumulative milestones were operational monitoring and release-discipline records, not independent replications. These records are relevant only as run-history provenance and do not substitute for the final analysis exports.
+The inferential source for the Article is the frozen 50k analysis. Earlier cumulative records document collection monitoring and release provenance rather than independent replications. They do not substitute for the final analysis exports.
 
 ## Supplementary Tables and source-data files
 
@@ -199,7 +199,7 @@ Supplementary Tables 1-8 are provided as accompanying source-data files; this se
 | Supplementary Table 5 | Distribution-quality diagnostics and baselines supporting non-degeneracy and item sensitivity of distribution-mode outputs. | `post_run/analysis_exports/50k/manuscript_tables/table_distribution_quality_50k.csv`; `post_run/analysis_exports/50k/manuscript_tables/table_baseline_distribution_quality_50k.csv` |
 | Supplementary Table 6 | Normative-certainty summaries for the secondary descriptive construct. | `post_run/analysis_exports/50k/manuscript_tables/table_normative_certainty_50k.csv` |
 | Supplementary Table 7 | Validity by model/mode, invalid-output categories, minimum validity rates, refusals, off-schema labels, API errors, terminal failures and repair fields. | `post_run/analysis_exports/50k/manuscript_tables/table_validity_by_model_mode_50k.csv`; `post_run/analysis_exports/50k/manuscript_tables/table_invalid_output_summary_50k.csv` |
-| Supplementary Table 8 | Model-ready secondary rows made available for transparency; these files do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported. | `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_50k.csv`; `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_strict_valid_50k.csv` |
+| Supplementary Table 8 | Mixed-effects input rows provided for transparency; these files do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported. | `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_50k.csv`; `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_strict_valid_50k.csv` |
 
 ## Extended Data figures and source data
 
