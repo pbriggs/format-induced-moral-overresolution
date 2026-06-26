@@ -97,7 +97,7 @@ The implication for model-output reliability is direct. Testing models only in d
 
 The study was preregistered on OSF as a target-scoped computational audit. It used existing SCRUPLES source-community judgments and newly collected LLM API outputs; no new human participants were recruited. The analysis uses the frozen 50k target-scoped exports from `post_run/analysis_exports/50k/`.
 
-Operational milestones tracked monitoring and release discipline. Inferential claims use the frozen 50k target-scoped analysis. Primary endpoint definitions and the low-consensus confirmatory subset remained fixed after inspection of the final 50k results, and subsequent presentation changes did not alter the frozen numerical outputs.
+Operational milestones tracked monitoring and release discipline. Primary endpoint definitions and the low-consensus confirmatory subset remained fixed after inspection of the final 50k results; subsequent presentation changes did not alter the frozen numerical outputs.
 
 The primary confirmatory endpoints were agreement surplus, distribution-agreement gap and sampling compression in low-consensus items. Diffuse/no-clear-consensus items were theoretically important secondary evidence and remained separate from the primary endpoint definition. Combined low-consensus and diffuse aggregates were used only as descriptive divided-item summaries where needed.
 
@@ -126,7 +126,9 @@ theta_i | c_i ~ Dirichlet(c_i + 0.5)
 primary_source_distribution_i = E[theta_i | c_i]
 ```
 
-Robustness checks used raw proportions and Laplace smoothing with alpha = 1.0. Items were stratified by top-label support:
+Robustness checks used raw proportions and Laplace smoothing with alpha = 1.0.
+
+Items were stratified by top-label support:
 
 ```text
 high consensus:             top-label support >= 0.80
@@ -155,9 +157,7 @@ Distribution mode asked each model to estimate the source-community probability 
 
 Requests were fresh and stateless across prompt modes. The verdict/agreement prompt did not include the model's own distribution-mode answer. Prompt templates, schemas, label order, rendered prompt hashes, model IDs, API route, timestamps and decoding parameters were recorded in run records. Prompts requested structured final outputs and did not request chain-of-thought.
 
-For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt at temperature 0.0. Label order was assigned separately for each prompt assignment using the recorded seed procedure; `sample_id` was part of the local label-order seed. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed.
-
-The sampling-compression endpoint measures diversity across repeated forced-choice outputs under the recorded prompt and label-order randomization protocol rather than stochastic sampling from an internal model distribution.
+For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt at temperature 0.0. Label order was assigned separately for each prompt assignment using the recorded seed procedure; `sample_id` was part of the local label-order seed. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed. The sampling-compression endpoint measures diversity across repeated forced-choice outputs under the recorded prompt and label-order randomization protocol rather than stochastic sampling from an internal model distribution.
 
 For paraphrase analyses, paraphrased versions of a stratified item subset were generated with the study's paraphrase-generation prompt mode. The paraphrased items were then evaluated with the paraphrased distribution and paraphrased descriptive verdict/agreement modes, using the same response schemas and parsing/validity rules as corresponding original-item prompts. Because matched original-vs-paraphrase coverage was limited, the paraphrase component provides aggregate surface-form evidence rather than a definitive paired original-vs-paraphrase test. This component did not test training-set membership, and contamination was not directly measured.
 
@@ -219,7 +219,7 @@ Contrasts comparing low-consensus or diffuse items with high-consensus items use
 
 ### Robustness and secondary analyses
 
-Robustness analyses addressed parsing/schema validity, source-community distribution construction, annotation and `info` sensitivity, distribution-mode non-degeneracy and surface-form sensitivity. They included strict-valid-only subsets; raw, Jeffreys-smoothed and Laplace-smoothed source-community distributions; high-annotation-only subsets; exclusion of `info`-majority items; exclusion of high-`info` items; distribution-quality diagnostics; non-API baselines; and aggregate paraphrase analyses.
+Robustness analyses covered five areas: parsing and schema validity, source-community distribution construction, annotation and `info` sensitivity, distribution-mode non-degeneracy, and prompt surface form. Checks included strict-valid-only subsets; raw, Jeffreys-smoothed and Laplace-smoothed source-community distributions; high-annotation-only subsets; exclusion of `info`-majority and high-`info` items; distribution-quality diagnostics with non-API baselines; and aggregate paraphrase analyses.
 
 Distribution-quality diagnostics included Jensen-Shannon divergence, total variation distance, entropy and Brier summaries, with uniform, global-base-rate and source-majority-oracle baselines. These diagnostics assessed non-degeneracy and item sensitivity rather than perfect distribution calibration.
 
@@ -241,7 +241,7 @@ Local setup and regeneration instructions are provided in `README.md`, `.env.exa
 
 ## AI assistance disclosure
 
-The author used AI tools for editorial drafting support, code/checklist support, manuscript organization and revision planning. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
+The author used AI tools for editorial drafting support, code and checklist support, manuscript organization and revision planning. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
 
 ## Ethics and human-subjects statement
 
