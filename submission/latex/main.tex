@@ -285,13 +285,29 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 8. Sclar, M., Choi, Y., Tsvetkov, Y. \& Suhr, A. Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. \emph{International Conference on Learning Representations} (2024). https://openreview.net/forum?id=RIu5lyNXjT
 
 
-\textbf{Fig. 1 | Study design for testing cross-format agreement consistency.} SCRUPLES source-community vote distributions were grouped by source-community disagreement bin and evaluated in matched item-model comparisons across prompt formats. Distribution mode elicited five-label source-community probability estimates; descriptive verdict/agreement mode elicited one label and an estimated source-community agreement value; repeated-sampling mode elicited repeated forced-choice outputs for the same item-model pair. The three primary endpoints are agreement surplus, distribution-agreement gap and sampling compression. Together, they compare source-community support, distribution-mode probabilities, verdict/agreement estimates and repeated-output entropy. Paraphrase-audit results provide supporting aggregate surface-form evidence, and normative-certainty results are secondary descriptive evidence; neither component is a primary endpoint. This schematic is a design overview; quantitative endpoint results are reported in Figs. 2--4 and Table 2.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_study_design_50k.pdf}
+\caption{\textbf{Fig. 1 | Study design for testing cross-format agreement consistency.} SCRUPLES source-community vote distributions were grouped by source-community disagreement bin and evaluated in matched item-model comparisons across prompt formats. Distribution mode elicited five-label source-community probability estimates; descriptive verdict/agreement mode elicited one label and an estimated source-community agreement value; repeated-sampling mode elicited repeated forced-choice outputs for the same item-model pair. The three primary endpoints are agreement surplus, distribution-agreement gap and sampling compression. Together, they compare source-community support, distribution-mode probabilities, verdict/agreement estimates and repeated-output entropy. Paraphrase-audit results provide supporting aggregate surface-form evidence, and normative-certainty results are secondary descriptive evidence; neither component is a primary endpoint. This schematic is a design overview; quantitative endpoint results are reported in Figs. 2--4 and Table 2.}
+\end{figure}
 
-\textbf{Fig. 2 | Verdict prompts inflate apparent source-community agreement.} Agreement surplus by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means. Positive values mean that the verdict-mode estimated source-community agreement exceeds source-community support for the model's chosen label. In the low-consensus primary subset, mean agreement surplus was 0.370931 (95\% item-cluster bootstrap CI, 0.361206-0.381114; n = 3,749 item-model rows; Holm-adjusted P = 0.0015).
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf}
+\caption{\textbf{Fig. 2 | Verdict prompts inflate apparent source-community agreement.} Agreement surplus by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means. Positive values mean that the verdict-mode estimated source-community agreement exceeds source-community support for the model's chosen label. In the low-consensus primary subset, mean agreement surplus was 0.370931 (95\% item-cluster bootstrap CI, 0.361206-0.381114; n = 3,749 item-model rows; Holm-adjusted P = 0.0015).}
+\end{figure}
 
-\textbf{Fig. 3 | Verdict prompts overstate agreement relative to the same model's distribution-mode estimate.} Distribution-agreement gap by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means. Positive values mean that the verdict-mode agreement estimate exceeds the same model's distribution-mode probability for the same item and verdict-selected label. This endpoint is the most direct cross-format coherence test because the model, item and selected label are fixed while the elicitation format changes; it does not require perfect calibration of distribution-mode estimates to the SCRUPLES source-community distribution. In the low-consensus primary subset, mean distribution-agreement gap was 0.232687 (95\% item-cluster bootstrap CI, 0.224387-0.241341; n = 3,736 item-model rows; Holm-adjusted P = 0.0015).
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_distribution_gap_by_bin_model_50k.pdf}
+\caption{\textbf{Fig. 3 | Verdict prompts overstate agreement relative to the same model's distribution-mode estimate.} Distribution-agreement gap by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means. Positive values mean that the verdict-mode agreement estimate exceeds the same model's distribution-mode probability for the same item and verdict-selected label. This endpoint is the most direct cross-format coherence test because the model, item and selected label are fixed while the elicitation format changes; it does not require perfect calibration of distribution-mode estimates to the SCRUPLES source-community distribution. In the low-consensus primary subset, mean distribution-agreement gap was 0.232687 (95\% item-cluster bootstrap CI, 0.224387-0.241341; n = 3,736 item-model rows; Holm-adjusted P = 0.0015).}
+\end{figure}
 
-\textbf{Fig. 4 | Repeated forced-choice outputs compress source-community disagreement.} Sampling compression by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means for source-community entropy minus entropy of repeated forced-choice outputs on the five-label scale in bits. Positive values mean that repeated forced-choice outputs are more concentrated than source-community judgments under the study protocol. In the low-consensus primary subset, mean sampling compression was 1.264638 bits (95\% item-cluster bootstrap CI, 1.218425-1.309054; n = 750 item-model summaries; Holm-adjusted P = 0.0015).
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_sampling_compression_by_bin_model_50k.pdf}
+\caption{\textbf{Fig. 4 | Repeated forced-choice outputs compress source-community disagreement.} Sampling compression by source-community disagreement bin and model. Bars show aggregate means across the evaluated models; overlaid points show model-level means for source-community entropy minus entropy of repeated forced-choice outputs on the five-label scale in bits. Positive values mean that repeated forced-choice outputs are more concentrated than source-community judgments under the study protocol. In the low-consensus primary subset, mean sampling compression was 1.264638 bits (95\% item-cluster bootstrap CI, 1.218425-1.309054; n = 750 item-model summaries; Holm-adjusted P = 0.0015).}
+\end{figure}
 
 \textbf{Table 1 | Model roster and target allocation.} The roster reports the evaluated model IDs, access routes, collection windows and target calls. Provider/route fields record provenance only; provider-family, route and model-family comparisons are outside the analysis. The allocation table reports the frozen study components used for the 50k analysis.
 
@@ -355,11 +371,23 @@ Estimates use the frozen 50k target-scoped analysis. Low-consensus values are th
 
 The Supplementary Information provides reviewer-facing methodological detail, source-data references and release-safe reproducibility information for the Extended Data figures, Extended Data table and Supplementary Tables. The corresponding source-data files are listed in the Supplementary Information rather than repeated in full in the main manuscript.
 
-\textbf{Extended Data Fig. 1 | Distribution-quality diagnostics.} Diagnostic distances and entropy summaries by source-community disagreement bin and model show that distribution-mode outputs varied by item and bin and were not merely uniform or fixed base-rate responses. This is a diagnostic support analysis, not a distribution-prediction benchmark.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_distribution_quality_distances_50k.pdf}
+\caption{\textbf{Extended Data Fig. 1 | Distribution-quality diagnostics.} Diagnostic distances and entropy summaries by source-community disagreement bin and model show that distribution-mode outputs varied by item and bin and were not merely uniform or fixed base-rate responses. This is a diagnostic support analysis, not a distribution-prediction benchmark.}
+\end{figure}
 
-\textbf{Extended Data Fig. 2 | Aggregate paraphrase-audit effects.} Aggregate paraphrase-audit agreement surplus and distribution-agreement gap estimates preserve the direction of the main effects. The figure should be interpreted with the limited matched-coverage caveat stated in the Results and Supplementary Information.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_paraphrase_audit_effects_50k.pdf}
+\caption{\textbf{Extended Data Fig. 2 | Aggregate paraphrase-audit effects.} Aggregate paraphrase-audit agreement surplus and distribution-agreement gap estimates preserve the direction of the main effects. The figure should be interpreted with the limited matched-coverage caveat stated in the Results and Supplementary Information.}
+\end{figure}
 
-\textbf{Extended Data Fig. 3 | Validity by model and prompt mode.} Primary-valid output rates by model and prompt mode show high validity and limited invalid outputs in the frozen 50k target-scoped analysis.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{../figures/final/figure_validity_rate_by_model_50k.pdf}
+\caption{\textbf{Extended Data Fig. 3 | Validity by model and prompt mode.} Primary-valid output rates by model and prompt mode show high validity and limited invalid outputs in the frozen 50k target-scoped analysis.}
+\end{figure}
 
 \textbf{Extended Data Table 1 | Validity and exclusion summary.} Reports validity by model/mode, invalid status counts, minimum model/mode validity, refusal count, off-schema count, API errors, terminal failures and repair fields.
 

@@ -5,6 +5,15 @@ import html
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "article" / "nmi_moral_overresolution_draft_50k_v5.md"
 OUT = Path(__file__).resolve().parent / "main.tex"
+FIGURE_FILES = {
+    "Fig. 1": "figure_study_design_50k.pdf",
+    "Fig. 2": "figure_agreement_surplus_by_bin_model_50k.pdf",
+    "Fig. 3": "figure_distribution_gap_by_bin_model_50k.pdf",
+    "Fig. 4": "figure_sampling_compression_by_bin_model_50k.pdf",
+    "Extended Data Fig. 1": "figure_distribution_quality_distances_50k.pdf",
+    "Extended Data Fig. 2": "figure_paraphrase_audit_effects_50k.pdf",
+    "Extended Data Fig. 3": "figure_validity_rate_by_model_50k.pdf",
+}
 
 def esc(s: str) -> str:
     s = html.unescape(s)
@@ -59,6 +68,32 @@ def table_to_latex(lines):
     out.append(r"\end{longtable}")
     out.append(r"\normalsize")
     out.append(r"\end{landscape}")
+    return "\n".join(out)
+
+def figure_key(line: str):
+    match = re.match(r"^\*\*((?:Fig\. [1-4]|Extended Data Fig\. [1-3]) \| .+?)\*\*", line.strip())
+    if not match:
+        return None
+    return match.group(1).split(" | ", 1)[0]
+
+def figure_to_latex(line: str) -> str:
+    key = figure_key(line)
+    if key is None:
+        return inline_md(line)
+
+    filename = FIGURE_FILES.get(key)
+    rel_path = f"../figures/final/{filename}" if filename else ""
+    abs_path = Path(__file__).resolve().parent / rel_path if rel_path else None
+    caption = inline_md(line)
+
+    out = [r"\begin{figure}[H]", r"\centering"]
+    if abs_path is not None and abs_path.exists():
+        out.append(rf"\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{{{rel_path}}}")
+    else:
+        missing_name = filename or f"unmapped file for {key}"
+        out.append(r"\fbox{\parbox{0.88\linewidth}{\centering Missing figure file: " + esc(missing_name) + r"}}")
+    out.append(r"\caption{" + caption + "}")
+    out.append(r"\end{figure}")
     return "\n".join(out)
 
 def convert(md: str) -> str:
@@ -174,6 +209,8 @@ def convert(md: str) -> str:
             body.append(r"\section{" + inline_md(line[3:].strip()) + "}")
         elif line.startswith("### "):
             body.append(r"\subsection{" + inline_md(line[4:].strip()) + "}")
+        elif figure_key(line):
+            body.append(figure_to_latex(line))
         elif line.strip() == "":
             body.append("")
         else:
