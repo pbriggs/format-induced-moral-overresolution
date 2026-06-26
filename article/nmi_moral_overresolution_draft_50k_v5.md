@@ -241,7 +241,7 @@ Local setup and regeneration instructions are provided in `README.md`, `.env.exa
 
 ## AI assistance disclosure
 
-The author used AI tools for editorial drafting support, code and checklist support, manuscript organization and revision planning. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
+The author used AI tools to support editorial revision, code review, checklist preparation and manuscript organization. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
 
 ## Ethics and human-subjects statement
 
