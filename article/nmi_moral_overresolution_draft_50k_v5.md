@@ -62,9 +62,9 @@ Output validity was high: of 47,500 outputs, 47,432 were primary-valid (validity
 
 ### Robustness and diagnostics
 
-The directional pattern of the three low-consensus endpoint results was preserved across robustness checks that recomputed the endpoints under alternative validity, reference-distribution and item-composition choices.
+The directional pattern of the three low-consensus endpoint results held across robustness checks that recomputed the endpoints under alternative validity, reference-distribution and item-composition choices.
 
-A strict-valid-only analysis restricted the data to outputs satisfying the strict schema. The direction of all three low-consensus endpoints was preserved: agreement surplus 0.376030, distribution-agreement gap 0.223867 and sampling compression 1.268188.
+A strict-valid-only analysis restricted the data to outputs satisfying the strict schema. The direction of all three low-consensus endpoints held: agreement surplus 0.376030, distribution-agreement gap 0.223867 and sampling compression 1.268188.
 
 The source-community reference distribution was checked against alternative constructions from SCRUPLES vote counts. Low-consensus endpoint effects were recomputed using raw proportions, Jeffreys smoothing and Laplace smoothing, and positive effects were preserved across all three. These checks addressed reference-distribution construction, not the calibration of distribution-mode outputs to those distributions.
 
