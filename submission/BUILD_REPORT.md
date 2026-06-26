@@ -2,7 +2,7 @@
 
 Generated from canonical manuscript source `article/nmi_moral_overresolution_draft_50k_v5.md`.
 
-Build/audit timestamp: 2026-06-25 23:26:43 -07:00.
+Build/audit timestamp: 2026-06-26 14:24:38 -07:00.
 
 ## Command Used
 
@@ -16,10 +16,12 @@ cmd /c sync_build_open.bat
 
 ## Build Status
 
-- `latex/main.pdf`: built successfully, 24 pages, includes the seven verified figure PDFs.
+- `latex/main.pdf`: built successfully, 25 pages, includes the seven verified figure PDFs.
 - `latex/supplementary_information.pdf`: built successfully, 12 pages.
 - `submission/manuscript.md`: refreshed from the canonical manuscript source and verified hash-identical.
-- Abstract length corrected for NMI readiness; current abstract is 150 words by the local package audit count.
+- `submission/supplementary_information.md`: verified hash-identical to the canonical SI source.
+- The current abstract is 160 words by the local Unicode-aware package audit count and requires author attention if the 150-word NMI Article limit applies.
+- Bootstrap-floor context is explicit for all reported `P = 0.0015` values in the main manuscript and Supplementary Information.
 - Table 1 display-count ambiguity resolved: model roster and target allocation now appear under one Table 1 caption with internal panels `a, Model roster and collection windows` and `b, Target allocation by study component`.
 - Fatal errors: none.
 - Missing figure files: none.
@@ -49,6 +51,7 @@ Editable SVGs for the same seven figures are included under `figures/editable/`.
   - `a, Model roster and collection windows`
   - `b, Target allocation by study component`
 - The Table 1 panels and Table 2 are rendered in landscape `longtable` blocks.
+- Table pages were visually reviewed at rendered-page resolution; values and headings are readable with no column overflow or clipping.
 - Table values were not changed.
 - Table captions and table references remain intact.
 
@@ -68,8 +71,9 @@ No required Fig. 1-4 or Extended Data Fig. 1-3 PDF/SVG assets were missing. No r
 
 ## Warnings Requiring Author Attention
 
-The PDF builds, but the logs contain layout warnings that should be visually reviewed:
+The PDF builds with layout warnings. Pages 2-4 and 24 of `main.pdf` and page 3 of `supplementary_information.pdf` were visually reviewed at rendered-page resolution; no text was clipped, overlapped or lost:
 
+- The current abstract is 160 words by the local package audit count, 10 words above the 150-word NMI Article limit used for this audit.
 - `main.log` line 45-46, page 2: 6.13116 pt overfull in the agreement-surplus paragraph, caused by the long phrase `source-community` in a dense results paragraph.
 - `main.log` line 69-70, page 3: 9.63971 pt overfull in the cross-model pattern paragraph, caused by long endpoint phrases such as `Low-consensus distribution-agreement`.
 - `main.log` line 71-72, page 4: 1.62645 pt and 19.05746 pt overfull boxes in the output-validity paragraph, caused by compact validity/status wording such as `strict-schema` and `extracted-JSON`.
@@ -77,14 +81,14 @@ The PDF builds, but the logs contain layout warnings that should be visually rev
 - `main.log` line 404-405, page 23: 12.4355 pt overfull in the Extended Data Table 1 caption, caused by a long caption/title line.
 - `supplementary_information.log` line 95-96, page 3: underfull boxes involving inline schema field names such as `label_probabilities`, `most_likely_label` and `chosen_label`.
 
-No content or numerical result was changed to address these layout warnings. The warnings are from dense text/code-token wrapping rather than missing files, unresolved references or figure path failures.
+No content or numerical result was changed to address these layout warnings. The warnings are acceptable for the review build and arise from dense text/code-token wrapping rather than missing files, unresolved references or figure path failures.
 
 ## Figure Readability Status
 
 - Fig. 1-4 are included in `latex/main.pdf` using vector PDF assets from `figures/final/`.
 - The LaTeX log confirms the expected final PDFs are included for Fig. 1-4 and Extended Data Fig. 1-3.
 - Matching editable SVG assets are present for all seven figures under `figures/editable/`.
-- No missing, raster-only or clipped figure file was detected from the build logs or asset inventory. Final visual legibility should still be checked in the PDF viewer before upload.
+- All seven figure pages were visually reviewed at rendered-page resolution. Labels are readable, and no figure is missing, raster-blurry or clipped.
 
 ## Generated-File Hygiene
 
@@ -121,7 +125,7 @@ Filename audit found no restricted-material files under `submission/`. Content m
 
 ## Next Human Checks
 
-- Visually inspect `latex/main.pdf` around lines reported in overfull box warnings, especially the endpoint text near lines 45-76 and Extended Data Table 1 caption.
-- Confirm wide tables are readable in the PDF viewer at normal zoom and are acceptable for upload as a review/check build.
-- Confirm figure labels and panel text are visually legible and meet journal expectations before final upload.
+- Shorten the 160-word abstract to the NMI Article limit of 150 words, then rebuild `main.pdf`.
+- Add the required cover letter; no cover-letter file was found in the repository.
+- Open the OSF project and registration links in a logged-out browser and confirm the intended public records are visible. Both URLs returned HTTP 200, but the OSF client-rendered shell did not expose record metadata to this automated audit.
 - Confirm portal-entered metadata, competing interests, data/code availability and ethics statements match the manuscript.

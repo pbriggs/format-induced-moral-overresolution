@@ -156,7 +156,7 @@ This note defines the three endpoints used to test cross-format uncertainty tran
 
 The distribution-agreement gap is a within-model endpoint: it compares the same model, item and verdict-selected label across two elicitation formats. It tests output coherence and does not require the model's distribution-mode estimate to perfectly match the source-community distribution.
 
-Primary inference uses item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed `20260621`. For bin-specific estimates, each bootstrap replicate resampled item IDs with replacement within the bin and retained all relevant model/prompt rows associated with the resampled items. This item-level clustering avoids treating item-model rows as fully independent observations. One-sided positive-effect bootstrap P values are Holm-adjusted across the three low-consensus primary endpoints. With 2,000 bootstrap iterations, the low-consensus Holm-adjusted values are reported as P = 0.0015.
+Primary inference uses item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed `20260621`. For bin-specific estimates, each bootstrap replicate resampled item IDs with replacement within the bin and retained all relevant model/prompt rows associated with the resampled items. This item-level clustering avoids treating item-model rows as fully independent observations. One-sided positive-effect bootstrap P values are Holm-adjusted across the three low-consensus primary endpoints. With 2,000 bootstrap iterations, the low-consensus Holm-adjusted values are reported as P = 0.0015 (bootstrap floor).
 
 ## Supplementary Note 7: Robustness checks
 
