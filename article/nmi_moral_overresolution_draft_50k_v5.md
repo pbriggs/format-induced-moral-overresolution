@@ -237,7 +237,7 @@ Raw SCRUPLES anecdotes, rendered prompts containing anecdote text, newly collect
 
 Analysis and figure-generation code are available at `https://github.com/pbriggs/format-induced-moral-overresolution` and archived under release tag `paper-analysis-50k-v1` with DOI `https://doi.org/10.5281/zenodo.20789625`. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap-analysis, manuscript-table and figure-rendering code. API credentials and provider-specific secrets are not included.
 
-Local setup and regeneration instructions are provided in `README.md`, `.env.example` and `docs/DATA_SETUP.md`. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the user's own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
+Local setup and regeneration instructions are provided in `README.md`, `.env.example` and `docs/DATA_SETUP.md`. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the rerunning researcher’s own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
 
 ## AI assistance disclosure
 
