@@ -1,0 +1,7 @@
+n,validity_status
+2,empty_response
+4,invalid_json
+52,probability_out_of_bounds
+10,probability_sum_error
+8642,valid_extracted_json
+38790,valid_strict_schema

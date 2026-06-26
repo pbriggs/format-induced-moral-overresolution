@@ -1,0 +1,4 @@
+bootstrap_iterations,bootstrap_one_sided_p_positive,ci_95_high,ci_95_low,ci_excludes_zero,disagreement_bin,endpoint,holm_adjusted_p,observed_mean,p_value_note,positive
+2000,0.0004997501249375312,0.3811135291192549,0.36120569049405754,True,low_consensus,agreement_surplus,0.0014992503748125937,0.37093131989024575,one-sided positive-effect p estimated from item-cluster bootstrap mass <= 0,True
+2000,0.0004997501249375312,0.2413409453000531,0.22438670996752436,True,low_consensus,distribution_agreement_gap,0.0014992503748125937,0.23268736616702354,one-sided positive-effect p estimated from item-cluster bootstrap mass <= 0,True
+2000,0.0004997501249375312,1.3090535619562242,1.2184254408342536,True,low_consensus,sampling_compression,0.0014992503748125937,1.2646376937804604,one-sided positive-effect p estimated from item-cluster bootstrap mass <= 0,True
