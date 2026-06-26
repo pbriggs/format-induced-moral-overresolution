@@ -27,7 +27,7 @@ The study uses SCRUPLES Anecdotes, a corpus of everyday ethical situations with 
 
 ### Endpoint logic and target set
 
-The three endpoints — agreement surplus, distribution-agreement gap and sampling compression — were evaluated on matched item-model comparisons. Low-consensus items (cases with a majority label but substantial remaining source-community disagreement) were the primary confirmatory subset; diffuse/no-clear-consensus items were analysed separately as secondary evidence; high-consensus items served as a reference condition. This hierarchy keeps the confirmatory test distinct from the secondary and reference conditions. Table 1 and Methods report the model roster, component allocation and scale, including 47,500 target calls and 47,432 primary-valid outputs.
+The three endpoints — agreement surplus, distribution-agreement gap and sampling compression — were evaluated on matched item-model comparisons. Low-consensus items (cases with a majority label but substantial remaining source-community disagreement) were the primary confirmatory subset; diffuse/no-clear-consensus items were analysed separately as secondary evidence; high-consensus items served as a reference condition. The model roster and study scale are reported in Table 1 and Methods; 47,500 target calls produced 47,432 primary-valid outputs.
 
 
 ### Verdict prompts inflate apparent agreement
@@ -40,7 +40,7 @@ The same direction appeared outside the primary subset. Diffuse/no-clear-consens
 
 The distribution-agreement gap is the study's central within-model coherence test: it compares each model's verdict-mode agreement estimate with the same model's distribution-mode probability for the same item and chosen label. A positive gap means the verdict/agreement format reported more estimated source-community agreement for the chosen label than the same model assigned to that label in distribution mode.
 
-This comparison is internal to the model's own outputs: it holds model, item and chosen label constant while the elicitation format differs. Because of that structure, this comparison does not require perfect calibration of the distribution-mode estimate to the source-community distribution. It tests whether the same model communicates compatible levels of source-community agreement for the same case and chosen label across two elicitation formats.
+This comparison is internal to the model's own outputs: it holds model, item and chosen label constant while the elicitation format differs, and therefore does not require the distribution-mode estimate to be perfectly calibrated to the source-community distribution.
 
 In the low-consensus primary subset, the distribution-agreement gap was 0.232687 (95% CI, 0.224387-0.241341; Holm-adjusted P = 0.0015; n = 3,736; Fig. 3 and Table 2): for the same item and chosen label, verdict/agreement mode reported more agreement than the same model's distribution-mode probability supported.
 
@@ -58,7 +58,7 @@ Under the study's repeated forced-choice protocol, outputs across fresh calls we
 
 All five evaluated models showed positive low-consensus agreement surplus, positive low-consensus distribution-agreement gap and positive low-consensus sampling compression. Model-level low-consensus agreement surplus ranged from 0.326454 to 0.445325. Low-consensus distribution-agreement gaps ranged from 0.215187 to 0.271943. Low-consensus sampling compression ranged from 0.920001 to 1.408416. Leave-one-model-out summaries preserved the direction of the aggregate pattern for all three endpoints. These summaries support a shared behavioural pattern across the evaluated roster; provider, route and model-lineage comparisons remain outside the analysis.
 
-Output validity was also high across the audit. Of 47,500 outputs, 47,432 were primary-valid (validity rate = 0.998568), comprising 38,790 strict-schema outputs and 8,642 extracted-JSON outputs. The minimum model/mode primary-valid rate was 0.969. Invalid statuses were 52 probability-out-of-bounds outputs, 10 probability-sum errors, 4 invalid-JSON outputs and 2 empty responses. Refusals and off-schema labels were both zero. Repair fields were tracked; `repair_attempted` and `repair_successful` were both zero, so no repaired outputs entered the final analysis. Validity by model and prompt mode is summarized in Extended Data Fig. 3 and Extended Data Table 1.
+Output validity was high: of 47,500 outputs, 47,432 were primary-valid (validity rate = 0.998568), comprising 38,790 strict-schema outputs and 8,642 extracted-JSON outputs. The minimum model/mode primary-valid rate was 0.969, with zero refusals, zero off-schema labels and no repaired outputs. Detailed validity counts by model, prompt mode and invalid status are in Extended Data Table 1 and Extended Data Fig. 3.
 
 ### Robustness and diagnostics
 
@@ -68,7 +68,7 @@ A strict-valid-only analysis restricted the data to outputs satisfying the stric
 
 The source-community reference distribution was checked against alternative constructions from SCRUPLES vote counts. Low-consensus endpoint effects were recomputed using raw proportions, Jeffreys smoothing and Laplace smoothing, and positive effects were preserved across all three. These checks addressed reference-distribution construction, not the calibration of distribution-mode outputs to those distributions.
 
-Item-composition checks asked whether the pattern depended on annotation density or on the `info` label. The directional endpoint pattern was preserved in high-annotation-only analyses, after excluding `info`-majority items and after excluding high-`info` items.
+Item-composition sensitivity preserved the directional endpoint pattern in high-annotation-only analyses and after excluding `info`-majority or high-`info` items.
 
 Distribution-mode diagnostics confirmed that model outputs varied by item and disagreement bin. Source entropy was higher in diffuse items (mean 1.955481 bits) than in high-consensus items (0.823596 bits). Model distribution entropy also varied by bin, with higher entropy in diffuse (1.515785 bits) and low-consensus items (1.476755 bits) than in high-consensus items (1.200675 bits). These analyses, summarized in Extended Data Fig. 1, are diagnostic rather than distribution-prediction or perfect-calibration tests.
 
@@ -87,7 +87,7 @@ The findings also bear on interface design. When a model is prompted for a verdi
 
 The findings are bounded by one source-community dataset, five evaluated models, a finite set of prompt templates and a source community that is not a universal or representative population sample.
 
-The paraphrase audit provides aggregate surface-form evidence; it did not test training-set membership; contamination was not directly measured; and the small matched original-vs-paraphrase overlap limits paired interpretation. Item familiarity could affect absolute label probabilities, though the distribution-agreement gap compares the same model's outputs across formats for the same item rather than against an external calibration target. The study leaves user effects -- including effects on perceived social consensus, confidence and decision-making -- as an open empirical question.
+The paraphrase audit provides aggregate surface-form evidence; it did not test training-set membership; contamination was not directly measured; and the small matched original-vs-paraphrase overlap limits paired interpretation. Item familiarity could affect absolute label probabilities, though the distribution-agreement gap compares the same model's outputs across formats for the same item rather than against an external calibration target. The study leaves user effects — including effects on perceived social consensus, confidence and decision-making — as an open empirical question.
 
 The implication for model-output reliability is direct. Testing models only in distribution mode can miss over-resolution in verdict mode: a model can produce non-degenerate distributional outputs while reporting higher apparent source-community agreement in verdict mode for the same case and label. Reliability evaluations that compare verdict-mode agreement estimates against the same model's distributional outputs for matched items can identify that discrepancy. An evaluation limited to one format can make distributional uncertainty appear adequate in that format while missing how the same model behaves when asked for a verdict.
 
