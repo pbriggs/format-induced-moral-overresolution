@@ -6,6 +6,8 @@ This package is a simple article-style LaTeX review build generated from the can
 
 ## Manuscript And LaTeX
 
+- `cover_letter.pdf`
+- `cover_letter.tex`
 - `manuscript.md`
 - `supplementary_information.md`
 - `latex/main.tex`

@@ -188,6 +188,7 @@ def convert(md: str) -> str:
 \usepackage[margin=1in]{{geometry}}
 \usepackage[T1]{{fontenc}}
 \usepackage[utf8]{{inputenc}}
+\usepackage{{lmodern}}
 \usepackage{{hyperref}}
 \usepackage{{booktabs}}
 \usepackage{{longtable}}
@@ -197,12 +198,14 @@ def convert(md: str) -> str:
 \usepackage{{caption}}
 \usepackage{{float}}
 \usepackage{{xurl}}
+\usepackage{{lineno}}
 \hypersetup{{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}}
 \title{{{title}}}
 \author{{{author_block}}}
 \date{{}}
 \begin{{document}}
 \maketitle
+\linenumbers
 """
 
     while i < len(lines):

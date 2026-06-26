@@ -2,6 +2,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -11,12 +12,14 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{xurl}
+\usepackage{lineno}
 \hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
 \title{Verdict-style prompts induce moral over-resolution in large language models}
 \author{Paul Briggs\\Independent researcher, Los Angeles, CA, USA\\Corresponding author: Paul Briggs, p.ivan.briggs@gmail.com\\ORCID: \url{https://orcid.org/0009-0002-9951-8661}}
 \date{}
 \begin{document}
 \maketitle
+\linenumbers
 \begin{abstract}
 Who was at fault? Who acted unfairly? Who was in the wrong? These are questions people ask large language models. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet a verdict-style answer gives one label and can make the case appear more settled than the source-community votes support. In a preregistered five-LLM audit, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than the recorded votes showed --- and more than each model's distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were more concentrated than source-community votes, most clearly in divided cases. These results identify a format-specific reliability failure in uncertainty communication: a model that assigns probability across labels in one format can make the same case appear more settled in another.
 

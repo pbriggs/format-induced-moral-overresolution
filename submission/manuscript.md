@@ -7,7 +7,7 @@
 
 ## Abstract
 
-Who was at fault? Who acted unfairly? Who was in the wrong? These are questions people ask large language models. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet a verdict-style answer gives only one label, which can make the chosen answer appear to carry more consensus than the source-community votes support. In a preregistered audit of five LLMs, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than the recorded votes showed — and more than each model’s own distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were also more concentrated than source-community votes, with the clearest effect in divided cases. These results identify a format-specific reliability failure in uncertainty communication: a model that assigns probability across labels in one format can make the same case appear more settled in another.
+Who was at fault? Who acted unfairly? Who was in the wrong? These are questions people ask large language models. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet a verdict-style answer gives one label and can make the case appear more settled than the source-community votes support. In a preregistered five-LLM audit, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than the recorded votes showed — and more than each model's distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were more concentrated than source-community votes, most clearly in divided cases. These results identify a format-specific reliability failure in uncertainty communication: a model that assigns probability across labels in one format can make the same case appear more settled in another.
 
 
 ## Main
@@ -241,7 +241,7 @@ Local setup and regeneration instructions are provided in `README.md`, `.env.exa
 
 ## AI assistance disclosure
 
-The author used AI tools for editorial drafting support, code and checklist support, manuscript organization and revision planning. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
+The author used AI tools to support editorial revision, code review, checklist preparation and manuscript organization. The author reviewed, verified and takes responsibility for all analyses, claims, interpretations and final manuscript text. No AI tool is listed as an author.
 
 ## Ethics and human-subjects statement
 
