@@ -27,7 +27,7 @@ The study uses SCRUPLES Anecdotes, a corpus of everyday ethical situations with 
 
 ### Endpoint logic and target set
 
-The three endpoints — agreement surplus, distribution-agreement gap and sampling compression — were evaluated on matched item-model comparisons. Low-consensus items (cases with a majority label but substantial remaining source-community disagreement) were the primary confirmatory subset; diffuse/no-clear-consensus items were analysed separately as secondary evidence; high-consensus items served as a reference condition. The model roster and study scale are reported in Table 1 and Methods; 47,500 target calls produced 47,432 primary-valid outputs.
+We tested three ways verdict-style answers can over-resolve source-community disagreement — agreement surplus, distribution-agreement gap and sampling compression — using matched item-model comparisons. Low-consensus items (cases with a majority label but substantial remaining source-community disagreement) were the primary confirmatory subset; diffuse/no-clear-consensus items were analysed separately as secondary evidence; high-consensus items served as a reference condition. The model roster and study scale are reported in Table 1 and Methods; 47,500 target calls produced 47,432 primary-valid outputs.
 
 
 ### Verdict prompts inflate apparent agreement
