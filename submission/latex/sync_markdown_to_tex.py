@@ -36,11 +36,45 @@ def esc(s: str) -> str:
     return s
 
 def inline_md(s: str) -> str:
+    code_spans = []
+
+    def stash_code(match):
+        code_spans.append(match.group(1))
+        return f"@@CODE{len(code_spans) - 1}@@"
+
+    s = re.sub(r"`(.+?)`", stash_code, s)
     s = esc(s)
     s = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", s)
     s = re.sub(r"\*(.+?)\*", r"\\emph{\1}", s)
-    s = re.sub(r"`(.+?)`", r"\\texttt{\1}", s)
+
+    for idx, value in enumerate(code_spans):
+        if value.startswith(("http://", "https://")):
+            replacement = r"\url{" + value + "}"
+        else:
+            replacement = r"\path{" + value + "}"
+        s = s.replace(f"@@CODE{idx}@@", replacement)
+
     return s
+
+def breakable_token(s: str) -> str:
+    s = esc(s)
+    for marker in ("-", ":", "/", "."):
+        s = s.replace(marker, marker + r"\allowbreak{}")
+    return s
+
+def table_cell_md(s: str) -> str:
+    code_match = re.fullmatch(r"`(.+?)`", s)
+    if code_match:
+        value = code_match.group(1)
+        if value.startswith(("http://", "https://")):
+            return r"\url{" + value + "}"
+        return r"\path{" + value + "}"
+
+    timestamp_match = re.fullmatch(r"\d{4}-\d{2}-\d{2}T[0-9:.+-]+", s)
+    if timestamp_match:
+        return r"\texttt{" + breakable_token(s) + "}"
+
+    return inline_md(s)
 
 def front_matter_value(line: str):
     match = re.match(r"^\*\*(.+?):\*\*\s*(.*?)\s*$", line.strip())
@@ -53,12 +87,28 @@ def front_matter_value(line: str):
 def table_to_latex(lines):
     rows = []
     for line in lines:
-        cells = [inline_md(c.strip()) for c in line.strip().strip("|").split("|")]
+        cells = [table_cell_md(c.strip()) for c in line.strip().strip("|").split("|")]
         rows.append(cells)
     if not rows:
         return ""
-    colspec = "p{0.22\\linewidth}" + "p{0.14\\linewidth}" * (len(rows[0]) - 1)
-    out = [r"\begin{landscape}", r"\small", rf"\begin{{longtable}}{{{colspec}}}"]
+    ncols = len(rows[0])
+    header_text = " | ".join(rows[0])
+    if ncols == 6 and "API route" in header_text:
+        widths = ["0.15", "0.13", "0.24", "0.18", "0.18", "0.08"]
+    elif ncols == 6:
+        widths = ["0.16", "0.17", "0.08", "0.17", "0.17", "0.15"]
+    elif ncols == 4:
+        widths = ["0.28", "0.13", "0.13", "0.38"]
+    else:
+        widths = ["0.18"] * ncols
+    colspec = "".join(rf">{{\raggedright\arraybackslash}}p{{{width}\linewidth}}" for width in widths)
+    out = [
+        r"\begin{landscape}",
+        r"\scriptsize",
+        r"\setlength{\tabcolsep}{2pt}",
+        r"\renewcommand{\arraystretch}{1.18}",
+        rf"\begin{{longtable}}{{{colspec}}}",
+    ]
     out.append(r" \toprule")
     out.append(" & ".join(rows[0]) + r" \\")
     out.append(r" \midrule")
@@ -67,6 +117,8 @@ def table_to_latex(lines):
     out.append(r" \bottomrule")
     out.append(r"\end{longtable}")
     out.append(r"\normalsize")
+    out.append(r"\setlength{\tabcolsep}{6pt}")
+    out.append(r"\renewcommand{\arraystretch}{1}")
     out.append(r"\end{landscape}")
     return "\n".join(out)
 

@@ -1,1 +1,1 @@
-Place final PDF/SVG/PNG figure exports here before submission. This sandbox package does not include repo figure assets unless they were uploaded.
+Final PDF figure exports for Fig. 1-4 and Extended Data Fig. 1-3 are included here.

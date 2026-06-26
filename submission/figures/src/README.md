@@ -1,1 +1,1 @@
-Place figure-generation source scripts here if packaging from the repository.
+Release-facing figure-generation and figure-package documentation copied from the repository are included here.

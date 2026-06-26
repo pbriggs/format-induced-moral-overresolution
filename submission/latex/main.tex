@@ -18,11 +18,11 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Large language models are often asked to judge everyday disputes by choosing who was in the wrong. For such cases, source-community votes range from near-unanimous to deeply divided. A verdict-style answer should not make that disagreement sound more settled than the votes support. In a preregistered audit, five LLMs evaluated matched ethical scenarios in distribution mode, verdict/agreement mode and repeated-sampling mode. In verdict/agreement mode, models estimated more source-community agreement for their chosen label than the recorded votes supported, and more than each model's own distribution-mode estimate for that label. Repeated forced-choice outputs were also more concentrated than source-community votes, with the clearest concern in divided cases. These findings identify a format-specific reliability failure: verdict-style interfaces can make divided cases appear more settled than the source-community votes support.
+Who was at fault? Who acted unfairly? Who was in the wrong? These are questions people ask large language models. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet verdict-style answers give one label, and that format can make the chosen answer appear to carry more consensus than the source-community votes support. In a preregistered audit of five LLMs, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than the recorded votes showed --- and more than each model's own distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were also more concentrated than source-community votes, with the clearest effect in divided cases. These results identify a format-specific reliability failure in uncertainty communication: a model that assigns probability across labels in one format can make the same case appear more settled in another.
 
 \end{abstract}
 
-Large language models are asked to judge everyday disputes by choosing who was in the wrong. Source-community votes on the same cases vary in consensus: in some cases a large majority of votes points to one label; in others, votes divide across several. When a model is asked to choose one label and estimate how much the source community agrees, it can report high agreement for a case where the votes were divided. That mismatch is the reliability concern this study examines.
+People now ask large language models to weigh in on everyday conflicts --- who was at fault, who acted unfairly, who was in the wrong. But source-community judgments on such cases do not always converge: votes can range from near-unanimous to deeply divided. A verdict-style answer nonetheless gives one label accompanied by an estimate of how much the community would agree. When that estimate exceeds what the votes show, the format communicates more consensus than the evidence supports --- and that is the reliability concern this study examines.
 
 Asking for one answer changes what a model communicates about its uncertainty. Given the same case, a model asked to distribute probability across labels may assign substantial weight to several; asked for one label and an agreement estimate, the same model may choose one label and report strong source-community agreement. Those two answers came from the same model on the same case; the prompt mode changed, not the case or the model. When the same case produces different apparent levels of source-community agreement depending on how the question is framed, the verdict-style format can make the case appear more settled than the source-community votes indicate.
 
@@ -78,7 +78,7 @@ A strict-valid-only analysis restricted the data to outputs satisfying the stric
 
 The source-community reference distribution was checked against alternative constructions from SCRUPLES vote counts. Low-consensus endpoint effects were recomputed using raw proportions, Jeffreys smoothing and Laplace smoothing, and positive effects were preserved across all three. These checks addressed reference-distribution construction, not the calibration of distribution-mode outputs to those distributions.
 
-Item-composition sensitivity preserved the directional endpoint pattern in high-annotation-only analyses and after excluding \texttt{info}-majority or high-\texttt{info} items.
+Item-composition sensitivity preserved the directional endpoint pattern in high-annotation-only analyses and after excluding \path{info}-majority or high-\path{info} items.
 
 Distribution-mode diagnostics confirmed that model outputs varied by item and disagreement bin. Source entropy was higher in diffuse items (mean 1.955481 bits) than in high-consensus items (0.823596 bits). Model distribution entropy also varied by bin, with higher entropy in diffuse (1.515785 bits) and low-consensus items (1.476755 bits) than in high-consensus items (1.200675 bits). These analyses, summarized in Extended Data Fig. 1, are diagnostic rather than distribution-prediction or perfect-calibration tests.
 
@@ -105,7 +105,7 @@ The implication for model-output reliability is direct. Testing models only in d
 
 \subsection{Preregistration and analysis scope}
 
-The study was preregistered on OSF as a target-scoped computational audit. It used existing SCRUPLES source-community judgments and newly collected LLM API outputs; no new human participants were recruited. The analysis uses the frozen 50k target-scoped exports from \texttt{post\_run/analysis\_exports/50k/}.
+The study was preregistered on OSF as a target-scoped computational audit. It used existing SCRUPLES source-community judgments and newly collected LLM API outputs; no new human participants were recruited. The analysis uses the frozen 50k target-scoped exports from \path{post_run/analysis_exports/50k/}.
 
 Operational milestones tracked monitoring and release discipline. Primary endpoint definitions and the low-consensus confirmatory subset remained fixed after inspection of the final 50k results; subsequent presentation changes did not alter the frozen numerical outputs.
 
@@ -125,7 +125,7 @@ nobody      = nobody was in the wrong
 info        = not enough information/cannot tell
 \end{verbatim}
 
-The \texttt{info} label was retained in the primary distributions because removing it would alter the observed disagreement structure.
+The \path{info} label was retained in the primary distributions because removing it would alter the observed disagreement structure.
 
 \subsection{Source-community distributions, bins and item allocation}
 
@@ -147,7 +147,7 @@ low consensus:              top-label support >= 0.50 and < 0.65
 diffuse/no-clear-consensus: top-label support < 0.50
 \end{verbatim}
 
-Item selection and label-order assignment used the recorded milestone seed \texttt{20260615}. Within each disagreement bin, eligible items were selected according to the frozen allocation plan and component-specific target counts; the released target manifests record the resulting item IDs. Beyond the eligibility rules above, target-list membership was determined by the frozen allocation plan and recorded seed rather than by inspection of model outputs.
+Item selection and label-order assignment used the recorded milestone seed \path{20260615}. Within each disagreement bin, eligible items were selected according to the frozen allocation plan and component-specific target counts; the released target manifests record the resulting item IDs. Beyond the eligibility rules above, target-list membership was determined by the frozen allocation plan and recorded seed rather than by inspection of model outputs.
 
 Low-consensus items were the primary confirmatory subset, diffuse/no-clear-consensus items remained secondary, and high-consensus items served as the reference condition.
 
@@ -155,7 +155,7 @@ The core cross-format component used 350 high-consensus, 400 moderate-consensus,
 
 \subsection{Model roster and collection}
 
-The amended frozen roster contained five models: \texttt{claude-sonnet-4-6}, \texttt{deepseek/deepseek-v3.2}, \texttt{gpt-5.5}, \texttt{grok-4.3} and \texttt{qwen/qwen3.7-max}. Each model had 9,500 target calls. API routes and call windows are reported in Table 1a.
+The amended frozen roster contained five models: \path{claude-sonnet-4-6}, \path{deepseek/deepseek-v3.2}, \path{gpt-5.5}, \path{grok-4.3} and \path{qwen/qwen3.7-max}. Each model had 9,500 target calls. API routes and call windows are reported in Table 1a.
 
 Temperature was 0.0 for all exported rows. Top-p was blank/null in the final model roster. Provider and route fields record access provenance and are not analysed as cross-provider group effects. Exact model snapshot dates were not available in the local final roster and are not inferred beyond the recorded first and last call timestamps.
 
@@ -167,7 +167,7 @@ Distribution mode asked each model to estimate the source-community probability 
 
 Requests were fresh and stateless across prompt modes. The verdict/agreement prompt did not include the model's own distribution-mode answer. Prompt templates, schemas, label order, rendered prompt hashes, model IDs, API route, timestamps and decoding parameters were recorded in run records. Prompts requested structured final outputs and did not request chain-of-thought.
 
-For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt at temperature 0.0. Label order was assigned separately for each prompt assignment using the recorded seed procedure; \texttt{sample\_id} was part of the local label-order seed. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed. The sampling-compression endpoint measures diversity across repeated forced-choice outputs under the recorded prompt and label-order randomization protocol rather than stochastic sampling from an internal model distribution.
+For repeated sampling, the ten outputs for each item-model pair were ten separate fresh calls under the sampling prompt at temperature 0.0. Label order was assigned separately for each prompt assignment using the recorded seed procedure; \path{sample_id} was part of the local label-order seed. Invalid outputs were handled under the same parsing and validity rules as other components before entropy summaries were computed. The sampling-compression endpoint measures diversity across repeated forced-choice outputs under the recorded prompt and label-order randomization protocol rather than stochastic sampling from an internal model distribution.
 
 For paraphrase analyses, paraphrased versions of a stratified item subset were generated with the study's paraphrase-generation prompt mode. The paraphrased items were then evaluated with the paraphrased distribution and paraphrased descriptive verdict/agreement modes, using the same response schemas and parsing/validity rules as corresponding original-item prompts. Because matched original-vs-paraphrase coverage was limited, the paraphrase component provides aggregate surface-form evidence rather than a definitive paired original-vs-paraphrase test. This component did not test training-set membership, and contamination was not directly measured.
 
@@ -177,13 +177,13 @@ Rendered prompt hashes were computed after inserting item text and randomized la
 
 Strict JSON schema enforcement was used where supported. Otherwise, JSON was extracted from model responses and validated against the required fields and ranges. Outputs were excluded from primary analyses if the response was empty, invalid JSON, out of range, outside the validation tolerance for five-label probability sums, missing required fields, a refusal, an off-schema label or a terminal/API failure without a valid response.
 
-For distribution-mode outputs, all five label probabilities had to be castable to floats and within the closed interval [0, 1]. Values outside that interval were marked as \texttt{probability\_out\_of\_bounds}.
+For distribution-mode outputs, all five label probabilities had to be castable to floats and within the closed interval [0, 1]. Values outside that interval were marked as \path{probability_out_of_bounds}.
 
-Probability vectors were accepted when their total fell within the inclusive interval [0.99, 1.01]. Accepted vectors whose totals differed from 1.0 by more than 1e-12 were renormalized to sum to one before downstream use. The 1e-12 threshold was only the renormalization threshold, not the exclusion tolerance. Vectors with totals below 0.99 or above 1.01 were marked as \texttt{probability\_sum\_error} and excluded from primary analyses. These statuses were assigned by the collection-time parser; the final 50k exporter inherited stored parser validity statuses rather than revalidating probability sums or applying a second tolerance.
+Probability vectors were accepted when their total fell within the inclusive interval [0.99, 1.01]. Accepted vectors whose totals differed from 1.0 by more than 1e-12 were renormalized to sum to one before downstream use. The 1e-12 threshold was only the renormalization threshold, not the exclusion tolerance. Vectors with totals below 0.99 or above 1.01 were marked as \path{probability_sum_error} and excluded from primary analyses. These statuses were assigned by the collection-time parser; the final 50k exporter inherited stored parser validity statuses rather than revalidating probability sums or applying a second tolerance.
 
 The frozen analysis included 47,500 planned, attempted and completed target calls. Run provenance recorded 0 API errors, 0 terminal failures, retry rate 0.0, executor status passed and database integrity ok.
 
-Primary-valid outputs were 47,432 of 47,500: 38,790 strict-schema outputs and 8,642 extracted-JSON outputs. Invalid status counts were 52 \texttt{probability\_out\_of\_bounds} outputs, 10 \texttt{probability\_sum\_error} outputs, 4 invalid-JSON outputs and 2 empty responses. Refusals and off-schema labels were zero. Repair fields were tracked, but \texttt{repair\_attempted=0} and \texttt{repair\_successful=0}; the final 50k analysis contained no repaired outputs. Validity by model and prompt mode is reported in Extended Data Table 1.
+Primary-valid outputs were 47,432 of 47,500: 38,790 strict-schema outputs and 8,642 extracted-JSON outputs. Invalid status counts were 52 \path{probability_out_of_bounds} outputs, 10 \path{probability_sum_error} outputs, 4 invalid-JSON outputs and 2 empty responses. Refusals and off-schema labels were zero. Repair fields were tracked, but \path{repair_attempted=0} and \path{repair_successful=0}; the final 50k analysis contained no repaired outputs. Validity by model and prompt mode is reported in Extended Data Table 1.
 
 Strict-schema support varied across access routes. The robustness analyses included a strict-valid-only subset, which preserved the direction of all three low-consensus endpoints and is reported in Results and the Supplementary Information.
 
@@ -219,7 +219,7 @@ Entropy values are reported on the five-label scale in bits. Positive values ind
 
 \subsection{Statistical inference}
 
-Primary inference used item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed \texttt{20260621}. For bin-specific estimates, each bootstrap replicate resampled item IDs with replacement within the bin and retained all relevant model/prompt rows associated with the resampled items.
+Primary inference used item-cluster bootstrap confidence intervals with 2,000 bootstrap iterations and seed \path{20260621}. For bin-specific estimates, each bootstrap replicate resampled item IDs with replacement within the bin and retained all relevant model/prompt rows associated with the resampled items.
 
 For contrasts, each bootstrap replicate recomputed the relevant bin means and subtracted the high-consensus reference estimate. This item-level clustering avoids treating item-model rows as fully independent observations.
 
@@ -229,7 +229,7 @@ Contrasts comparing low-consensus or diffuse items with high-consensus items use
 
 \subsection{Robustness and secondary analyses}
 
-Robustness analyses covered five areas: parsing and schema validity, source-community distribution construction, annotation and \texttt{info} sensitivity, distribution-mode non-degeneracy, and prompt surface form. Checks included strict-valid-only subsets; raw, Jeffreys-smoothed and Laplace-smoothed source-community distributions; high-annotation-only subsets; exclusion of \texttt{info}-majority and high-\texttt{info} items; distribution-quality diagnostics with non-API baselines; and aggregate paraphrase analyses.
+Robustness analyses covered five areas: parsing and schema validity, source-community distribution construction, annotation and \path{info} sensitivity, distribution-mode non-degeneracy, and prompt surface form. Checks included strict-valid-only subsets; raw, Jeffreys-smoothed and Laplace-smoothed source-community distributions; high-annotation-only subsets; exclusion of \path{info}-majority and high-\path{info} items; distribution-quality diagnostics with non-API baselines; and aggregate paraphrase analyses.
 
 Distribution-quality diagnostics included Jensen-Shannon divergence, total variation distance, entropy and Brier summaries, with uniform, global-base-rate and source-majority-oracle baselines. These diagnostics assessed non-degeneracy and item sensitivity rather than perfect distribution calibration.
 
@@ -237,7 +237,7 @@ Normative certainty was analysed as a secondary descriptive construct distinct f
 
 \section{Data availability}
 
-Derived analysis files and reproducibility records are available through the OSF project (\texttt{https://osf.io/rwhax/overview}), OSF registration home (\texttt{https://osf.io/rwhax/registrations}), GitHub repository (\texttt{https://github.com/pbriggs/format-induced-moral-overresolution}), the post-50k execution/completion archive (\texttt{https://doi.org/10.5281/zenodo.20786461}) and the paper-analysis archive (\texttt{https://doi.org/10.5281/zenodo.20789625}). The corresponding release tags are \texttt{post-50k-completion-v1} and \texttt{paper-analysis-50k-v1}.
+Derived analysis files and reproducibility records are available through the OSF project (\url{https://osf.io/rwhax/overview}), OSF registration home (\url{https://osf.io/rwhax/registrations}), GitHub repository (\url{https://github.com/pbriggs/format-induced-moral-overresolution}), the post-50k execution/completion archive (\url{https://doi.org/10.5281/zenodo.20786461}) and the paper-analysis archive (\url{https://doi.org/10.5281/zenodo.20789625}). The corresponding release tags are \path{post-50k-completion-v1} and \path{paper-analysis-50k-v1}.
 
 Release-safe materials include frozen target lists and run manifests with sensitive details removed where needed; prompt templates and schemas; derived endpoint, robustness, paraphrase, baseline, secondary normative-certainty and distribution-quality summaries; bootstrap intervals, adjusted tests and validity/exclusion summaries; manuscript-table CSVs, figure-ready CSVs and rendered figures. The Supplementary Information and repository documentation list the main source-data and analysis files, and analysis code is described below. The repository license is CC0 1.0 Universal unless superseded by OSF project settings.
 
@@ -245,9 +245,9 @@ Raw SCRUPLES anecdotes, rendered prompts containing anecdote text, newly collect
 
 \section{Code availability}
 
-Analysis and figure-generation code are available at \texttt{https://github.com/pbriggs/format-induced-moral-overresolution} and archived under release tag \texttt{paper-analysis-50k-v1} with DOI \texttt{https://doi.org/10.5281/zenodo.20789625}. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap-analysis, manuscript-table and figure-rendering code. API credentials and provider-specific secrets are not included.
+Analysis and figure-generation code are available at \url{https://github.com/pbriggs/format-induced-moral-overresolution} and archived under release tag \path{paper-analysis-50k-v1} with DOI \url{https://doi.org/10.5281/zenodo.20789625}. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap-analysis, manuscript-table and figure-rendering code. API credentials and provider-specific secrets are not included.
 
-Local setup and regeneration instructions are provided in \texttt{README.md}, \texttt{.env.example} and \texttt{docs/DATA\_SETUP.md}. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the rerunning researcher's own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
+Local setup and regeneration instructions are provided in \path{README.md}, \path{.env.example} and \path{docs/DATA_SETUP.md}. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the rerunning researcher's own provider credentials and may produce new model outputs rather than exactly reproducing the frozen 50k collection.
 
 \section{AI assistance disclosure}
 
@@ -314,19 +314,23 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 \textbf{Table 1a | Model roster and collection windows.}
 
 \begin{landscape}
-\small
-\begin{longtable}{p{0.22\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.13\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}}
  \toprule
 Model ID & Provider/route & API route & First call UTC & Last call UTC & Target calls \\
  \midrule
-\texttt{claude-sonnet-4-6} & Anthropic & \texttt{https://api.anthropic.com/v1/messages} & 2026-06-16T22:25:08.996871+00:00 & 2026-06-21T15:33:15.162406+00:00 & 9,500 \\
-\texttt{deepseek/deepseek-v3.2} & OpenRouter-compatible route & \texttt{https://openrouter.ai/api/v1/chat/completions} & 2026-06-16T22:25:04.892615+00:00 & 2026-06-21T15:33:02.923140+00:00 & 9,500 \\
-\texttt{gpt-5.5} & OpenAI & \texttt{https://api.openai.com/v1/responses} & 2026-06-16T22:25:12.406257+00:00 & 2026-06-21T15:33:16.432159+00:00 & 9,500 \\
-\texttt{grok-4.3} & xAI & \texttt{https://api.x.ai/v1/responses} & 2026-06-17T17:55:15.846572+00:00 & 2026-06-21T15:32:59.334062+00:00 & 9,500 \\
-\texttt{qwen/qwen3.7-max} & OpenRouter-compatible route & \texttt{https://openrouter.ai/api/v1/chat/completions} & 2026-06-16T22:25:15.735026+00:00 & 2026-06-21T15:33:13.991444+00:00 & 9,500 \\
+\path{claude-sonnet-4-6} & Anthropic & \url{https://api.anthropic.com/v1/messages} & \texttt{2026-\allowbreak{}06-\allowbreak{}16T22:\allowbreak{}25:\allowbreak{}08.\allowbreak{}996871+00:\allowbreak{}00} & \texttt{2026-\allowbreak{}06-\allowbreak{}21T15:\allowbreak{}33:\allowbreak{}15.\allowbreak{}162406+00:\allowbreak{}00} & 9,500 \\
+\path{deepseek/deepseek-v3.2} & OpenRouter-compatible route & \url{https://openrouter.ai/api/v1/chat/completions} & \texttt{2026-\allowbreak{}06-\allowbreak{}16T22:\allowbreak{}25:\allowbreak{}04.\allowbreak{}892615+00:\allowbreak{}00} & \texttt{2026-\allowbreak{}06-\allowbreak{}21T15:\allowbreak{}33:\allowbreak{}02.\allowbreak{}923140+00:\allowbreak{}00} & 9,500 \\
+\path{gpt-5.5} & OpenAI & \url{https://api.openai.com/v1/responses} & \texttt{2026-\allowbreak{}06-\allowbreak{}16T22:\allowbreak{}25:\allowbreak{}12.\allowbreak{}406257+00:\allowbreak{}00} & \texttt{2026-\allowbreak{}06-\allowbreak{}21T15:\allowbreak{}33:\allowbreak{}16.\allowbreak{}432159+00:\allowbreak{}00} & 9,500 \\
+\path{grok-4.3} & xAI & \url{https://api.x.ai/v1/responses} & \texttt{2026-\allowbreak{}06-\allowbreak{}17T17:\allowbreak{}55:\allowbreak{}15.\allowbreak{}846572+00:\allowbreak{}00} & \texttt{2026-\allowbreak{}06-\allowbreak{}21T15:\allowbreak{}32:\allowbreak{}59.\allowbreak{}334062+00:\allowbreak{}00} & 9,500 \\
+\path{qwen/qwen3.7-max} & OpenRouter-compatible route & \url{https://openrouter.ai/api/v1/chat/completions} & \texttt{2026-\allowbreak{}06-\allowbreak{}16T22:\allowbreak{}25:\allowbreak{}15.\allowbreak{}735026+00:\allowbreak{}00} & \texttt{2026-\allowbreak{}06-\allowbreak{}21T15:\allowbreak{}33:\allowbreak{}13.\allowbreak{}991444+00:\allowbreak{}00} & 9,500 \\
  \bottomrule
 \end{longtable}
 \normalsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1}
 \end{landscape}
 
 Temperature was 0.0 for all exported model-roster rows; top-p was blank/null. Provider/route fields record access provenance and are not analysed as cross-provider group effects; model snapshot dates are not inferred beyond the recorded first and last call timestamps. Total target calls were 47,500.
@@ -334,8 +338,10 @@ Temperature was 0.0 for all exported model-roster rows; top-p was blank/null. Pr
 \textbf{Table 1b | Target allocation by study component.}
 
 \begin{landscape}
-\small
-\begin{longtable}{p{0.22\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.13\linewidth}>{\raggedright\arraybackslash}p{0.13\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}}
  \toprule
 Component & Unique items & Target calls & Manuscript role \\
  \midrule
@@ -347,13 +353,17 @@ Total &  & 47,500 & Frozen 50k target-scoped analysis \\
  \bottomrule
 \end{longtable}
 \normalsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1}
 \end{landscape}
 
 \textbf{Table 2 | Primary endpoint estimates, contrasts, confidence intervals and adjusted tests.}
 
 \begin{landscape}
-\small
-\begin{longtable}{p{0.22\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}}
  \toprule
 Endpoint & Low-consensus primary mean (95\% CI) & Holm-adjusted P & Diffuse secondary mean (95\% CI) & High-consensus reference mean (95\% CI) & Low--high contrast (95\% CI) \\
  \midrule
@@ -363,6 +373,8 @@ Sampling compression, bits & 1.264638 (1.218425-1.309054) & 0.0015 & 1.507379 (1
  \bottomrule
 \end{longtable}
 \normalsize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1}
 \end{landscape}
 
 Estimates use the frozen 50k target-scoped analysis. Low-consensus values are the primary confirmatory estimates; diffuse/no-clear-consensus values are secondary evidence and remain separate from the primary endpoint definition; high-consensus values are positive estimates for the reference condition. Confidence intervals are item-cluster bootstrap intervals with 2,000 bootstrap iterations. P values are one-sided positive-effect bootstrap P values, Holm-adjusted across the three low-consensus primary endpoints; with 2,000 bootstrap iterations, Holm-adjusted P values are reported at the finite bootstrap floor of 0.0015.
@@ -395,7 +407,7 @@ The Supplementary Information provides reviewer-facing methodological detail, so
 
 \textbf{Supplementary Table 2 | Source-community distribution smoothing robustness.} Reports raw-proportion, Jeffreys-smoothed and Laplace-smoothed source-community distribution sensitivity checks.
 
-\textbf{Supplementary Table 3 | Annotation and \texttt{info} robustness.} Reports high-annotation-only, \texttt{info}-majority exclusion and high-\texttt{info} exclusion checks.
+\textbf{Supplementary Table 3 | Annotation and \path{info} robustness.} Reports high-annotation-only, \path{info}-majority exclusion and high-\path{info} exclusion checks.
 
 \textbf{Supplementary Table 4 | Paraphrase audit.} Reports paraphrase target calls, valid outputs, aggregate effects, confidence intervals, chosen-label stability and the matched-coverage caveat.
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  25 JUN 2026 21:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  25 JUN 2026 23:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -447,338 +447,96 @@ Overfull \hbox (5.55223pt too wide) in paragraph at lines 75--76
 -ity, reference-distribution and item-composition
  []
 
-[4] [5] [6] [7]
-Overfull \hbox (58.80533pt too wide) in paragraph at lines 186--187
-\T1/cmr/m/n/10.95 JSON out-puts. In-valid sta-tus counts were 52 \T1/cmtt/m/n/1
-0.95 probability_out_of_bounds \T1/cmr/m/n/10.95 out-puts, 10 \T1/cmtt/m/n/10.9
-5 probability_sum_error
- []
-
-[8]
-Overfull \hbox (112.00154pt too wide) in paragraph at lines 240--241
-\T1/cmr/m/n/10.95 Derived anal-y-sis files and re-pro-ducibil-ity records are a
-vail-able through the OSF project (\T1/cmtt/m/n/10.95 https://osf.io/rwhax/over
-view\T1/cmr/m/n/10.95 ),
- []
-
-
-Overfull \hbox (296.6511pt too wide) in paragraph at lines 240--241
-\T1/cmr/m/n/10.95 OSF reg-is-tra-tion home (\T1/cmtt/m/n/10.95 https://osf.io/r
-whax/registrations\T1/cmr/m/n/10.95 ), GitHub repos-i-tory (\T1/cmtt/m/n/10.95 
-https://github.com/pbriggs/format-induced-moral-overresolution\T1/cmr/m/n/10.95
- ),
- []
-
-[9]
-Overfull \hbox (122.26021pt too wide) in paragraph at lines 248--249
-\T1/cmr/m/n/10.95 Analysis and figure-generation code are avail-able at \T1/cmt
-t/m/n/10.95 https://github.com/pbriggs/format-induced-moral-overresolution
- []
-
-
-Overfull \hbox (65.20181pt too wide) in paragraph at lines 248--249
-\T1/cmr/m/n/10.95 and archived un-der re-lease tag \T1/cmtt/m/n/10.95 paper-ana
-lysis-50k-v1 \T1/cmr/m/n/10.95 with DOI \T1/cmtt/m/n/10.95 https://doi.org/10.5
-281/zenodo.20789625\T1/cmr/m/n/10.95 .
- []
-
-
-Overfull \hbox (34.2188pt too wide) in paragraph at lines 248--249
-\T1/cmr/m/n/10.95 The repos-i-tory in-cludes pre-pro-cess-ing, prompt/schema, p
-ars-ing/validation, bootstrap-analysis, manuscript-
- []
-
-
-Overfull \hbox (66.44093pt too wide) in paragraph at lines 250--251
-[]\T1/cmr/m/n/10.95 Local setup and re-gen-er-a-tion in-struc-tions are pro-vid
-ed in \T1/cmtt/m/n/10.95 README.md\T1/cmr/m/n/10.95 , \T1/cmtt/m/n/10.95 .env.e
-xample \T1/cmr/m/n/10.95 and \T1/cmtt/m/n/10.95 docs/DATA_SETUP.md\T1/cmr/m/n/1
-0.95 .
- []
-
-[10] [11]
-Overfull \hbox (11.84656pt too wide) in paragraph at lines 292--293
-[]\T1/cmr/bx/n/10.95 Fig. 3 | Ver-dict prompts over-state agree-ment rel-a-tive
- to the same model's distribution-
- []
-
-
-Overfull \hbox (6.30266pt too wide) in paragraph at lines 292--293
-\T1/cmr/m/n/10.95 Pos-i-tive val-ues mean that the verdict-mode agree-ment es-t
-i-mate ex-ceeds the same model's distribution-
- []
-
-[12]
-Overfull \hbox (103.14278pt too wide) in paragraph at lines 306--306
-[]|\T1/cmtt/m/n/10 https://api.anthropic.com/v1/messages| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 306--306
-\T1/cmr/m/n/10 16T22:25:08.996871+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 306--306
-\T1/cmr/m/n/10 21T15:33:15.162406+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 307--307
-[]|\T1/cmr/m/n/10 OpenRouter-
- []
-
-
-Overfull \hbox (145.13252pt too wide) in paragraph at lines 307--307
-[]|\T1/cmtt/m/n/10 https://openrouter.ai/api/v1/chat/completions| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 307--307
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 307--307
-\T1/cmr/m/n/10 16T22:25:04.892615+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 307--307
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 307--307
-\T1/cmr/m/n/10 21T15:33:02.923140+00:00| 
- []
-
-
-Overfull \hbox (92.64534pt too wide) in paragraph at lines 308--308
-[]|\T1/cmtt/m/n/10 https://api.openai.com/v1/responses| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 308--308
-\T1/cmr/m/n/10 16T22:25:12.406257+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 308--308
-\T1/cmr/m/n/10 21T15:33:16.432159+00:00| 
- []
-
-
-Overfull \hbox (61.15303pt too wide) in paragraph at lines 309--309
-[]|\T1/cmtt/m/n/10 https://api.x.ai/v1/responses| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 309--309
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 309--309
-\T1/cmr/m/n/10 17T17:55:15.846572+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 309--309
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 309--309
-\T1/cmr/m/n/10 21T15:32:59.334062+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
-[]|\T1/cmr/m/n/10 OpenRouter-
- []
-
-
-Overfull \hbox (145.13252pt too wide) in paragraph at lines 310--310
-[]|\T1/cmtt/m/n/10 https://openrouter.ai/api/v1/chat/completions| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 310--310
-\T1/cmr/m/n/10 16T22:25:15.735026+00:00| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
-[]|\T1/cmr/m/n/10 2026-06-
- []
-
-
-Overfull \hbox (25.02296pt too wide) in paragraph at lines 310--310
-\T1/cmr/m/n/10 21T15:33:13.991444+00:00| 
- []
-
-
-Overfull \hbox (19.96437pt too wide) in alignment at lines 302--312
- [] [] [] [] [] [] 
- []
-
-[13
-
-] [14
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 81.
+[4] [5] [6] [7] [8] [9] [10]
+<../figures/final/figure_study_design_50k.pdf, id=177, 512.39432pt x 502.27649p
+t>
+File: ../figures/final/figure_study_design_50k.pdf Graphic file (type pdf)
+<use ../figures/final/figure_study_design_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_study_design_50k.pdf  used on 
+input line 290.
+(pdftex.def)             Requested size: 469.76662pt x 460.49052pt.
+ [11]
+<../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf, id=184, 512.39
+432pt x 328.8285pt>
+File: ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf Graphic fi
+le (type pdf)
+<use ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_agreement_surplus_by_bin_model
+_50k.pdf  used on input line 296.
+(pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
+ [12 <../figures/final/figure_study_design_50k.pdf>]
+<../figures/final/figure_distribution_gap_by_bin_model_50k.pdf, id=282, 512.394
+32pt x 328.8285pt>
+File: ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf Graphic fil
+e (type pdf)
+<use ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_distribution_gap_by_bin_model_
+50k.pdf  used on input line 302.
+(pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
+ [13 <../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>]
+<../figures/final/figure_sampling_compression_by_bin_model_50k.pdf, id=341, 512
+.39432pt x 328.8285pt>
+File: ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf Graphic
+ file (type pdf)
+<use ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_sampling_compression_by_bin_mo
+del_50k.pdf  used on input line 308.
+(pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
+
+[14 <../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>] [15 <../fi
+gures/final/figure_sampling_compression_by_bin_model_50k.pdf>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 324.
+ [16
+
+] [17
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 328--329
-[]|\T1/cmr/m/n/10 Aggregate surface-
- []
+[18
 
+] [19
 
-Underfull \hbox (badness 10000) in paragraph at lines 329--330
-[]|\T1/cmr/m/n/10 Secondary de-scrip-
- []
-
-
-Underfull \hbox (badness 3219) in paragraph at lines 330--331
-[]|\T1/cmr/m/n/10 Frozen 50k target-
- []
-
-[15
-
-] [16
+] [20
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 342--342
-[]|\T1/cmr/m/n/10 Low-consensus pri-
- []
+<../figures/final/figure_distribution_quality_distances_50k.pdf, id=494, 484.20
+9pt x 281.85298pt>
+File: ../figures/final/figure_distribution_quality_distances_50k.pdf Graphic fi
+le (type pdf)
+<use ../figures/final/figure_distribution_quality_distances_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_distribution_quality_distances
+_50k.pdf  used on input line 388.
+(pdftex.def)             Requested size: 469.77081pt x 273.44867pt.
+<../figures/final/figure_paraphrase_audit_effects_50k.pdf, id=495, 498.663pt x 
+281.85298pt>
+File: ../figures/final/figure_paraphrase_audit_effects_50k.pdf Graphic file (ty
+pe pdf)
+<use ../figures/final/figure_paraphrase_audit_effects_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_paraphrase_audit_effects_50k.p
+df  used on input line 394.
+(pdftex.def)             Requested size: 469.75526pt x 265.51384pt.
+ [21
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 342--342
-\T1/cmr/m/n/10 mary mean (95%
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 342--342
-[]|\T1/cmr/m/n/10 Diffuse sec-ondary
- []
-
-
-Underfull \hbox (badness 5771) in paragraph at lines 342--342
-[]|\T1/cmr/m/n/10 High-consensus ref-
- []
-
-
-Underfull \hbox (badness 4217) in paragraph at lines 342--342
-\T1/cmr/m/n/10 er-ence mean (95%
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 342--343
-[]|\T1/cmr/m/n/10 Low--high con-trast
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 344--344
-[]|\T1/cmr/m/n/10 0.370931 (0.361206-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 344--344
-[]|\T1/cmr/m/n/10 0.435619 (0.427337-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 344--344
-[]|\T1/cmr/m/n/10 0.169409 (0.145651-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 344--345
-[]|\T1/cmr/m/n/10 0.201523 (0.174835-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 345--345
-[]|\T1/cmr/m/n/10 0.232687 (0.224387-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 345--345
-[]|\T1/cmr/m/n/10 0.226556 (0.216740-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 345--345
-[]|\T1/cmr/m/n/10 0.182842 (0.169762-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 345--346
-[]|\T1/cmr/m/n/10 0.049845 (0.033774-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 346--346
-[]|\T1/cmr/m/n/10 1.264638 (1.218425-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 346--346
-[]|\T1/cmr/m/n/10 1.507379 (1.452200-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 346--346
-[]|\T1/cmr/m/n/10 0.563708 (0.495005-
- []
-
-
-Underfull \hbox (badness 2644) in paragraph at lines 346--347
-[]|\T1/cmr/m/n/10 0.700930 (0.618287-
- []
-
-
-Overfull \hbox (19.96437pt too wide) in alignment at lines 340--348
- [] [] [] [] [] [] 
- []
-
-[17
-
-]
-Overfull \hbox (12.4355pt too wide) in paragraph at lines 364--365
+ <../figures/final/figure_distribution_quality_distances_50k.pdf>]
+<../figures/final/figure_validity_rate_by_model_50k.pdf, id=543, 512.39432pt x 
+274.626pt>
+File: ../figures/final/figure_validity_rate_by_model_50k.pdf Graphic file (type
+ pdf)
+<use ../figures/final/figure_validity_rate_by_model_50k.pdf>
+Package pdftex.def Info: ../figures/final/figure_validity_rate_by_model_50k.pdf
+  used on input line 400.
+(pdftex.def)             Requested size: 469.76662pt x 251.77898pt.
+ [22 <../figures/final/figure_paraphrase_audit_effects_50k.pdf>]
+Overfull \hbox (12.4355pt too wide) in paragraph at lines 404--405
 []\T1/cmr/bx/n/10.95 Extended Data Ta-ble 1 | Va-lid-ity and ex-clu-sion sum-ma
 ry. \T1/cmr/m/n/10.95 Re-ports va-lid-ity by model/mode,
  []
 
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 370.
-[18
-
-] [19] (main.aux)
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 410.
+[23 <../figures/final/figure_validity_rate_by_model_50k.pdf>] [24] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-05-26>
@@ -787,29 +545,31 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: F8D334D9FCA79CA301C07DCD4BEAFA26;5620.
  ) 
 Here is how much of TeX's memory you used:
- 11090 strings out of 467509
- 180282 string characters out of 5408780
- 602609 words of memory out of 5000000
- 40149 multiletter control sequences out of 15000+600000
- 639328 words of font info for 63 fonts, out of 8000000 for 9000
+ 11165 strings out of 467509
+ 184014 string characters out of 5408780
+ 603613 words of memory out of 5000000
+ 40211 multiletter control sequences out of 15000+600000
+ 640708 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 89i,7n,95p,1136b,566s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,7n,95p,1212b,627s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt
-1000.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
-0\ecbx1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
-/dpi600\ecti1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
-pen/ec/dpi600\ectt1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/
-ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fon
-ts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\pivan\AppData\Local\MiKT
-eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\pivan\AppData\Loca
-l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\pivan\AppDat
-a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\pivan\
-AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\
-pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on main.pdf (19 pages, 231421 bytes).
+0800.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\ecrm0800.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecbx1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecti1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\pivan\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\pivan\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\pivan\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\pivan\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\pivan\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\
+pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\
+Users\pivan\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk
+>
+Output written on main.pdf (24 pages, 379801 bytes).
 PDF statistics:
- 753 PDF objects out of 1000 (max. 8388607)
- 51 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1232 PDF objects out of 1440 (max. 8388607)
+ 63 named destinations out of 1000 (max. 500000)
+ 260 words of extra memory for PDF output out of 10000 (max. 10000000)
 
