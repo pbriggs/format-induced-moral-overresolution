@@ -18,7 +18,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Who was at fault? Who acted unfairly? Who was in the wrong? These are questions people ask large language models. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet verdict-style answers give one label, and that format can make the chosen answer appear to carry more consensus than the source-community votes support. In a preregistered audit of five LLMs, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than the recorded votes showed --- and more than each model's own distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were also more concentrated than source-community votes, with the clearest effect in divided cases. These results identify a format-specific reliability failure in uncertainty communication: a model that assigns probability across labels in one format can make the same case appear more settled in another.
+People ask large language models who was at fault, who acted unfairly, or who was in the wrong. Source-community judgments on such cases can range from near-unanimous to deeply divided. Yet verdict-style answers give one label, and that format can make the chosen answer appear to carry more consensus than source-community votes support. In a preregistered audit of five LLMs, models evaluated matched ethical scenarios in distribution, verdict/agreement and repeated-sampling modes. In verdict/agreement mode, models reported more source-community agreement for their chosen label than recorded votes showed, and more than each model's own distribution-mode probability for that same label, holding model, item and label constant across formats. Repeated forced-choice outputs were also more concentrated than source-community votes, with the clearest effect in divided cases. These results identify a format-specific reliability failure in uncertainty communication: verdict-style output can make a case appear more settled than distributional output supports.
 
 \end{abstract}
 
@@ -28,7 +28,7 @@ Asking for one answer changes what a model communicates about its uncertainty. G
 
 Prior work has studied whether models predict moral judgments, agree with majority labels or show calibrated confidence [1-7]. These studies ask how well model outputs match a reference distribution from one format. This study asks a distinct reliability question: when the same model answers the same case in two elicitation formats, do the resulting outputs communicate consistent levels of source-community agreement? Unlike standard calibration, this comparison is internal to the model's own outputs; it does not require the distributional estimate to have recovered the source-community distribution perfectly.
 
-The failure mode this study tests is format-induced moral over-resolution: a verdict-style prompt can make a divided case appear more settled than the source-community votes --- or the model's own distributional answer --- would indicate. Three matched-item endpoints test whether and how much verdict-style outputs over-resolve source-community disagreement. Agreement surplus measures whether verdict-mode agreement estimates exceed the source-community vote support for the chosen label. The distribution-agreement gap is the central cross-format test: it measures whether those estimates also exceed the same model's own distribution-mode probability for the same label, comparing the same model, item and chosen label across elicitation formats. A positive gap is a cross-format inconsistency within the model's own outputs: the same model reports more apparent source-community agreement in verdict mode than its distributional answer assigns to that same label. Sampling compression measures whether repeated forced-choice outputs are more concentrated than the source-community vote distribution.
+The failure mode this study tests is format-induced moral over-resolution: a verdict-style prompt can make a divided case appear more settled than the source-community votes (or the model's own distributional answer) would indicate. Three matched-item endpoints test whether and how much verdict-style outputs over-resolve source-community disagreement. Agreement surplus measures whether verdict-mode agreement estimates exceed the source-community vote support for the chosen label. The distribution-agreement gap is the central cross-format test: it measures whether those estimates also exceed the same model's own distribution-mode probability for the same label, comparing the same model, item and chosen label across elicitation formats. A positive gap is a cross-format inconsistency within the model's own outputs: the same model reports more apparent source-community agreement in verdict mode than its distributional answer assigns to that same label. Sampling compression measures whether repeated forced-choice outputs are more concentrated than the source-community vote distribution.
 
 The study uses SCRUPLES Anecdotes, a corpus of everyday ethical situations with recorded votes on who was in the wrong [4]. "Source community" here refers to the annotator population represented in SCRUPLES; the resulting vote distributions are reference data from that data-generating process, not moral truth, universal norms or representative population estimates. In this preregistered audit, five LLMs evaluated matched SCRUPLES items in distribution mode, descriptive verdict/agreement mode and repeated-sampling mode (Fig. 1). Low-consensus items --- cases with a majority label but substantial remaining disagreement in the source-community votes --- were the primary confirmatory subset. Diffuse/no-clear-consensus items were analysed separately as secondary evidence; high-consensus items served as a reference condition. SCRUPLES provides measured disagreement in everyday moral judgments; the study's contribution is an evaluation of model-output reliability under format change.
 
@@ -155,7 +155,7 @@ The core cross-format component used 350 high-consensus, 400 moderate-consensus,
 
 \subsection{Model roster and collection}
 
-The amended frozen roster contained five models: \path{claude-sonnet-4-6}, \path{deepseek/deepseek-v3.2}, \path{gpt-5.5}, \path{grok-4.3} and \path{qwen/qwen3.7-max}. Each model had 9,500 target calls. API routes and call windows are reported in Table 1a.
+The amended frozen roster contained five models: \path{claude-sonnet-4-6}, \path{deepseek/deepseek-v3.2}, \path{gpt-5.5}, \path{grok-4.3} and \path{qwen/qwen3.7-max}. Each model had 9,500 target calls. API routes and call windows are reported in Table 1, panel a.
 
 Temperature was 0.0 for all exported rows. Top-p was blank/null in the final model roster. Provider and route fields record access provenance and are not analysed as cross-provider group effects. Exact model snapshot dates were not available in the local final roster and are not inferred beyond the recorded first and last call timestamps.
 
@@ -311,7 +311,7 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 
 \textbf{Table 1 | Model roster and target allocation.} The roster reports the evaluated model IDs, access routes, collection windows and target calls. Provider/route fields record provenance only; provider-family, route and model-family comparisons are outside the analysis. The allocation table reports the frozen study components used for the 50k analysis.
 
-\textbf{Table 1a | Model roster and collection windows.}
+\textbf{a, Model roster and collection windows}
 
 \begin{landscape}
 \scriptsize
@@ -335,7 +335,7 @@ Model ID & Provider/route & API route & First call UTC & Last call UTC & Target 
 
 Temperature was 0.0 for all exported model-roster rows; top-p was blank/null. Provider/route fields record access provenance and are not analysed as cross-provider group effects; model snapshot dates are not inferred beyond the recorded first and last call timestamps. Total target calls were 47,500.
 
-\textbf{Table 1b | Target allocation by study component.}
+\textbf{b, Target allocation by study component}
 
 \begin{landscape}
 \scriptsize

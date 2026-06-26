@@ -145,7 +145,7 @@ The core cross-format component used 350 high-consensus, 400 moderate-consensus,
 
 ### Model roster and collection
 
-The amended frozen roster contained five models: `claude-sonnet-4-6`, `deepseek/deepseek-v3.2`, `gpt-5.5`, `grok-4.3` and `qwen/qwen3.7-max`. Each model had 9,500 target calls. API routes and call windows are reported in Table 1a.
+The amended frozen roster contained five models: `claude-sonnet-4-6`, `deepseek/deepseek-v3.2`, `gpt-5.5`, `grok-4.3` and `qwen/qwen3.7-max`. Each model had 9,500 target calls. API routes and call windows are reported in Table 1, panel a.
 
 Temperature was 0.0 for all exported rows. Top-p was blank/null in the final model roster. Provider and route fields record access provenance and are not analysed as cross-provider group effects. Exact model snapshot dates were not available in the local final roster and are not inferred beyond the recorded first and last call timestamps.
 
@@ -286,7 +286,7 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 
 **Table 1 | Model roster and target allocation.** The roster reports the evaluated model IDs, access routes, collection windows and target calls. Provider/route fields record provenance only; provider-family, route and model-family comparisons are outside the analysis. The allocation table reports the frozen study components used for the 50k analysis.
 
-**Table 1a | Model roster and collection windows.**
+**a, Model roster and collection windows**
 
 | Model ID | Provider/route | API route | First call UTC | Last call UTC | Target calls |
 |---|---|---|---|---|---:|
@@ -298,7 +298,7 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 
 Temperature was 0.0 for all exported model-roster rows; top-p was blank/null. Provider/route fields record access provenance and are not analysed as cross-provider group effects; model snapshot dates are not inferred beyond the recorded first and last call timestamps. Total target calls were 47,500.
 
-**Table 1b | Target allocation by study component.**
+**b, Target allocation by study component**
 
 | Component | Unique items | Target calls | Manuscript role |
 |---|---:|---:|---|

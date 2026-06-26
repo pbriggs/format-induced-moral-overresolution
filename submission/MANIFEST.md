@@ -46,6 +46,10 @@ This package is a simple article-style LaTeX review build generated from the can
 
 ## Source Data
 
+Inventory:
+
+- `source_data/INVENTORY.md`
+
 Figure-ready CSVs:
 
 - `source_data/figure_ready/figure_agreement_surplus_by_bin_model_50k.csv`
@@ -103,3 +107,10 @@ Validity summaries:
 ## Restricted-Material Boundary
 
 This package intentionally does not include raw SCRUPLES anecdotes, rendered prompts containing anecdote text, raw provider/model responses, full call ledgers, full run stores, `analysis_rows_50k.csv`, `distribution_diagnostics_50k.csv`, `paraphrase_original_vs_rewrite_50k.csv`, or model-ready row stores. Included source data are derived, release-facing summaries, figure-ready CSVs and manuscript-table CSVs.
+
+## Verification Notes
+
+- `submission/manuscript.md` was refreshed from `article/nmi_moral_overresolution_draft_50k_v5.md` and is hash-identical to the canonical manuscript source as of the Phase 3 packaging audit.
+- Table 1 is presented as one main display item with internal panels `a, Model roster and collection windows` and `b, Target allocation by study component`.
+- The build uses manual numbered references in the manuscript file; no `references.bib` file was found in the package.
+- `submission/` is not matched by `.gitignore` in the current repository configuration.
