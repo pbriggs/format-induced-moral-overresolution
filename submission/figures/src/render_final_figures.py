@@ -11,6 +11,12 @@ from matplotlib.patches import FancyBboxPatch, Rectangle
 from matplotlib.transforms import Bbox
 
 
+# Ensure vector exports embed TrueType fonts instead of Type 3 glyphs.
+plt.rcParams["pdf.fonttype"] = 42
+plt.rcParams["ps.fonttype"] = 42
+plt.rcParams["svg.fonttype"] = "none"
+
+
 BIN_ORDER = ["high_consensus", "moderate_consensus", "low_consensus", "diffuse", "low_diffuse"]
 BIN_LABELS = {
     "high_consensus": "High",
