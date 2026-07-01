@@ -1,10 +1,28 @@
 from pathlib import Path
 import re
 import html
+import argparse
 
 ROOT = Path(__file__).resolve().parents[2]
-SRC = ROOT / "article" / "nmi_moral_overresolution_draft_50k_v5.md"
-OUT = Path(__file__).resolve().parent / "main.tex"
+LATEX_DIR = Path(__file__).resolve().parent
+MAIN_OUT = LATEX_DIR / "main.tex"
+SI_OUT = LATEX_DIR / "supplementary_information.tex"
+
+SOURCE_CANDIDATES = {
+    "main": {
+        "rsos": ROOT / "article" / "rsos_moral_overresolution_draft_v1.md",
+        "nmi": ROOT / "article" / "nmi_moral_overresolution_draft_50k_v5.md",
+    },
+    "si": {
+        "rsos": ROOT / "article" / "rsos_supplementary_information_v1.md",
+        "nmi": ROOT / "article" / "nmi_supplementary_information_50k_v2.md",
+    },
+}
+
+TARGET_OUTPUTS = {
+    "main": MAIN_OUT,
+    "si": SI_OUT,
+}
 FIGURE_FILES = {
     "Fig. 1": "figure_study_design_50k.pdf",
     "Fig. 2": "figure_agreement_surplus_by_bin_model_50k.pdf",
@@ -275,9 +293,52 @@ def convert(md: str) -> str:
 
     return preamble + "\n".join(body) + "\n\\end{document}\n"
 
-if not SRC.exists():
-    raise SystemExit(f"Missing source markdown: {SRC}")
+def resolve_source(target: str, variant: str) -> tuple[str, Path]:
+    choices = SOURCE_CANDIDATES[target]
+    if variant == "auto":
+        if choices["rsos"].exists():
+            return "rsos", choices["rsos"]
+        if choices["nmi"].exists():
+            return "nmi", choices["nmi"]
+        raise SystemExit(
+            f"Missing source markdown for {target}: expected one of {choices['rsos']} or {choices['nmi']}"
+        )
 
-tex = convert(SRC.read_text(encoding="utf-8-sig"))
-OUT.write_text(tex, encoding="utf-8")
-print(f"Wrote {OUT}")
+    src = choices[variant]
+    if not src.exists():
+        raise SystemExit(f"Missing source markdown ({variant}) for {target}: {src}")
+    return variant, src
+
+
+def write_target(target: str, variant: str) -> None:
+    chosen_variant, src = resolve_source(target, variant)
+    out = TARGET_OUTPUTS[target]
+    tex = convert(src.read_text(encoding="utf-8-sig"))
+    out.write_text(tex, encoding="utf-8")
+    print(f"Wrote {out} from {src.name} (variant={chosen_variant})")
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Sync manuscript markdown sources to LaTeX files used for PDF builds."
+    )
+    parser.add_argument(
+        "--target",
+        choices=("main", "si", "all"),
+        default="all",
+        help="Which LaTeX file(s) to generate.",
+    )
+    parser.add_argument(
+        "--variant",
+        choices=("auto", "rsos", "nmi"),
+        default="auto",
+        help="Which markdown variant to use. auto prefers rsos_ files and falls back to nmi_.",
+    )
+    args = parser.parse_args()
+
+    targets = ["main", "si"] if args.target == "all" else [args.target]
+    for target in targets:
+        write_target(target, args.variant)
+
+
+if __name__ == "__main__":
+    main()

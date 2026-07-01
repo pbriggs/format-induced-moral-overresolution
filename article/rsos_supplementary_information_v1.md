@@ -195,7 +195,9 @@ Primary inference uses item-cluster bootstrap confidence intervals with 2,000 bo
 
 Robustness checks address likely reviewer concerns about parsing, source-community distribution construction, annotation density, `info` responses and model-level dependence. Robustness outputs include strict-valid-only analyses, raw/Jeffreys/Laplace source-community distribution checks, high-annotation-only checks, `info`-majority exclusion, high-`info` exclusion, leave-one-model-out summaries and model-level endpoint summaries. These checks support the direction of the main findings while preserving the primary status of the low-consensus endpoint definitions.
 
-Mixed-effects input rows are provided for transparency. They do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported.
+One dependence-aware robustness analysis was run on frozen low-consensus model-ready endpoint rows: model fixed effects plus item-cluster bootstrap uncertainty (4,000 iterations; seed `20260701`). The resulting estimates preserved sign and similar magnitude for all three endpoints: agreement surplus 0.370919 (95% CI, 0.360798-0.381290), distribution-agreement gap 0.232772 (95% CI, 0.224615-0.241494), and repeated forced-choice concentration 1.264638 bits (95% CI, 1.220329-1.307882). This is reported as robustness only and does not replace preregistered primary inference.
+
+The corresponding derived output file is `post_run/analysis_exports/50k/model_fixed_effects_item_cluster_bootstrap_50k.csv`.
 
 ---
 
@@ -242,7 +244,7 @@ Supplementary Tables 1–8 are provided as accompanying source-data files. File 
 | Supplementary Table 5 | Distribution-quality diagnostics and baselines supporting non-degeneracy and item sensitivity of distribution-mode outputs. | `post_run/analysis_exports/50k/manuscript_tables/table_distribution_quality_50k.csv`; `post_run/analysis_exports/50k/manuscript_tables/table_baseline_distribution_quality_50k.csv` |
 | Supplementary Table 6 | Normative-certainty summaries for the secondary descriptive construct. | `post_run/analysis_exports/50k/manuscript_tables/table_normative_certainty_50k.csv` |
 | Supplementary Table 7 | Validity by model/mode, invalid-output categories, minimum validity rates, refusals, off-schema labels, API errors, terminal failures and repair fields. | `post_run/analysis_exports/50k/manuscript_tables/table_validity_by_model_mode_50k.csv`; `post_run/analysis_exports/50k/manuscript_tables/table_invalid_output_summary_50k.csv` |
-| Supplementary Table 8 | Mixed-effects input rows provided for transparency; these files do not constitute reported mixed-effects analyses, and no mixed-effects model result is reported. | `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_50k.csv`; `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_strict_valid_50k.csv` |
+| Supplementary Table 8 | Model-ready endpoint rows and dependence-aware robustness summary (model fixed effects plus item-cluster bootstrap) used as a sensitivity check, not as primary inference. | `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_50k.csv`; `post_run/analysis_exports/50k/model_ready/mixed_effects_endpoint_rows_strict_valid_50k.csv`; `post_run/analysis_exports/50k/model_fixed_effects_item_cluster_bootstrap_50k.csv` |
 
 ---
 
