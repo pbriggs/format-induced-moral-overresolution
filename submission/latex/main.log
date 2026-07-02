@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  1 JUL 2026 21:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  1 JUL 2026 21:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -510,18 +510,18 @@ File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 {C:/Users/pivan/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/piva
 n/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}] [2]
-Overfull \hbox (5.34308pt too wide) in paragraph at lines 73--74
+Overfull \hbox (5.34308pt too wide) in paragraph at lines 77--78
 \T1/lmr/m/n/10.95 distribution-agreement gap, and pos-i-tive low-consensus re-p
 eated forced-choice con-cen-tra-tion. Model-
  []
 
 [3]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 81.
+(Font)              <10.95> on input line 85.
  [4] [5] [6] [7] [8] [9] [10
 
 ]
-Overfull \hbox (29.68097pt too wide) in paragraph at lines 276--277
+Overfull \hbox (29.68097pt too wide) in paragraph at lines 280--281
 []\T1/lmr/m/n/10.95 Raw SCRU-PLES anec-dotes, ren-dered prompts with anec-dote 
 text, newly col-lected raw model/provider
  []
@@ -534,7 +534,7 @@ t>
 File: ../figures/final/figure_study_design_50k.pdf Graphic file (type pdf)
 <use ../figures/final/figure_study_design_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_study_design_50k.pdf  used on 
-input line 324.
+input line 328.
 (pdftex.def)             Requested size: 469.76662pt x 460.49052pt.
  [13]
 <../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf, id=195, 512.39
@@ -543,7 +543,7 @@ File: ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf Graphic fi
 le (type pdf)
 <use ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_agreement_surplus_by_bin_model
-_50k.pdf  used on input line 330.
+_50k.pdf  used on input line 334.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [14 <../figures/final/figure_study_design_50k.pdf>]
 <../figures/final/figure_distribution_gap_by_bin_model_50k.pdf, id=216, 512.394
@@ -552,7 +552,7 @@ File: ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf Graphic fil
 e (type pdf)
 <use ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_distribution_gap_by_bin_model_
-50k.pdf  used on input line 336.
+50k.pdf  used on input line 340.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [15 <../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>]
 <../figures/final/figure_sampling_compression_by_bin_model_50k.pdf, id=235, 512
@@ -561,12 +561,12 @@ File: ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf Graphic
  file (type pdf)
 <use ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_sampling_compression_by_bin_mo
-del_50k.pdf  used on input line 342.
+del_50k.pdf  used on input line 346.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [16 <../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>] [17 <../f
 igures/final/figure_sampling_compression_by_bin_model_50k.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 358.
+(Font)              <5> on input line 362.
  [18
 
 ] [19
@@ -584,7 +584,7 @@ File: ../figures/final/figure_distribution_quality_distances_50k.pdf Graphic fi
 le (type pdf)
 <use ../figures/final/figure_distribution_quality_distances_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_distribution_quality_distances
-_50k.pdf  used on input line 422.
+_50k.pdf  used on input line 426.
 (pdftex.def)             Requested size: 469.77081pt x 273.44867pt.
 <../figures/final/figure_paraphrase_audit_effects_50k.pdf, id=306, 498.663pt x 
 281.85298pt>
@@ -592,7 +592,7 @@ File: ../figures/final/figure_paraphrase_audit_effects_50k.pdf Graphic file (ty
 pe pdf)
 <use ../figures/final/figure_paraphrase_audit_effects_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_paraphrase_audit_effects_50k.p
-df  used on input line 428.
+df  used on input line 432.
 (pdftex.def)             Requested size: 469.75526pt x 265.51384pt.
  [23
 
@@ -603,16 +603,16 @@ File: ../figures/final/figure_validity_rate_by_model_50k.pdf Graphic file (type
  pdf)
 <use ../figures/final/figure_validity_rate_by_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_validity_rate_by_model_50k.pdf
-  used on input line 434.
+  used on input line 438.
 (pdftex.def)             Requested size: 469.76662pt x 251.77898pt.
  [24 <../figures/final/figure_paraphrase_audit_effects_50k.pdf>]
-Overfull \hbox (15.49974pt too wide) in paragraph at lines 438--439
+Overfull \hbox (15.49974pt too wide) in paragraph at lines 442--443
 []\T1/lmr/bx/n/10.95 Extended Data Ta-ble 1 | Va-lid-ity and ex-clu-sion sum-ma
 ry. \T1/lmr/m/n/10.95 Re-ports va-lid-ity by model/mode,
  []
 
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 444.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 448.
 [25 <../figures/final/figure_validity_rate_by_model_50k.pdf>] [26] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
@@ -641,7 +641,7 @@ Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.pfb>
-Output written on main.pdf (26 pages, 517180 bytes).
+Output written on main.pdf (26 pages, 517061 bytes).
 PDF statistics:
  424 PDF objects out of 1000 (max. 8388607)
  67 named destinations out of 1000 (max. 500000)
