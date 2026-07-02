@@ -244,7 +244,7 @@ Normative certainty was analysed as a secondary descriptive construct distinct f
 
 ## Data availability
 
-Derived analysis files and reproducibility records are available through the OSF project (`https://osf.io/rwhax/overview`), OSF registration home (`https://osf.io/rwhax/registrations`), GitHub repository (`https://github.com/pbriggs/format-induced-moral-overresolution`), the post-50k execution/completion archive (`https://doi.org/10.5281/zenodo.20786461`), and the paper-analysis archive (`https://doi.org/10.5281/zenodo.20789625`). Corresponding release tags are `post-50k-completion-v1` and `paper-analysis-50k-v1`.
+Derived analysis files and reproducibility records are available through the OSF project (`https://osf.io/rwhax/overview`), OSF registration home (`https://osf.io/rwhax/registrations`), GitHub repository (`https://github.com/pbriggs/format-induced-moral-overresolution`), the post-50k execution/completion archive [9], and the paper-analysis archive [10]. Corresponding release tags are `post-50k-completion-v1` and `paper-analysis-50k-v1`.
 
 Release-safe materials include frozen target lists and run manifests with sensitive details removed as needed; prompt templates and schemas; derived endpoint, robustness, paraphrase, baseline, secondary normative-certainty, and distribution-quality summaries; bootstrap intervals, adjusted tests, and validity/exclusion summaries; manuscript-table CSVs; figure-ready CSVs; and rendered figures. The Supplementary Information and repository documentation list main source-data and analysis files. Analysis code is described below. Repository licence is CC0 1.0 Universal unless superseded by OSF settings.
 
@@ -252,7 +252,7 @@ Raw SCRUPLES anecdotes, rendered prompts with anecdote text, newly collected raw
 
 ## Code availability
 
-Analysis and figure-generation code are available at `https://github.com/pbriggs/format-induced-moral-overresolution` and archived under release tag `paper-analysis-50k-v1` with DOI `https://doi.org/10.5281/zenodo.20789625`. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap analysis, manuscript-table generation, and figure-rendering code. API credentials and provider-specific secrets are not included.
+Analysis and figure-generation code are available at `https://github.com/pbriggs/format-induced-moral-overresolution` and archived under release tag `paper-analysis-50k-v1` [10]. The repository includes preprocessing, prompt/schema, parsing/validation, bootstrap analysis, manuscript-table generation, and figure-rendering code. API credentials and provider-specific secrets are not included.
 
 Local setup and regeneration instructions are in `README.md`, `.env.example`, and `docs/DATA_SETUP.md`. Offline regeneration uses completed-run data in an authorized local or reviewer environment and does not make new provider calls. Optional provider-call reruns require the rerunning researcher's own provider credentials and may produce new outputs rather than exact reproduction of the frozen 50k collection.
 
@@ -290,6 +290,8 @@ The author thanks Nicholas Lourie, Ronan Le Bras and Yejin Choi, and the Allen I
 6. Takemoto, K. The moral machine experiment on large language models. *Royal Society Open Science* **11**, 231393 (2024). https://doi.org/10.1098/rsos.231393
 7. Zaim bin Ahmad, M. S. & Takemoto, K. Large-scale moral machine experiment on large language models. *PLoS One* **20**, e0322776 (2025). https://doi.org/10.1371/journal.pone.0322776
 8. Sclar, M., Choi, Y., Tsvetkov, Y. & Suhr, A. Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. *International Conference on Learning Representations* (2024). https://openreview.net/forum?id=RIu5lyNXjT
+9. Briggs, P. Format-induced moral over-resolution: post-50k execution and completion archive (version post-50k-completion-v1). Zenodo (2026). https://doi.org/10.5281/zenodo.20786461
+10. Briggs, P. Format-induced moral over-resolution: paper-analysis archive (version paper-analysis-50k-v1). Zenodo (2026). https://doi.org/10.5281/zenodo.20789625
 
 ## Main display items
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  1 JUL 2026 18:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.25)  1 JUL 2026 21:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -529,44 +529,44 @@ text, newly col-lected raw model/provider
 [11
 
 ] [12]
-<../figures/final/figure_study_design_50k.pdf, id=191, 512.39432pt x 502.27649p
+<../figures/final/figure_study_design_50k.pdf, id=188, 512.39432pt x 502.27649p
 t>
 File: ../figures/final/figure_study_design_50k.pdf Graphic file (type pdf)
 <use ../figures/final/figure_study_design_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_study_design_50k.pdf  used on 
-input line 322.
+input line 324.
 (pdftex.def)             Requested size: 469.76662pt x 460.49052pt.
  [13]
-<../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf, id=198, 512.39
+<../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf, id=195, 512.39
 432pt x 328.8285pt>
 File: ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf Graphic fi
 le (type pdf)
 <use ../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_agreement_surplus_by_bin_model
-_50k.pdf  used on input line 328.
+_50k.pdf  used on input line 330.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [14 <../figures/final/figure_study_design_50k.pdf>]
-<../figures/final/figure_distribution_gap_by_bin_model_50k.pdf, id=219, 512.394
+<../figures/final/figure_distribution_gap_by_bin_model_50k.pdf, id=216, 512.394
 32pt x 328.8285pt>
 File: ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf Graphic fil
 e (type pdf)
 <use ../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_distribution_gap_by_bin_model_
-50k.pdf  used on input line 334.
+50k.pdf  used on input line 336.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [15 <../figures/final/figure_agreement_surplus_by_bin_model_50k.pdf>]
-<../figures/final/figure_sampling_compression_by_bin_model_50k.pdf, id=238, 512
+<../figures/final/figure_sampling_compression_by_bin_model_50k.pdf, id=235, 512
 .39432pt x 328.8285pt>
 File: ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf Graphic
  file (type pdf)
 <use ../figures/final/figure_sampling_compression_by_bin_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_sampling_compression_by_bin_mo
-del_50k.pdf  used on input line 340.
+del_50k.pdf  used on input line 342.
 (pdftex.def)             Requested size: 469.76662pt x 301.47221pt.
  [16 <../figures/final/figure_distribution_gap_by_bin_model_50k.pdf>] [17 <../f
 igures/final/figure_sampling_compression_by_bin_model_50k.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 356.
+(Font)              <5> on input line 358.
  [18
 
 ] [19
@@ -578,41 +578,41 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ] [22
 
 ]
-<../figures/final/figure_distribution_quality_distances_50k.pdf, id=308, 484.20
+<../figures/final/figure_distribution_quality_distances_50k.pdf, id=305, 484.20
 9pt x 281.85298pt>
 File: ../figures/final/figure_distribution_quality_distances_50k.pdf Graphic fi
 le (type pdf)
 <use ../figures/final/figure_distribution_quality_distances_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_distribution_quality_distances
-_50k.pdf  used on input line 420.
+_50k.pdf  used on input line 422.
 (pdftex.def)             Requested size: 469.77081pt x 273.44867pt.
-<../figures/final/figure_paraphrase_audit_effects_50k.pdf, id=309, 498.663pt x 
+<../figures/final/figure_paraphrase_audit_effects_50k.pdf, id=306, 498.663pt x 
 281.85298pt>
 File: ../figures/final/figure_paraphrase_audit_effects_50k.pdf Graphic file (ty
 pe pdf)
 <use ../figures/final/figure_paraphrase_audit_effects_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_paraphrase_audit_effects_50k.p
-df  used on input line 426.
+df  used on input line 428.
 (pdftex.def)             Requested size: 469.75526pt x 265.51384pt.
  [23
 
  <../figures/final/figure_distribution_quality_distances_50k.pdf>]
-<../figures/final/figure_validity_rate_by_model_50k.pdf, id=325, 512.39432pt x 
+<../figures/final/figure_validity_rate_by_model_50k.pdf, id=322, 512.39432pt x 
 274.626pt>
 File: ../figures/final/figure_validity_rate_by_model_50k.pdf Graphic file (type
  pdf)
 <use ../figures/final/figure_validity_rate_by_model_50k.pdf>
 Package pdftex.def Info: ../figures/final/figure_validity_rate_by_model_50k.pdf
-  used on input line 432.
+  used on input line 434.
 (pdftex.def)             Requested size: 469.76662pt x 251.77898pt.
  [24 <../figures/final/figure_paraphrase_audit_effects_50k.pdf>]
-Overfull \hbox (15.49974pt too wide) in paragraph at lines 436--437
+Overfull \hbox (15.49974pt too wide) in paragraph at lines 438--439
 []\T1/lmr/bx/n/10.95 Extended Data Ta-ble 1 | Va-lid-ity and ex-clu-sion sum-ma
 ry. \T1/lmr/m/n/10.95 Re-ports va-lid-ity by model/mode,
  []
 
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 442.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 444.
 [25 <../figures/final/figure_validity_rate_by_model_50k.pdf>] [26] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
@@ -641,9 +641,9 @@ Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb><C:/
 Users/pivan/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.pfb>
-Output written on main.pdf (26 pages, 518111 bytes).
+Output written on main.pdf (26 pages, 517180 bytes).
 PDF statistics:
- 427 PDF objects out of 1000 (max. 8388607)
+ 424 PDF objects out of 1000 (max. 8388607)
  67 named destinations out of 1000 (max. 500000)
  268 words of extra memory for PDF output out of 10000 (max. 10000000)
 
