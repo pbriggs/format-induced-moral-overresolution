@@ -22,9 +22,6 @@ The tested failure mode is format-induced moral over-resolution. A verdict-style
 
 The study uses SCRUPLES Anecdotes, a corpus of everyday ethical situations with recorded votes on who was in the wrong [4]. Here, source community means the annotator population represented in SCRUPLES. These vote distributions are reference data from that process. They are not moral truth, universal norms, or representative population estimates. In this preregistered audit, five large language models evaluated matched SCRUPLES items in distribution mode, verdict/agreement mode, and repeated forced-choice mode (Fig. 1). Low-consensus items, with a majority label but substantial remaining disagreement, were the primary confirmatory subset. Diffuse/no-clear-consensus items were secondary evidence. High-consensus items were the reference condition. The contribution is a test of model-output reliability under format change.
 
-The study contributes: (i) a preregistered five-model audit on a source-community disagreement dataset; (ii) matched distribution and verdict/agreement prompts on the same items and labels; (iii) distribution-agreement gap as a within-model coherence test with model, item, and label held constant while format changes; (iv) a repeated forced-choice concentration endpoint that measures label diversity across fresh forced-choice calls; and (v) release-safe reproducibility materials, including derived analysis files, prompt templates, and endpoint code.
-
-This study does not claim that SCRUPLES votes are moral truth. They are a measured reference distribution from one annotator community. Source-community votes are not a global population estimate. The study does not measure user outcomes or behaviour in response to model verdicts. It does not evaluate all large language models or all prompt formats. Training-data contamination was not directly tested, and we make no contamination claim.
 
 ## Results
 
@@ -103,9 +100,8 @@ The reliability implication is direct. Distribution-mode testing alone can miss 
 
 The study was preregistered on OSF as a target-scoped computational audit. It used existing SCRUPLES source-community judgments and newly collected LLM API outputs. No new human participants were recruited. The analysis uses frozen 50k target-scoped exports from `post_run/analysis_exports/50k/`.
 
-Operational milestones tracked monitoring and release discipline. The three primary endpoint definitions and the low-consensus confirmatory subset were preregistered before confirmatory collection. They remained unchanged through the final 50k analysis. Later presentation choices did not alter frozen numerical outputs.
+The three primary endpoint definitions and the low-consensus confirmatory subset were preregistered before confirmatory collection. They remained unchanged through the final 50k analysis. Later presentation choices did not alter frozen numerical outputs.
 
-The primary confirmatory endpoints were agreement surplus, distribution-agreement gap and repeated forced-choice concentration in low-consensus items. Diffuse/no-clear-consensus items were theoretically important secondary evidence and remained separate from the primary endpoint definition. Combined low-consensus and diffuse aggregates were used only as descriptive divided-item summaries where needed.
 
 ### Dataset, eligibility and label schema
 
